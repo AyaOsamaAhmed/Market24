@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp">
+
+    <RadioGroup
+        android:layout_marginTop="5dp"
+        android:id="@+id/report_radio_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/report_reason1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reason1"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size" />
+
+        <RadioButton
+            android:id="@+id/report_reason2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reason2"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size" />
+
+        <RadioButton
+            android:id="@+id/report_reason3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reason3"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size" />
+
+        <RadioButton
+            android:id="@+id/report_reason4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reason4"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size" />
+    </RadioGroup>
+    <EditText
+        android:layout_margin="5dp"
+        android:layout_below="@id/report_radio_btn"
+        android:hint="@string/enter_your_reason"
+        android:id="@+id/edit_text_additional_reason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

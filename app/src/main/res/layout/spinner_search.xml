@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:id="@+id/first_main_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:weightSum="2">
+    <LinearLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/back3"
+            android:gravity="center"
+            android:padding="3dp">
+
+            <Spinner
+                android:id="@+id/category_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+                android:foregroundTint="@color/green"
+                android:gravity="center" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/container_subcat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:background="@drawable/back3"
+            android:gravity="center"
+            android:padding="3dp">
+
+            <Spinner
+                android:id="@+id/sub_category_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+                android:foregroundTint="@color/green"
+                android:gravity="center" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- SUB -->
+    <LinearLayout
+        android:id="@+id/sub_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:layout_weight="1"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/back3"
+            android:gravity="center"
+            android:padding="3dp">
+
+            <Spinner
+                android:id="@+id/city_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+                android:foregroundTint="@color/green"
+                android:gravity="center" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+           android:id="@+id/container_subcity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:background="@drawable/back3"
+            android:gravity="center"
+            android:padding="3dp">
+
+            <Spinner
+                android:id="@+id/sub_city_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+                android:foregroundTint="@color/green"
+                android:gravity="center" />
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>
+</RelativeLayout>

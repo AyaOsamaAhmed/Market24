@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "746201412757",
+    "firebase_url": "https://market24-14a90.firebaseio.com",
+    "project_id": "market24-14a90",
+    "storage_bucket": "market24-14a90.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746201412757:android:25fc15144888da87a1579c",
+        "android_client_info": {
+          "package_name": "com.ka8eem.market24"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "746201412757-1l88ta680l7q9gj08j3lspqk1tljhrbr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRAawrKm_zvpvd4ffLzanFJw-3zQ8qeww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "746201412757-1l88ta680l7q9gj08j3lspqk1tljhrbr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

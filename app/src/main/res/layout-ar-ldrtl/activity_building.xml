@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.BuildingActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/line5"
+        android:fillViewport="true">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_margin="15dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="3dp">
+
+                    <EditText
+                        android:id="@+id/building_room_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/back3"
+                        android:gravity="center"
+                        android:hint="@string/room_number"
+                        android:inputType="number"
+                        android:padding="5dp" />
+                </RelativeLayout>
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="3dp">
+
+                    <EditText
+                        android:id="@+id/building_space"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/back3"
+                        android:gravity="center"
+                        android:hint="@string/space"
+                        android:inputType="number"
+                        android:padding="5dp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/line1"
+                android:layout_margin="15dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="3dp">
+
+                    <EditText
+                        android:id="@+id/building_bathroom_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/back3"
+                        android:gravity="center"
+                        android:hint="@string/bathroom_number"
+                        android:inputType="number"
+                        android:padding="5dp" />
+                </RelativeLayout>
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="3dp">
+
+                    <EditText
+                        android:id="@+id/building_finish"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/back3"
+                        android:gravity="center"
+                        android:hint="@string/finished"
+                        android:inputType="text"
+                        android:padding="5dp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@id/line3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/line2"
+                android:layout_margin="15dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="3dp">
+
+                    <EditText
+                        android:id="@+id/building_luxuries"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/back3"
+                        android:gravity="center"
+                        android:hint="@string/luxuries"
+                        android:inputType="text"
+                        android:padding="5dp" />
+                </RelativeLayout>
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="3dp">
+
+                    <EditText
+                        android:id="@+id/building_floor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/back3"
+                        android:gravity="center"
+                        android:hint="@string/floor_number"
+                        android:inputType="number"
+                        android:padding="5dp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/line4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/line3"
+                android:layout_margin="15dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="3dp">
+
+                    <EditText
+                        android:id="@+id/building_furnished"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/back3"
+                        android:gravity="center"
+                        android:hint="@string/furnished"
+                        android:inputType="text"
+                        android:padding="5dp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/desc"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_below="@id/line4"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/back3"
+                android:gravity="center"
+                android:hint="@string/details"
+                android:inputType="text"
+                android:padding="5dp" />
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/line5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="15dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="3dp">
+
+            <Button
+                android:id="@+id/upload_building"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/back_btn"
+                android:gravity="center"
+                android:text="@string/upload"
+                android:textColor="@color/white"
+                android:textSize="@dimen/settings_sup_header_text_size" />
+        </RelativeLayout>
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="3dp">
+
+            <Button
+                android:id="@+id/cancel_building"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/back_btn"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/white"
+                android:textSize="@dimen/settings_sup_header_text_size" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

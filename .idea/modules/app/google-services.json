@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "237202902547",
+    "firebase_url": "https://ebayapp-c7a80.firebaseio.com",
+    "project_id": "ebayapp-c7a80",
+    "storage_bucket": "ebayapp-c7a80.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237202902547:android:3ed675425d2510ac4e39e6",
+        "android_client_info": {
+          "package_name": "com.ka8eem.market24"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237202902547-tkj7hvm3958qu69vgbjsa6ceqfnqqhku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ka8eem.market24",
+            "certificate_hash": "0d8fe5f5b7719beb79e160b49223347e9095c0a7"
+          }
+        },
+        {
+          "client_id": "237202902547-r63dggm8m9liabes24iqehc2oam4gc31.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ka8eem.market24",
+            "certificate_hash": "104d105ee5345c95a0439f8a7574c14894d6638c"
+          }
+        },
+        {
+          "client_id": "237202902547-a0rr712msc5pho1pdtaat7mg5cfpuh90.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaR399Q-RG84oXAmLQuddBv17h0lJsZwA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237202902547-a0rr712msc5pho1pdtaat7mg5cfpuh90.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray"
+    tools:context=".ui.activities.FilterActivity">
+
+    <EditText
+        android:id="@+id/search_text"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/ic_nav_search"
+        android:hint="@string/search"
+        android:textSize="@dimen/text_size" />
+
+    <Spinner
+        android:id="@+id/category_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@+id/search_text"
+        android:layout_marginHorizontal="5dp"
+        android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+        android:foregroundTint="@color/green"
+        android:gravity="center" />
+
+    <Spinner
+        android:id="@+id/sub_category_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@+id/category_spinner"
+        android:layout_marginHorizontal="5dp"
+        android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+        android:foregroundTint="@color/green"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <Spinner
+        android:id="@+id/area_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@+id/sub_category_spinner"
+        android:layout_marginHorizontal="5dp"
+        android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+        android:foregroundTint="@color/green"
+        android:gravity="center" />
+
+    <Spinner
+        android:id="@+id/sub_area_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@+id/area_spinner"
+        android:layout_marginHorizontal="5dp"
+        android:dropDownVerticalOffset="?attr/dropdownListPreferredItemHeight"
+        android:foregroundTint="@color/green"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/back_btn"
+        android:onClick="search"
+        android:text="@string/search"
+        android:textColor="@color/white"
+        android:textSize="@dimen/settings_sup_header_text_size" />
+</RelativeLayout>
