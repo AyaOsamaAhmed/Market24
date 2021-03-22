@@ -6,55 +6,69 @@ import java.io.Serializable;
 
 public class SubCategoryModel implements Serializable {
 
-    @SerializedName("id_cat")
-    private int categoryId;
-
     @SerializedName("sub_id")
+    private int sub_id;
+
+    @SerializedName("id_cat")
     private int subCatId;
 
-    public SubCategoryModel(int categoryId, String cubCatName, String isCar) {
-        this.categoryId = categoryId;
-        this.subCatId = subCatId;
-        this.imageUrl = imageUrl;
-        this.cubCatName = cubCatName;
-        this.isCar = isCar;
-        this.subCatNameEn = subCatNameEn;
-    }
-
     @SerializedName("sub_img")
-    private String imageUrl;
+    private String subImage;
 
-    @SerializedName("sub_name_A")
+    @SerializedName("sub_name")
     private String cubCatName;
 
     @SerializedName("Vehicles_Car")
     private String isCar;
 
-    public String getIsCar() {
-        return isCar;
-    }
-
-    public String getCubCatName() {
-        return cubCatName;
-    }
-
-    @SerializedName("sub_name")
+    @SerializedName("sub_name_E")
     private String subCatNameEn;
 
+    public SubCategoryModel(int sub_id, int subCatId, String subImage, String cubCatName, String subCatNameEn) {
+        this.sub_id = sub_id;
+        this.subCatId = subCatId;
+        this.subImage = subImage;
+        this.cubCatName = cubCatName;
+        this.subCatNameEn = subCatNameEn;
+    }
 
-    public int getCategoryId() {
-        return categoryId;
+    public int getSub_id() {
+        return sub_id;
+    }
+
+    public void setSub_id(int sub_id) {
+        this.sub_id = sub_id;
     }
 
     public int getSubCatId() {
         return subCatId;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public void setSubCatId(int subCatId) {
+        this.subCatId = subCatId;
+    }
+
+    public String getSubImage() {
+        return subImage;
+    }
+
+    public void setSubImage(String subImage) {
+        this.subImage = subImage;
+    }
+
+    public String getCubCatName() {
+        return cubCatName;
+    }
+
+    public void setCubCatName(String cubCatName) {
+        this.cubCatName = cubCatName;
     }
 
     public String getSubCatNameEn() {
         return subCatNameEn;
+    }
+
+    public void setSubCatNameEn(String subCatNameEn) {
+        this.subCatNameEn = subCatNameEn;
     }
 }

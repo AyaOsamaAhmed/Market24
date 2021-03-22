@@ -2,6 +2,7 @@ package com.ka8eem.market24.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,29 +10,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.ProductModel;
-import com.ka8eem.market24.ui.activities.ProductDetails;
+import com.ka8eem.market24.ui.fragments.ProductDetailsFragment;
 import com.ka8eem.market24.util.Constants;
+import com.ka8eem.market24.util.Keys;
+import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<ProductModel> list;
-
+    List<ProductModel> list;
+    NavController navController ;
 
     public AdsAdapter() {
 
     }
 
-    public void setList(ArrayList<ProductModel> list) {
+    public void setList(List<ProductModel> list , NavController navController) {
         this.list = list;
+        this.navController = navController ;
         notifyDataSetChanged();
     }
 
@@ -39,37 +42,42 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.ads_list_items, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.ads_list_item, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-
         ProductModel model = list.get(position);
-
         String curLang = Constants.getLocal(context);
         String price = model.getPrice();
-        String cityName = model.getCityName();
+        String url = null ;
+        if( model.getAdsImage() != null) {
+              url = Keys.image_domain + model.getAdsImage().getImgUrl();
+        }
+        String productName = model.getProduct_name();
         if (curLang.equals("AR")) {
             price = price + " ل.س" ;
         } else {
             price = price + " L.S";
-            cityName = model.getCityNameEn();
         }
-        Glide.with(context).load(model.getProductImages().get(0).getImgUrl()).fitCenter().into(holder.imageView);
-        holder.textCity.setText(cityName);
-        holder.textSalary.setText(price);
-        holder.textProductName.setText(model.getProductName());
-        holder.textUserName.setText(model.getUserName());
+     //   Glide.with(context).load(model.getProductImages().get(0).getImgUrl()).fitCenter().into(holder.imageView);
+
+        holder.price.setText(price);
+        holder.ProductName.setText(model.getProduct_name());
+
+        Picasso.get()
+                .load(url).resize(600, 200)
+                .placeholder(R.mipmap.ic_logo_round)
+                .into(holder.imageView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProductModel model = list.get(position);
-                Intent intent = new Intent(context, ProductDetails.class);
-                intent.putExtra("product_id", model.getProductID() + "");
-                context.startActivity(intent);
+                Bundle arguments = new Bundle();
+                arguments.putString("product_id", list.get(position).getAdsID()+"");
+
+                navController.navigate(R.id.ProductDetailsFragment,arguments);
             }
         });
     }
@@ -99,16 +107,13 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView textSalary, textCatType, textCity, textProductName, textUserName , txtSubArea;
+        TextView price, ProductName;
 
         public MyViewHolder(@NonNull View item) {
             super(item);
-            imageView = item.findViewById(R.id.img_ads_list_item);
-            textProductName = item.findViewById(R.id.ads_product_name);
-            textUserName = item.findViewById(R.id.ads_user_name);
-            textSalary = item.findViewById(R.id.price_ads_item);
-            textCity = item.findViewById(R.id.ads_city_name);
-            textCatType = item.findViewById(R.id.ads_category);
+            imageView = item.findViewById(R.id.ads_img_item);
+            ProductName = item.findViewById(R.id.product_name);
+            price = item.findViewById(R.id.product_price);
 
         }
     }

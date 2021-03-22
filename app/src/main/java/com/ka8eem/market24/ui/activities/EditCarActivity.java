@@ -81,7 +81,7 @@ public class EditCarActivity extends AppCompatActivity {
 
     private void initViews() {
         valid = true;
-        model = adsModel.getVehiclesConstantDetailsModel();
+     //   model = adsModel.getVehiclesConstantDetailsModel();
         categoryViewModel = ViewModelProviders.of(this).get(CategoryViewModel.class);
         yearOfCreate = findViewById(R.id.edit_car_text_year_of_create);
         textEnginePower = findViewById(R.id.edit_car_edit_text_engine_power);
@@ -180,7 +180,7 @@ public class EditCarActivity extends AppCompatActivity {
                             color,
                             desc
                     );
-                    AdsModel model = new AdsModel(
+                /*    AdsModel model = new AdsModel(
                             adsModel.getAdsTitle(),
                             adsModel.getAdsCatId(),
                             adsModel.getAdsSubCategoryId(),
@@ -194,10 +194,12 @@ public class EditCarActivity extends AppCompatActivity {
                             new BuildingConstantDetailsModel(),
                             new OtherConstantDetailsModel()
                     );
-                    model.setID_ADS(adsModel.getID_ADS());
+                      model.setID_ADS(adsModel.getID_ADS());
+                 */
+
                     ProductViewModel viewModel = ViewModelProviders.of(EditCarActivity.this).
                             get(ProductViewModel.class);
-                    viewModel.updateProduct(model);
+                  //  viewModel.updateProduct(model);
                     final ProgressDialog progressDialog = new ProgressDialog(EditCarActivity.this);
                     progressDialog.show();
                     progressDialog.setContentView(R.layout.progress_dialog);

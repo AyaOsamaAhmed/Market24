@@ -2,38 +2,24 @@ package com.ka8eem.market24.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.ChatlistModel;
-import com.ka8eem.market24.models.ProductModel;
-import com.ka8eem.market24.models.SubCategoryModel;
-import com.ka8eem.market24.models.UserFirebaseModel;
-import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.ui.activities.CattingActivity;
-import com.ka8eem.market24.ui.activities.ProductDetails;
-import com.ka8eem.market24.ui.fragments.ProfileFragment;
-import com.ka8eem.market24.util.Constants;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserFirebaseAdapter extends RecyclerView.Adapter<UserFirebaseAdapter.MyViewHolder> {

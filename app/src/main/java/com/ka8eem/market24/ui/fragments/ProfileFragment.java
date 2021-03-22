@@ -29,6 +29,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -47,9 +49,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.UserModel;
+import com.ka8eem.market24.ui.activities.ChangePassActivity;
 import com.ka8eem.market24.ui.activities.LoginActivity;
 import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.viewmodel.UserViewModel;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
@@ -71,13 +75,15 @@ public class ProfileFragment extends Fragment {
     private  Uri imageUri ;
     private StorageTask storageTask;
     // widgets
+
     Button btnSaveEdit;
     CircleImageView circleImageView;
     EditText textName, textAddress, textEmail, textPhone;
     UserModel retUserModel;
     SearchView searchView;
-    ImageView filterImage;
-
+    ImageView filterImage  , edit_image;
+    LinearLayout toolbar ;
+    TextView  change_pass , title_profile;
 
     // vars
     private boolean edit;
@@ -98,14 +104,19 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         initViews(view);
       //  storageReference = FirebaseStorage.getInstance().getReference("Uploads");
+
+        toolbar = getActivity().findViewById(R.id.relative1);
+         toolbar.setVisibility(View.GONE);
+
         circleImageView.setClickable(false);
         if (savedInstanceState != null) {
             edit = savedInstanceState.getBoolean("edit");
         }
         if (!edit)
             btnSaveEdit.setText(getString(R.string.edit_info));
-        else
+        else {
             btnSaveEdit.setText(getString(R.string.save_changes));
+        }
         btnSaveEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,6 +131,16 @@ public class ProfileFragment extends Fragment {
                 edit = !edit;
             }
         });
+
+        if(userModel.getImage() != null) {
+            Uri uri = Uri.parse(userModel.getImage());
+            Toast.makeText(getContext(), "---" + userModel.getImage() + "---" + uri, Toast.LENGTH_SHORT).show();
+            Picasso.get()
+                    .load(uri)
+                    .placeholder(R.drawable.user_bk_profile)
+                    .into(circleImageView);
+            circleImageView.setImageURI(uri);
+        }
         return view;
     }
 
@@ -135,16 +156,18 @@ public class ProfileFragment extends Fragment {
         email = textEmail.getText().toString();
 
 
-
+      //-----------
         if (encodedImg == null)
             encodedImg = "";
         UserModel model = new UserModel(pass  ,user_id , name, phone, address, encodedImg);
         userViewModel.updateProfile(model);
+        //--------------
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.show();
         progressDialog.setContentView(R.layout.progress_dialog);
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         progressDialog.setCancelable(false);
+
         userViewModel.userUpdate.observe(getActivity(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -188,12 +211,19 @@ public class ProfileFragment extends Fragment {
     private void enableViews() {
         textAddress.setEnabled(true);
         textEmail.setVisibility(View.INVISIBLE);
+        change_pass.setVisibility(View.GONE);
+        edit_image.setVisibility(View.VISIBLE);
+        title_profile.setText(R.string.edit_profile);
+
         textName.setEnabled(true);
         textPhone.setEnabled(true);
         circleImageView.setClickable(true);
     }
 
     private void disableViews() {
+        title_profile.setText(R.string.profile);
+        change_pass.setVisibility(View.VISIBLE);
+        edit_image.setVisibility(View.GONE);
         textAddress.setEnabled(false);
         textEmail.setVisibility(View.VISIBLE);
         textEmail.setEnabled(false);
@@ -207,12 +237,16 @@ public class ProfileFragment extends Fragment {
         editor = preferences.edit();
         getUserFromShared();
         btnSaveEdit = view.findViewById(R.id.btn_save_changes);
+        change_pass = view.findViewById(R.id.change_pass);
+        title_profile = view.findViewById(R.id.title_profile);
+        edit_image = view.findViewById(R.id.edit_image);
         textPhone = view.findViewById(R.id.phone_profile);
         textName = view.findViewById(R.id.user_name_profile);
         textEmail = view.findViewById(R.id.email_profile);
         textAddress = view.findViewById(R.id.address_profile);
         circleImageView = view.findViewById(R.id.image_profile);
 
+        edit_image.setVisibility(View.GONE);
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -222,19 +256,30 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
+        change_pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                   Intent intent = new Intent(getActivity() , ChangePassActivity.class);
+                  startActivity(intent);
+            }
+        });
         pass = userModel.getPassword();
         user_id = userModel.getUserId();
         textAddress.setText(userModel.getAddress());
         textEmail.setText(userModel.getEmail());
         textName.setText(userModel.getUserName());
         textPhone.setText(userModel.getPhone());
-        if (userModel.getImage() == null || userModel.getImage().equals("")){
+
+      /*  if (userModel.getImage() == null || userModel.getImage().equals("")){
             circleImageView.setImageResource(R.drawable.ic_person);}
         else{
-         //   Toast.makeText(getContext(), userModel.getImage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"--------------"+ userModel.getImage(), Toast.LENGTH_SHORT).show();
             new GetImageFromUrl(circleImageView).execute(userModel.getImage());
-            //Glide.with(ProfileFragment.this).load(userModel.getImage()).into(circleImageView);
+            Glide.with(ProfileFragment.this).load(userModel.getImage()).into(circleImageView);
+
             }
+       */
 
 
     }

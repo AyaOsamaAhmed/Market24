@@ -3,7 +3,6 @@ package com.ka8eem.market24.ui.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -27,8 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.Notification.Client;
 import com.ka8eem.market24.Notification.Data;
 import com.ka8eem.market24.Notification.MyResponse;
@@ -39,13 +35,9 @@ import com.ka8eem.market24.interfaces.DataInterface;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.RequestModel;
 import com.ka8eem.market24.models.UserFirebaseModel;
-import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.ui.activities.CattingActivity;
-import com.ka8eem.market24.ui.activities.ProductDetails;
 import com.ka8eem.market24.viewmodel.ProductViewModel;
 
-import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -136,7 +128,7 @@ public class MessageDialog extends AppCompatDialogFragment {
 
     private void makeRequest() {
         ProductViewModel productViewModel = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
-        RequestModel requestModel = new RequestModel(productModel.getProductID() + "", userId, productModel.getUserID() + "", productModel.getPrice());
+        RequestModel requestModel = new RequestModel(productModel.getAdsID() + "", userId, productModel.getUserID() + "", productModel.getPrice());
 
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.show();

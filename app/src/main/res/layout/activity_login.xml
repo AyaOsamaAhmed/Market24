@@ -38,7 +38,7 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="20dp"
             android:layout_weight="0.5"
-            android:drawableStart="@drawable/email"
+            android:drawableStart="@drawable/ic_message_grey"
             android:gravity="center_vertical"
             android:hint="@string/email"
             android:drawablePadding="12dp"

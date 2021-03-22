@@ -14,15 +14,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.ProductModel;
-import com.ka8eem.market24.ui.activities.ProductDetails;
+import com.ka8eem.market24.ui.fragments.ProductDetailsFragment;
 import com.ka8eem.market24.util.Constants;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -41,9 +39,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
     }
 
-    private int isFav(int _id) {
+    private int isFav(String _id) {
         for (int i = 0; i < listInFav.size(); i++)
-            if (listInFav.get(i).getProductID() == _id)
+            if (listInFav.get(i).getAdsID() == _id)
                 return i;
         return -1;
     }
@@ -81,23 +79,23 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
         ProductModel model = list.get(position);
         String curLang = Constants.getLocal(context);
         String price = model.getPrice();
-        String cityName = model.getCityName();
-        String catName = model.getCategoryName();
-        String time = model.getDateTime();
+      //  String cityName = model.getCityName();
+      //  String catName = model.getCategoryName();
+        String time = model.getDate();
         time = time.substring(0, time.indexOf(' '));
         if (curLang.equals("AR")) {
             price = price + " ل.س";
         } else {
             price = price + " L.S";
-            cityName = model.getCityNameEn();
-            catName = model.getCategoryNameEn();
+           // cityName = model.getCityNameEn();
+           // catName = model.getCategoryNameEn();
         }
-        Glide.with(context).load(model.getProductImages().get(0).getImgUrl()).fitCenter().into(holder.imageView);
-        holder.textCity.setText(cityName);
+     //   Glide.with(context).load(model.getProductImages().get(0).getImgUrl()).fitCenter().into(holder.imageView);
+      //  holder.textCity.setText(cityName);
         holder.textSalary.setText(price);
-        holder.textProductName.setText(model.getProductName());
-        holder.textUserName.setText(model.getUserName());
-        holder.textCatType.setText(catName);
+        holder.textProductName.setText(model.getProduct_name());
+     //   holder.textUserName.setText(model.getUserName());
+    //    holder.textCatType.setText(catName);
         holder.textDataTime.setText(time);
         holder.imageStar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,18 +104,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
             }
         });
 
-        int ok = isFav(model.getProductID());
+        int ok = isFav(model.getAdsID());
         Drawable drw = context.getResources().getDrawable(R.drawable.ic_favorite_border);
         if (ok > -1) {
             drw = context.getResources().getDrawable(R.drawable.ic_favorite);
         }
         holder.imageStar.setImageDrawable(drw);
-        holder.txtSubArea.setText(list.get(position).getSubCityName());
+      //  holder.txtSubArea.setText(list.get(position).getSubCityName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ProductDetails.class);
-                intent.putExtra("product_id", model.getProductID() + "");
+                Intent intent = new Intent(context, ProductDetailsFragment.class);
+                intent.putExtra("product_id", model.getAdsID() + "");
                 context.startActivity(intent);
             }
         });
@@ -125,7 +123,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
     private void addToFavourite(MyViewHolder holder, ProductModel productModel) {
         String toastMess = "";
-        int _id = productModel.getProductID();
+        String _id = productModel.getAdsID();
         Gson gson = new Gson();
         String json = preferences.getString("listFav", null);
         Type type = new TypeToken<ArrayList<ProductModel>>() {

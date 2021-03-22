@@ -4,11 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ka8eem.market24.interfaces.DataInterface;
 import com.ka8eem.market24.models.AdsModel;
-import com.ka8eem.market24.models.CategoryModel;
-import com.ka8eem.market24.models.CityModel;
+import com.ka8eem.market24.models.AreaModel;
 import com.ka8eem.market24.models.ColorModel;
 import com.ka8eem.market24.models.ForgetPasswordResponse;
-import com.ka8eem.market24.models.ImageModel;
+import com.ka8eem.market24.models.MainModel;
 import com.ka8eem.market24.models.ModelsOfCarModel;
 import com.ka8eem.market24.models.PannerModel;
 import com.ka8eem.market24.models.PaymentAdsModel;
@@ -29,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -71,12 +69,16 @@ public class DataClient {
         return INSTANCE;
     }
 
-    public Call<ArrayList<CategoryModel>> getAllCategories() {
+    public Call<MainModel> getAllCategories() {
         return dataInterface.getAllCategories();
     }
 
-    public Call<ArrayList<CityModel>> getAllCities() {
-        return dataInterface.getAllCities();
+    public Call<MainModel> getAllAreas() {
+        return dataInterface.getAllAreas();
+    }
+
+    public Call<MainModel> getHome() {
+        return dataInterface.getHome();
     }
 
     public Call<ArrayList<ProductModel>> getProducts(String catID,
@@ -116,7 +118,7 @@ public class DataClient {
     }
 
 
-    public Call<RegisterResponse> uploadProduct(AdsModel adsModel) {
+    public Call<MainModel> uploadProduct(AdsModel adsModel) {
         return dataInterface.uploadProduct(adsModel);
     }
 
@@ -136,7 +138,7 @@ public class DataClient {
         return dataInterface.getAdsByCategory(id);
     }
 
-    public Call<ArrayList<SubCategoryModel>> getSubCategory(String id) {
+    public Call<MainModel> getSubCategory(String id) {
         return dataInterface.getSubCategory(id);
     }
 
@@ -148,7 +150,7 @@ public class DataClient {
         return dataInterface.deleteProduct(id);
     }
 
-    public Call<ArrayList<CityModel>> getSubArea(String id) {
+    public Call<MainModel> getSubArea(String id) {
         return dataInterface.getSubAreas(id);
     }
 
@@ -156,9 +158,11 @@ public class DataClient {
         return dataInterface.uploadFiles(id, images);
     }
 
-    public Call<String> uploadImagesAsString(UploadImageModel model) {
+   /* public Call<String> uploadImagesAsString(UploadImageModel model) {
         return dataInterface.uploadImagesAsString(model);
     }
+
+    */
 
     public Call<String> updateImagesAsString(UploadImageModel model) {
         return dataInterface.updateImagesAsString(model);

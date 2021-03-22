@@ -118,6 +118,8 @@ public class CarActivity extends AppCompatActivity {
                 yearOfCreate.setText(text + ": " + year);
             }
         });
+       /*
+
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +151,7 @@ public class CarActivity extends AppCompatActivity {
                             color,
                             desc
                     );
-                    AdsModel model = new AdsModel(
+                 /*   AdsModel model = new AdsModel(
                             adsModel.getAdsTitle(),
                             adsModel.getAdsCatId(),
                             adsModel.getAdsSubCategoryId(),
@@ -163,9 +165,11 @@ public class CarActivity extends AppCompatActivity {
                             new BuildingConstantDetailsModel(),
                             new OtherConstantDetailsModel()
                     );
+
+
                     ProductViewModel viewModel = ViewModelProviders.of(CarActivity.this).
                             get(ProductViewModel.class);
-                    viewModel.uploadProduct(model);
+                   // viewModel.uploadProduct(model);
                     final ProgressDialog progressDialog = new ProgressDialog(CarActivity.this);
                     progressDialog.show();
                     progressDialog.setContentView(R.layout.progress_dialog);
@@ -201,6 +205,9 @@ public class CarActivity extends AppCompatActivity {
                 }
             }
         });
+
+        */
+
         initSpinners();
         radioGroupStatus.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

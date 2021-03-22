@@ -50,7 +50,7 @@ public class EditBuildingActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        BuildingConstantDetailsModel model = adsModel.getBuildingConstantDetailsModel();
+      //  BuildingConstantDetailsModel model = adsModel.getBuildingConstantDetailsModel();
         valid = true;
         btnEdit = findViewById(R.id.upload_edit_building);
         btnCancel = findViewById(R.id.cancel_edit_building);
@@ -62,17 +62,18 @@ public class EditBuildingActivity extends AppCompatActivity {
         textLuxuries = findViewById(R.id.edit_building_luxuries);
         textFloorNumber = findViewById(R.id.edit_building_floor);
         textFurnished = findViewById(R.id.edit_building_furnished);
-if(model != null)
-{
-    textNumberOfRooms.setText(model.getNumOfRooms());
-    textNumberOfBathroom.setText(model.getNumOfBathroom());
-    textSpace.setText(model.getSpace());
-    textDetails.setText(model.getDetails());
-    textFinishing.setText(model.getFinishing());
-    textLuxuries.setText(model.getLux());
-    textFloorNumber.setText(model.getFloorNumber());
-    textFurnished.setText(model.getFurnished());
-}
+       /* if(model != null)
+        {
+        textNumberOfRooms.setText(model.getNumOfRooms());
+        textNumberOfBathroom.setText(model.getNumOfBathroom());
+        textSpace.setText(model.getSpace());
+        textDetails.setText(model.getDetails());
+        textFinishing.setText(model.getFinishing());
+        textLuxuries.setText(model.getLux());
+        textFloorNumber.setText(model.getFloorNumber());
+        textFurnished.setText(model.getFurnished());
+        }
+        */
 
         /*
          * images to uploaded
@@ -102,7 +103,7 @@ if(model != null)
                         furnished,
                         desc
                 );
-                AdsModel model = new AdsModel(
+              /*  AdsModel model = new AdsModel(
                         adsModel.getAdsTitle(),
                         adsModel.getAdsCatId(),
                         adsModel.getAdsSubCategoryId(),
@@ -116,10 +117,12 @@ if(model != null)
                         details,
                         null
                 );
-                model.setID_ADS(adsModel.getID_ADS());
+
+               */
+               // model.setID_ADS(adsModel.getID_ADS());
                 ProductViewModel viewModel = ViewModelProviders.of(EditBuildingActivity.this).
                         get(ProductViewModel.class);
-                viewModel.updateProduct(model);
+               // viewModel.updateProduct(model);
                 final ProgressDialog progressDialog = new ProgressDialog(EditBuildingActivity.this);
                 progressDialog.show();
                 progressDialog.setContentView(R.layout.progress_dialog);

@@ -6,13 +6,13 @@
     <string name="arabic_lang">العربية</string>
     <string name="choose_language">أختر اللغة</string>
     <string name="home">الصفحة الرئيسية</string>
-    <string name="vehicles">المركبات</string>
-    <string name="all_categories">كل الفئات</string>
+    <string name="vehicles">سيارات</string>
+    <string name="all_categories">الفئات</string>
     <string name="gallery">الأكثرطلباً</string>
     <string name="recommended_for_you">تمت إضافته مؤخراً</string>
     <string name="property">غير ذلك</string>
-    <string name="_home">المنازل</string>
-    <string name="fashion">الموضة</string>
+    <string name="_home">العقارات</string>
+    <string name="fashion">فستان</string>
     <string name="login">تسجيل الدخول</string>
     <string name="register2">انشاء حساب</string>
     <string name="don_t_have_an_account">ليس لديك حساب؟</string>
@@ -39,7 +39,7 @@
     <string name="egypt">مصر</string>
     <string name="select_city">اختر المدينة</string>
     <string name="select_category">اختر الفئة</string>
-    <string name="take_photo">قم بتحميل صور لمنتجك بحد أقصى 5 صور</string>
+    <string name="take_photo">قم بتحميل صور لمنتجك</string>
     <string name="type_req">نوع الطلب</string>
     <string name="Show">عرض</string>
     <string name="product_details">تفاصيل المنتج</string>
@@ -186,7 +186,7 @@
     <string name="bathroom_number">عدد الحمامات</string>
     <string name="floor_number">الدور</string>
     <string name="luxuries">الكماليات</string>
-    <string name="furnished">مفروش</string>
+    <string name="furnished">اثاث منزلى</string>
     <string name="other">الحالة</string>
     <string name="vehicle_type">نوع المركبة</string>
     <string name="vehicle_model">موديل المركبة</string>
@@ -200,7 +200,7 @@
     <string name="ads_uploaded">تم رفع الإعلان بنجاح</string>
     <string name="forget">هل نسيت كلمة المرور!</string>
     <string name="change">تغيير</string>
-    <string name="call_cats">كل الفئات</string>
+    <string name="call_cats">الفئات</string>
     <string name="save_with_out_edit_images">حفظ بدون الصور</string>
     <string name="save_with_edit_images">حفظ مع الصور</string>
     <string name="edit_product">تعديل الإعلان</string>
@@ -220,5 +220,19 @@
     <string name="log_in">تسجيل </string>
     <string name="go">دخول !</string>
     <string name="enter">الدخول</string>
-    <string name="change_pass">تغير كلمه المرور</string>
+    <string name="change_pass">تغير كلمه المرور ؟</string>
+    <string name="create_account">انشاء حساب</string>
+    <string name="confirm_password">تاكيد كلمه المرور</string>
+    <string name="edit_profile">تعديل البروفيل</string>
+    <string name="change_pass_success">تم تغير كلمه المرور بنجاح</string>
+    <string name="new_product">"اضافه منتج "</string>
+    <string name="enter_price">ادخل السعر - قابل للتفاوض</string>
+    <string name="details_take_photo">"بحد أقصى 5 صور "</string>
+    <string name="publish">رفع الاعلان</string>
+    <string name="choose_location">اختر الموقع</string>
+    <string name="upload_ads_sucess">تم رفع الاعلان بنجاح</string>
+    <string name="animal">حيوانات</string>
+    <string name="num">ادخل رقم الهاتف</string>
+    <string name="sub_category">تصنيف فرعى</string>
+    <string name="all_sub_of">كل الفروع الخاصه ب</string>
 </resources>

@@ -70,6 +70,7 @@ public class VehiclesActivity extends AppCompatActivity {
         textKilometer = findViewById(R.id.vehicle_km);
         btnUpload = findViewById(R.id.ok_go);
         btnCancel = findViewById(R.id.cancel);
+        /*
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +97,7 @@ public class VehiclesActivity extends AppCompatActivity {
                             color,
                             desc
                     );
-                    AdsModel model = new AdsModel(
+                     AdsModel model = new AdsModel(
                             adsModel.getAdsTitle(),
                             adsModel.getAdsCatId(),
                             adsModel.getAdsSubCategoryId(),
@@ -110,9 +111,11 @@ public class VehiclesActivity extends AppCompatActivity {
                             new BuildingConstantDetailsModel(),
                             new OtherConstantDetailsModel()
                     );
+
+
                     ProductViewModel viewModel = ViewModelProviders.of(VehiclesActivity.this).
                             get(ProductViewModel.class);
-                    viewModel.uploadProduct(model);
+                 //   viewModel.uploadProduct(model);
                     final ProgressDialog progressDialog = new ProgressDialog(VehiclesActivity.this);
                     progressDialog.show();
                     progressDialog.setContentView(R.layout.progress_dialog);
@@ -149,6 +152,7 @@ public class VehiclesActivity extends AppCompatActivity {
                 }
             }
         });
+        */
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

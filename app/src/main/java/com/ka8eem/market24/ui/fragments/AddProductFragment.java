@@ -13,58 +13,49 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
 
 import com.google.android.material.navigation.NavigationView;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.adapters.ImageProductAdapter;
+import com.ka8eem.market24.databinding.FragmentAddProductBinding;
 import com.ka8eem.market24.models.AdsModel;
 import com.ka8eem.market24.models.CategoryModel;
-import com.ka8eem.market24.models.CityModel;
+import com.ka8eem.market24.models.AreaModel;
+import com.ka8eem.market24.models.MainModel;
+import com.ka8eem.market24.models.SubAreaModel;
 import com.ka8eem.market24.models.SubCategoryModel;
 import com.ka8eem.market24.models.UserModel;
-import com.ka8eem.market24.ui.activities.OtherDetailsActivity;
-import com.ka8eem.market24.ui.activities.BuildingActivity;
-import com.ka8eem.market24.ui.activities.CarActivity;
-import com.ka8eem.market24.ui.activities.VehiclesActivity;
+import com.ka8eem.market24.ui.activities.HomeActivity;
 import com.ka8eem.market24.util.Constants;
+import com.ka8eem.market24.util.Keys;
 import com.ka8eem.market24.viewmodel.CategoryViewModel;
-import com.theartofdev.edmodo.cropper.CropImage;
-
+import com.ka8eem.market24.viewmodel.ProductViewModel;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Struct;
 import java.util.ArrayList;
-
-import okhttp3.MediaType;
+import java.util.List;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-
 import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
 
 public class AddProductFragment extends Fragment {
 
@@ -72,114 +63,147 @@ public class AddProductFragment extends Fragment {
         // Required empty public constructor
     }
 
-    //widgets
-    RecyclerView recyclerViewProductImages;
-    Spinner categorySpinner, subCategorySpinner, areaSpinner, subAreaSpinner;
-    Button btnCancel, btnNext;
-    EditText editTextPrice, otherArea, productName;
-    TextView empty;
-    ImageView imageView;
-    CheckBox priceSwitch;
-    CheckBox checkBoxAddArea;
-    SearchView searchView;
-    ImageView filterImage;
+    FragmentAddProductBinding fragmentAddProductBinding ;
+    LinearLayout searchView;
+    private DrawerLayout drawerLayout;
     // vars
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
+    String curLang = "AR";
     public static ArrayList<Uri> imageUris;
-    boolean valid;
-    String price, priceType, subArea, name;
+    public static ArrayList<File> imageFiles;
+
     int areaIndex, subAreaIndex, categoryIndex, subCategoryIntex;
     ImageProductAdapter imageProductAdapter;
     CategoryViewModel categoryViewModel;
+    ProductViewModel  viewModel ;
     ArrayList<CategoryModel> catList = new ArrayList<>();
-    ArrayList<CityModel> cityList = new ArrayList<>();
+    ArrayList<AreaModel> areaList = new ArrayList<>();
     ArrayAdapter<String> catAdapter, cityAdapter, subAreaAdapter, subCatAdapter;
     ArrayList<SubCategoryModel> subCategoryList = new ArrayList<>();
-    ArrayList<CityModel> subAreaList = new ArrayList<>();
+    ArrayList<SubAreaModel> subAreaList = new ArrayList<>();
     public static ArrayList<MultipartBody.Part> images;
     public static ArrayList<String> encodedImages;
+      ProgressDialog progressDialog ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_add_product, container, false);
-        initViews(view);
-        return view;
+        fragmentAddProductBinding =  FragmentAddProductBinding.inflate(inflater, container, false);
+        initViews();
+        return fragmentAddProductBinding.getRoot();
     }
 
-    private void initViews(View view) {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        searchView = (SearchView) getActivity().findViewById(R.id.search_view);
+        //You need to add the following line for this solution to work; thanks skayred
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener( new View.OnKeyListener()
+        {
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    //  FragmentTransaction tx = getFragmentManager().beginTransaction();
+                    //  tx.replace(R.id.fragment_container, new AddProductFragment() ).addToBackStack( "tag" ).commit();
+
+                    return true;
+                }
+                return false;
+            }
+        } );
+
+    }
+
+    private void initViews() {
+
+        searchView = (LinearLayout) getActivity().findViewById(R.id.relative1);
         searchView.setVisibility(View.GONE);
-        filterImage = (ImageView) getActivity().findViewById(R.id.filter_icon);
-        filterImage.setVisibility(View.GONE);
+        drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        //-------------------
         imageUris = new ArrayList<>();
+        imageFiles =new ArrayList<>();
         encodedImages = new ArrayList<>();
         preferences = getContext().getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
         editor = preferences.edit();
-        valid = true;
-        priceType = "0";
+        curLang = Constants.getLocal(getContext());
+        //-----------------
         areaIndex = subAreaIndex = categoryIndex = subCategoryIntex = -1;
         categoryViewModel = ViewModelProviders.of(getActivity()).get(CategoryViewModel.class);
-        recyclerViewProductImages = view.findViewById(R.id.recycler_view_product_image);
-        imageUris = new ArrayList<>();
-        checkBoxAddArea = view.findViewById(R.id.check_other_area);
-        priceSwitch = view.findViewById(R.id.switch_price);
-        otherArea = view.findViewById(R.id.other_area);
-        imageView = view.findViewById(R.id.take_img);
-        empty = view.findViewById(R.id.empty);
-        editTextPrice = view.findViewById(R.id.edit_text_price);
-        btnNext = view.findViewById(R.id.btn_next);
-        btnCancel = view.findViewById(R.id.btn_cancel_add_product);
-        productName = view.findViewById(R.id.edit_text_ads_name);
-        categorySpinner = view.findViewById(R.id.add_product_category_spinner);
-        // categorySpinner.setFocusable(true);
-        // categorySpinner.setFocusableInTouchMode(true);
-        subCategorySpinner = view.findViewById(R.id.add_product_sub_category_spinner);
-        // subCategorySpinner.setFocusable(true);
-        // subCategorySpinner.setFocusableInTouchMode(true);
-        areaSpinner = view.findViewById(R.id.add_product_area_spinner);
-        // areaSpinner.setFocusable(true);
-        // areaSpinner.setFocusableInTouchMode(true);
-        subAreaSpinner = view.findViewById(R.id.add_product_sub_area_spinner);
-        // subAreaSpinner.setFocusable(true);
-        // subAreaSpinner.setFocusableInTouchMode(true);
+        viewModel = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
+        //-------------
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+        //----------------
+        if(! preferences.getString(Keys.longtitude,"").equals("")){
+            fragmentAddProductBinding.editLocation.setText(preferences.getString(Keys.latitude,"") +"--"+preferences.getString(Keys.longtitude,""));
+        }
+        //---------
+        categoryViewModel.subCategoryList.observe(getActivity(), new Observer<List<SubCategoryModel>>() {
+            @Override
+            public void onChanged(List<SubCategoryModel> subCategoryModels) {
+                if (getActivity() != null && getContext() != null) {
+                    subCategoryList = new ArrayList<>(subCategoryModels);
+                    ArrayList<String> listNames = new ArrayList<>();
+                    // subCategoryList.add(0, new SubCategoryModel(-1, "", ""));
+                    //  listNames.add(getString(R.string.choose_sub_category));
+                    for (SubCategoryModel it : subCategoryModels) {
+                        if (curLang.equals("AR"))
+                            listNames.add(it.getCubCatName());
+                        else
+                            listNames.add(it.getSubCatNameEn());
+                    }
 
-        areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    subCatAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_textview, listNames);
+                    subCatAdapter.setDropDownViewResource(R.layout.text_drop);
+                    fragmentAddProductBinding.subCategorySpinner.setAdapter(subCatAdapter);
+                    subCategoryIntex = subCategoryList.get(0).getSub_id();
+                }
+            }
+        });
+
+        categoryViewModel.subAreaList.observe(getActivity(), new Observer<List<SubAreaModel>>() {
+                    @Override
+                    public void onChanged(List<SubAreaModel> subAreaModels) {
+                        if (getActivity() != null && getContext() != null) {
+                            subAreaList = new ArrayList<>(subAreaModels);
+                            List<String> listNames = new ArrayList<>();
+                            //  listNames.add(getString(R.string.choose_sub_area));
+                            // subAreaList.add(0, new AreaModel(-1, ""));
+
+                            for (SubAreaModel it : subAreaModels) {
+                                if (curLang.equals("AR"))
+                                    listNames.add(it.getSubAreaName());
+                                else
+                                    listNames.add(it.getSubAreaNameEn());
+                            }
+                            subAreaAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_textview, listNames);
+                            subAreaAdapter.setDropDownViewResource(R.layout.text_drop);
+                         //   fragmentAddProductBinding.subAreaSpinner.setAdapter(subAreaAdapter);
+                            subAreaIndex  = subAreaList.get(0).getSubAreaID();
+                        }
+                    }
+                }
+        );
+
+        //------------
+     /*   fragmentAddProductBinding.areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (getActivity() != null && cityList != null && cityList.size() > 0) {
+                if (getActivity() != null && areaList != null && areaList.size() > 0) {
                     areaIndex = position;
                     if (position != 0) {
-                        String _id = cityList.get(position).getCityID() + "";
+                        areaIndex = areaList.get(position).getAreaID() ;
                         subAreaList = new ArrayList<>();
-                        categoryViewModel.getSubArea(_id);
-                        categoryViewModel.subAreaList.observe(getActivity(), new Observer<ArrayList<CityModel>>() {
-                                    @Override
-                                    public void onChanged(ArrayList<CityModel> cityModels) {
-                                        if (getActivity() != null && getContext() != null) {
-                                            subAreaList = new ArrayList<>(cityModels);
-                                            String curLang = "AR";
-                                            ArrayList<String> listNames = new ArrayList<>();
-                                            listNames.add(getString(R.string.choose_sub_area));
-                                            subAreaList.add(0, new CityModel(-1, ""));
-                                            curLang = Constants.getLocal(getContext());
-                                            for (CityModel it : cityModels) {
-                                                if (curLang.equals("AR"))
-                                                    listNames.add(it.getCityName());
-                                                else
-                                                    listNames.add(it.getAreaNameEn());
-                                            }
-                                            subAreaAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_textview, listNames);
-                                            subAreaAdapter.setDropDownViewResource(R.layout.text_drop);
-                                            subAreaSpinner.setAdapter(subAreaAdapter);
-                                        }
-                                    }
-                                }
-                        );
-                    }
+                        categoryViewModel.getSubArea(areaIndex+"");
+                     }
                 }
             }
 
@@ -189,7 +213,9 @@ public class AddProductFragment extends Fragment {
             }
         });
 
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      */
+
+        fragmentAddProductBinding.categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (getActivity() != null && catList != null && catList.size() > 0) {
@@ -197,32 +223,8 @@ public class AddProductFragment extends Fragment {
                     ArrayList<String> list = new ArrayList<>();
                     if (position != 0) {
                         subCategoryList = new ArrayList<>();
-                        String _id = catList.get(position).getCategoryId() + "";
-                        categoryViewModel.getSubCategory(_id);
-
-                        categoryViewModel.subCategoryList.observe(getActivity(), new Observer<ArrayList<SubCategoryModel>>() {
-                            @Override
-                            public void onChanged(ArrayList<SubCategoryModel> subCategoryModels) {
-                                if (getActivity() != null && getContext() != null) {
-                                    subCategoryList = new ArrayList<>(subCategoryModels);
-                                    String curLang = "AR";
-                                    curLang = Constants.getLocal(getContext());
-                                    ArrayList<String> listNames = new ArrayList<>();
-                                    subCategoryList.add(0, new SubCategoryModel(-1, "", ""));
-                                    listNames.add(getString(R.string.choose_sub_category));
-                                    for (SubCategoryModel it : subCategoryModels) {
-                                        if (curLang.equals("AR"))
-                                            listNames.add(it.getCubCatName());
-                                        else
-                                            listNames.add(it.getSubCatNameEn());
-                                    }
-
-                                    subCatAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_textview, listNames);
-                                    subCatAdapter.setDropDownViewResource(R.layout.text_drop);
-                                    subCategorySpinner.setAdapter(subCatAdapter);
-                                }
-                            }
-                        });
+                        categoryIndex = catList.get(position).getCategoryId() ;
+                        categoryViewModel.getSubCategory(categoryIndex+"");
                     }
                 }
             }
@@ -233,7 +235,7 @@ public class AddProductFragment extends Fragment {
             }
         });
 
-        subCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        fragmentAddProductBinding.subCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 subCategoryIntex = position;
@@ -245,7 +247,7 @@ public class AddProductFragment extends Fragment {
             }
         });
 
-        subAreaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+/*        fragmentAddProductBinding.subAreaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position,
                                        long id) {
@@ -258,68 +260,43 @@ public class AddProductFragment extends Fragment {
             }
         });
 
-        checkBoxAddArea.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked == true) {
-                    otherArea.setVisibility(View.VISIBLE);
-                    otherArea.setEnabled(true);
-                    //  otherArea.setFocusable(true);
-                } else {
-                    subArea = "-1";
-                    otherArea.setVisibility(View.GONE);
-                    otherArea.setEnabled(false);
-                    // otherArea.setFocusable(false);
-                }
-            }
-        });
+ */
 
-        priceSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    priceType = "1";
-                else
-                    priceType = "0";
-            }
-        });
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+        fragmentAddProductBinding.editLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (getActivity() != null && getContext() != null) {
                     NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
                     navigationView.setCheckedItem(R.id.nav_home);
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, new MapFragment()).commit();
                 }
             }
         });
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
+        fragmentAddProductBinding.btnPublishProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                valid = true;
-                price = editTextPrice.getText().toString().trim();
-                name = productName.getText().toString();
-                validInput();
-                if (valid) {
-                    String catId = catList.get(categoryIndex).getCategoryId() + "";
-                    String subCatId = subCategoryList.get(subCategoryIntex).getSubCatId() + "";
-                    String areaId = cityList.get(areaIndex).getCityID() + "";
-                    String subAreaId = subAreaList.get(subAreaIndex).getCityID() + "";
-                    String _otherArea = null;
-                    if (checkBoxAddArea.isChecked()) {
-                        _otherArea = otherArea.getText().toString();
-                    } else
-                        _otherArea = "-1";
+                if (validInput()) {
+                    progressDialog.show();
                     UserModel userModel = Constants.getUser(getContext());
 
-                    if (userModel == null) {
-                        Toast.makeText(getContext(), "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
                     String userId = userModel.getUserId() + "";
-                    AdsModel adsModel = new AdsModel(name, catId, subCatId, userId, areaId, subAreaId, _otherArea, price, priceType);
-                    Intent intent = null;
+                   String price = fragmentAddProductBinding.editPrice.getText().toString().trim();
+                   String name = fragmentAddProductBinding.editProductName.getText().toString();
+                    String catId = catList.get(categoryIndex).getCategoryId() + "";
+                    String subCatId = subCategoryList.get(subCategoryIntex).getSubCatId() + "";
+                    String areaId = areaList.get(areaIndex).getAreaID() + "";
+                    String subAreaId = subAreaList.get(subAreaIndex).getSubAreaID() + "";
+                    String description = fragmentAddProductBinding.editDescription.getText().toString();
+                    String latitude = preferences.getString(Keys.latitude,"");
+                    String longtitude =preferences.getString(Keys.longtitude,"");
+
+                    AdsModel adsModel = new AdsModel(userId, catId, subCatId , areaId, subAreaId,name, price, description , imageUris,latitude,longtitude);
+                    Log.i(TAG, "onClick: "+ userId +"..."+catId +".."+subCatId+".."+areaId +".."+subAreaId+".."+price+"..."+description);
+                    viewModel.uploadProduct(adsModel);
+
+                 /*
+                     Intent intent = null;
                     String productType = catList.get(categoryIndex).getIsVehicles();
                     if (productType.equals("1")) {
                         if (subCategoryList.get(subCategoryIntex).getIsCar().equals("1"))
@@ -331,14 +308,17 @@ public class AddProductFragment extends Fragment {
                     } else if (productType.equals("0"))
                         intent = new Intent(getContext(), OtherDetailsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("ads_model", adsModel);
+               //     bundle.putSerializable("ads_model", adsModel);
                     bundle.putSerializable("images", null);
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                //    startActivity(intent);
+                  */
+
                 }
             }
         });
-        imageView.setOnClickListener(new View.OnClickListener() {
+
+        fragmentAddProductBinding.takeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (imageUris != null && imageUris.size() >= 5) {
@@ -358,20 +338,74 @@ public class AddProductFragment extends Fragment {
             }
         });
 
+        fragmentAddProductBinding.takeImg2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (imageUris != null && imageUris.size() >= 5) {
+                    Toast.makeText(getContext(), getString(R.string.max_images_uploaded), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
+                    return;
+                }
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_images)), 1);
+            }
+        });
+
+        viewModel.mutableUploadProduct.observe((LifecycleOwner) getContext(), new Observer<MainModel>() {
+            @Override
+            public void onChanged(MainModel resultMainModel) {
+                if (resultMainModel.getStatus()) {
+                    Toast.makeText(getContext(), getString(R.string.upload_ads_sucess), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    Intent intent = new Intent(getContext(), HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else{
+                     Toast.makeText(getContext(), resultMainModel.getMessage(), Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+
+              //  Log.e("encodedImagesSize", AddProductFragment.encodedImages.size() + "");
+               /* UploadImageModel imageModel = new UploadImageModel( AddProductFragment.encodedImages);
+                viewModel.uploadImageAsString(imageModel);
+                viewModel.uploadImageAsString.observe(getContext(), new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        if (s.contains("-1-2-3") || s.contains("error")) {
+                            Toast.makeText(getContext(), getString(R.string.connection_error), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            return;
+                        }
+                        Toast.makeText(getContext(), getString(R.string.ads_uploaded), Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+
+                    }
+                });
+                */
+            }
+        });
+
         initSpinners();
+
+
     }
 
     private void initSpinners() {
         catList = new ArrayList<>();
         categoryViewModel.getAllCategories();
-        categoryViewModel.mutableCategoryList.observe(getActivity(), new Observer<ArrayList<CategoryModel>>() {
+        categoryViewModel.mutableCategoryList.observe(getActivity(), new Observer<List<CategoryModel>>() {
             @Override
-            public void onChanged(ArrayList<CategoryModel> categoryModels) {
+            public void onChanged(List<CategoryModel> categoryModels) {
                 if (getActivity() != null && getContext() != null) {
                     catList = new ArrayList<>();
-                    String curLang = "AR";
-                    curLang = Constants.getLocal(getContext());
-                    ArrayList<String> list = new ArrayList<>();
+                     ArrayList<String> list = new ArrayList<>();
                     for (CategoryModel it : categoryModels) {
                         catList.add(it);
                         if (curLang.equals("AR"))
@@ -379,93 +413,104 @@ public class AddProductFragment extends Fragment {
                         else
                             list.add(it.getCatNameEn());
                     }
-                    String all = getContext().getString(R.string.all_categories);
-                    list.add(0, all);
-                    catList.add(0, new CategoryModel(0, all, "0"));
-                    list.remove(list.size() - 1);
+                 //   String all = getContext().getString(R.string.all_categories);
+                  //  list.add(0, all);
+                  //  catList.add(0, new CategoryModel(0, all, "0"));
+                 //   list.remove(list.size() - 1);
                     catAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_textview, list);
                     catAdapter.setDropDownViewResource(R.layout.text_drop);
-                    categorySpinner.setAdapter(catAdapter);
+                    fragmentAddProductBinding.categorySpinner.setAdapter(catAdapter);
+
+                    categoryIndex = catList.get(0).getCategoryId();
+                    categoryViewModel.getSubCategory(categoryIndex+"");
                 }
             }
         });
-        cityList = new ArrayList<>();
+        areaList = new ArrayList<>();
         categoryViewModel.getAllCities();
-        categoryViewModel.mutableCityList.observe(getActivity(), new Observer<ArrayList<CityModel>>() {
+        categoryViewModel.mutableAreaList.observe(getActivity(), new Observer<List<AreaModel>>() {
             @Override
-            public void onChanged(ArrayList<CityModel> cityModels) {
+            public void onChanged(List<AreaModel> cityModels) {
                 if (getActivity() != null && getContext() != null) {
-                    cityList = new ArrayList<>();
+                    areaList = new ArrayList<>();
                     ArrayList<String> list = new ArrayList<>();
-                    String curLang = "AR";
-                    curLang = Constants.getLocal(getContext());
-                    for (CityModel model : cityModels) {
-                        cityList.add(model);
+                    for (AreaModel model : cityModels) {
+                        areaList.add(model);
                         if (curLang.equals("AR"))
-                            list.add(model.getCityName());
+                            list.add(model.getAreaName());
                         else
                             list.add(model.getAreaNameEn());
                     }
-                    String all = getContext().getString(R.string.all_cities);
-                    list.add(0, all);
-                    cityList.add(0, new CityModel(0, all));
-                    list.remove(list.size() - 1);
+                //    String all = getContext().getString(R.string.all_cities);
+                //    list.add(0, all);
+                //    areaList.add(0, new AreaModel(0, all));
+                //    list.remove(list.size() - 1);
                     cityAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_textview, list);
                     cityAdapter.setDropDownViewResource(R.layout.text_drop);
-                    areaSpinner.setAdapter(cityAdapter);
+                  //  fragmentAddProductBinding.areaSpinner.setAdapter(cityAdapter);
+                    areaIndex = areaList.get(0).getAreaID();
+                    categoryViewModel.getSubArea(areaIndex+"");
                 }
             }
         });
+        progressDialog.dismiss();
     }
 
-    private void validInput() {
-        if (name.isEmpty()) {
-            productName.setError("");
-            productName.requestFocus();
-            valid = false;
+    private Boolean validInput() {
+        if (fragmentAddProductBinding.editProductName.getText().toString().isEmpty()) {
+            fragmentAddProductBinding.editProductName.setError("");
+            fragmentAddProductBinding.editProductName.requestFocus();
+            return false;
         }
-        if (price == null || price.isEmpty()) {
-            editTextPrice.setError("");
-            editTextPrice.requestFocus();
-            valid = false;
+        else if (fragmentAddProductBinding.editPrice.getText().toString().isEmpty()) {
+            fragmentAddProductBinding.editPrice.setError("");
+            fragmentAddProductBinding.editPrice.requestFocus();
+            return false;
         }
-        if (areaSpinner.getSelectedItemPosition() == -1 || areaSpinner.getSelectedItemPosition() == 0) {
-            areaSpinner.requestFocus();
+        else if ( preferences.getString(Keys.latitude,"").isEmpty()  ) {
+            fragmentAddProductBinding.editLocation.requestFocus();
+            return false;
+        }
+       /* else if (areaIndex != 0) {
+            fragmentAddProductBinding.areaSpinner.requestFocus();
             Toast.makeText(getContext(), getString(R.string.choose_city), Toast.LENGTH_SHORT).show();
-            valid = false;
+            return false;
         }
+        */
 
 
-        if (categorySpinner.getSelectedItemPosition() == -1 || categorySpinner.getSelectedItemPosition() == 0) {
-            categorySpinner.requestFocus();
+        else if (categoryIndex !=0) {
+            fragmentAddProductBinding.categorySpinner.requestFocus();
             Toast.makeText(getContext(), getString(R.string.choose_cat), Toast.LENGTH_SHORT).show();
-            valid = false;
+            return false;
         }
 
-        if (subCategorySpinner.getSelectedItemPosition() == -1 || subCategorySpinner.getSelectedItemPosition() == 0) {
-            subCategorySpinner.requestFocus();
+        else if (subCategoryIntex != 0 ) {
+            fragmentAddProductBinding.subCategorySpinner.requestFocus();
             Toast.makeText(getContext(), getString(R.string.choose_sub_category), Toast.LENGTH_SHORT).show();
-            valid = false;
+            return false;
         }
-        if (imageUris == null || imageUris.size() == 0 || imageUris.size() > 5) {
-            valid = false;
+        else if (imageUris == null || imageUris.size() == 0 || imageUris.size() > 5) {
             Toast.makeText(getContext(), getString(R.string.max_images_uploaded), Toast.LENGTH_SHORT).show();
+            return false;
         }
-        if (checkBoxAddArea.isChecked()) {
-            subAreaIndex = 0;
-            otherArea.setEnabled(true);
-            otherArea.setVisibility(View.VISIBLE);
-            subArea = otherArea.getText().toString();
-            if (subArea == null || subArea.isEmpty()) {
-                otherArea.setError("");
-                otherArea.requestFocus();
-                valid = false;
-            }
-        } else if (subAreaSpinner.getSelectedItemPosition() == -1 || subAreaSpinner.getSelectedItemPosition() == 0) {
-            subAreaSpinner.requestFocus();
+
+      /*  else if (subAreaIndex != 0 ) {
+            fragmentAddProductBinding.subAreaSpinner.requestFocus();
             Toast.makeText(getContext(), getString(R.string.choose_sub_area), Toast.LENGTH_SHORT).show();
-            valid = false;
+            return false;
         }
+
+       */
+        return true ;
+    }
+
+    public void openDrawer(View view) {
+        String lang = Constants.getLocal(getContext());
+        if (lang.equals("AR"))
+            drawerLayout.openDrawer(Gravity.RIGHT);
+        else
+            drawerLayout.openDrawer(Gravity.LEFT);
     }
 
     @Override
@@ -473,10 +518,13 @@ public class AddProductFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Uri uri = null;
+            File filePath = null ;
             ClipData clipData = data.getClipData();
             if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     imageUris.add(clipData.getItemAt(i).getUri());
+                    filePath = new File (clipData.getItemAt(i).getUri().getPath());
+                    imageFiles.add(filePath);
                 }
                 encodedImages = new ArrayList<>();
                 Bitmap bitmap = null;
@@ -517,17 +565,24 @@ public class AddProductFragment extends Fragment {
                         byte[] byteArrayImage = baos.toByteArray();
                         encoded = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
                         encodedImages.add(encoded);
+                        filePath = new File (data.getData().getPath());
+                        imageFiles.add(filePath);
                     }
                 } else
                     encodedImages = new ArrayList<>();
             }
             GridLayoutManager manager = new GridLayoutManager(getContext(), 3);
-            recyclerViewProductImages.setLayoutManager(manager);
+            fragmentAddProductBinding.recyclerViewProductImage.setLayoutManager(manager);
             imageProductAdapter = new ImageProductAdapter(false);
             imageProductAdapter.setList(imageUris);
-            recyclerViewProductImages.setVisibility(View.VISIBLE);
-            empty.setVisibility(View.GONE);
-            recyclerViewProductImages.setAdapter(imageProductAdapter);
+            fragmentAddProductBinding.recyclerViewProductImage.setVisibility(View.VISIBLE);
+            fragmentAddProductBinding.empty.setVisibility(View.GONE);
+            fragmentAddProductBinding.emptyDetails.setVisibility(View.GONE);
+            fragmentAddProductBinding.takeImg.setVisibility(View.GONE);
+            fragmentAddProductBinding.takeImg2.setVisibility(View.VISIBLE);
+            fragmentAddProductBinding.recyclerViewProductImage.setAdapter(imageProductAdapter);
         }
     }
+
+
 }

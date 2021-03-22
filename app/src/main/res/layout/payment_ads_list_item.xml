@@ -1,18 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="110dp"
+    android:layout_height="140dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_white_paid_ads"
     android:layout_margin="5dp">
 
     <ImageView
-        android:id="@+id/payment_ads_img_item"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/logo" />
-    <TextView
+        android:id="@+id/payment_ads_img"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:src="@mipmap/ic_logo_round"
+       android:scaleType="fitXY"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/product_name"
+
+        />
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_6240bb69_8b42_4c83_bf45_d7b364600284_200x200"/>
-</RelativeLayout>
+        android:src="@drawable/ic_paid_right"
+       app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+       />
+
+    <TextView
+        android:id="@+id/product_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/product_name"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/payment_ads_img_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/product_price"
+        />
+    <TextView
+        android:id="@+id/product_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1000$"
+        android:textSize="@dimen/text_size_medium"
+        android:textColor="@color/green"
+         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,12 +2,10 @@ package com.ka8eem.market24.ui.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -34,26 +32,26 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.navigation.NavigationView;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.adapters.EditImageProductAdapter;
 import com.ka8eem.market24.adapters.ImageProductAdapter;
 import com.ka8eem.market24.models.AdsModel;
 import com.ka8eem.market24.models.BuildingConstantDetailsModel;
 import com.ka8eem.market24.models.CategoryModel;
-import com.ka8eem.market24.models.CityModel;
+import com.ka8eem.market24.models.AreaModel;
 import com.ka8eem.market24.models.OtherConstantDetailsModel;
 import com.ka8eem.market24.models.ProductModel;
+import com.ka8eem.market24.models.SubAreaModel;
 import com.ka8eem.market24.models.SubCategoryModel;
 import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.models.VehiclesConstantDetailsModel;
-import com.ka8eem.market24.ui.fragments.HomeFragment;
 import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.viewmodel.CategoryViewModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 
@@ -82,11 +80,11 @@ public class EditProductActivity extends AppCompatActivity {
     EditImageProductAdapter editImageProductAdapter;
     CategoryViewModel categoryViewModel;
     ArrayList<CategoryModel> catList = new ArrayList<>();
-    ArrayList<CityModel> cityList = new ArrayList<>();
+    ArrayList<AreaModel> areaList = new ArrayList<>();
     ArrayAdapter<String> catAdapter, cityAdapter, subAreaAdapter, subCatAdapter ,subCatAdapter2;
     ArrayList<SubCategoryModel> subCategoryList = new ArrayList<>();
     ArrayList<SubCategoryModel> subCategoryList2= new ArrayList<>();
-    ArrayList<CityModel> subAreaList = new ArrayList<>();
+    ArrayList<SubAreaModel> subAreaList = new ArrayList<>();
     public static ArrayList<MultipartBody.Part> images;
     public static ArrayList<String> encodedImages;
     Intent intent;
@@ -119,16 +117,18 @@ public class EditProductActivity extends AppCompatActivity {
         recyclerViewDeleteImages.setLayoutManager(manager);
         //recyclerViewDeleteImages.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         editImageProductAdapter = new EditImageProductAdapter();
-        editImageProductAdapter.setList(productModel.getProductImages());
+     //   editImageProductAdapter.setList(productModel.getProductImages());
         recyclerViewDeleteImages.setAdapter(editImageProductAdapter);
         imageUris = new ArrayList<>();
         checkBoxAddArea = findViewById(R.id.edit_product_check_other_area);
 
         priceSwitch = findViewById(R.id.edit_product_switch_price);
-        if (productModel.getPriceType().equals("1")) {
+       /* if (productModel.getPriceType().equals("1")) {
             priceSwitch.setChecked(true);
         } else
             priceSwitch.setChecked(false);
+
+        */
         otherArea = findViewById(R.id.edit_product_other_area);
         imageView = findViewById(R.id.edit_product_take_img);
         empty = findViewById(R.id.edit_product_empty);
@@ -137,7 +137,7 @@ public class EditProductActivity extends AppCompatActivity {
         btnNext = findViewById(R.id.edit_product_btn_next);
         btnCancel = findViewById(R.id.edit_product_btn_cancel_add_product);
         productName = findViewById(R.id.edit_product_edit_text_ads_name);
-        productName.setText(productModel.getProductName());
+        productName.setText(productModel.getProduct_name());
         categorySpinner = findViewById(R.id.edit_product_category_spinner);
 //        textCurArea = findViewById(R.id.edit_product_cur_area_text);
 //        textCurSubArea = findViewById(R.id.edit_product_cur_sub_area_text);
@@ -159,33 +159,33 @@ public class EditProductActivity extends AppCompatActivity {
         areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (cityList != null && cityList.size() > 0) {
+                if (areaList != null && areaList.size() > 0) {
                     areaIndex = position;
                     if (position != 0) {
-                        String _id = cityList.get(position).getCityID() + "";
+                        String _id = areaList.get(position).getAreaID() + "";
                         subAreaList = new ArrayList<>();
                         categoryViewModel.getSubArea(_id);
-                        categoryViewModel.subAreaList.observe(EditProductActivity.this, new Observer<ArrayList<CityModel>>() {
+                        categoryViewModel.subAreaList.observe(EditProductActivity.this, new Observer<List<SubAreaModel>>() {
                                     @Override
-                                    public void onChanged(ArrayList<CityModel> cityModels) {
-                                        subAreaList = new ArrayList<>(cityModels);
+                                    public void onChanged(List<SubAreaModel> subAreaModels) {
+                                        subAreaList = new ArrayList<>(subAreaModels);
                                         String curLang = "AR";
                                         ArrayList<String> listNames = new ArrayList<>();
                                         listNames.add(getString(R.string.choose_sub_area));
-                                        subAreaList.add(0, new CityModel(-1, ""));
+                                 //       subAreaList.add(0, new AreaModel(-1, ""));
                                         curLang = Constants.getLocal(EditProductActivity.this);
-                                        for (CityModel it : cityModels) {
+                                        for (SubAreaModel it : subAreaModels) {
                                             if (curLang.equals("AR"))
-                                                listNames.add(it.getCityName());
+                                                listNames.add(it.getSubAreaName());
                                             else
-                                                listNames.add(it.getAreaNameEn());
+                                                listNames.add(it.getSubAreaNameEn());
                                         }
                                         subAreaAdapter = new ArrayAdapter<>(EditProductActivity.this, R.layout.spinner_textview, listNames);
                                         subAreaAdapter.setDropDownViewResource(R.layout.text_drop);
                                         subAreaSpinner.setAdapter(subAreaAdapter);
 
                                         for (int i = 1; i < subAreaList.size(); i++) {
-                                            String s = subAreaList.get(i).getCityID()+"";
+                                            String s = subAreaList.get(i).getAreaId()+"";
                                             if (productModel.getSubAreaId().equals(s)) {
                                                 subAreaSpinner.setSelection(i);
                                                 break;
@@ -214,14 +214,14 @@ public class EditProductActivity extends AppCompatActivity {
                         subCategoryList = new ArrayList<>();
                         String _id = catList.get(position).getCategoryId() + "";
                         categoryViewModel.getSubCategory(_id);
-                        categoryViewModel.subCategoryList.observe(EditProductActivity.this, new Observer<ArrayList<SubCategoryModel>>() {
+                        categoryViewModel.subCategoryList.observe(EditProductActivity.this, new Observer<List<SubCategoryModel>>() {
                             @Override
-                            public void onChanged(ArrayList<SubCategoryModel> subCategoryModels) {
+                            public void onChanged(List<SubCategoryModel> subCategoryModels) {
                                 subCategoryList = new ArrayList<>(subCategoryModels);
                                 String curLang = "AR";
                                 curLang = Constants.getLocal(EditProductActivity.this);
                                 ArrayList<String> listNames = new ArrayList<>();
-                                subCategoryList.add(0, new SubCategoryModel(-1, "", ""));
+                             //   subCategoryList.add(0, new SubCategoryModel(-1, "", ""));
                                 listNames.add(getString(R.string.choose_sub_category));
                                 for (SubCategoryModel it : subCategoryModels) {
                                     if (curLang.equals("AR"))
@@ -235,7 +235,7 @@ public class EditProductActivity extends AppCompatActivity {
                                 subCategorySpinner.setAdapter(subCatAdapter);
                                 for (int i = 1; i < subCategoryList.size(); i++) {
                                     String s = subCategoryList.get(i).getSubCatId()+"";
-                                    if (productModel.getSubCatId().equals(s)) {
+                                    if (productModel.getSubCategory().equals(s)) {
                                         subCategorySpinner.setSelection(i);
                                         break;
                                     }
@@ -316,8 +316,8 @@ public class EditProductActivity extends AppCompatActivity {
                 if (valid) {
                     catId = catList.get(categoryIndex).getCategoryId() + "";
                     subCatId = subCategoryList.get(subCategoryIndex).getSubCatId() + "";
-                    areaId = cityList.get(areaIndex).getCityID() + "";
-                    subAreaId = subAreaList.get(subAreaIndex).getCityID() + "";
+                    areaId = areaList.get(areaIndex).getAreaID() + "";
+                    subAreaId = subAreaList.get(subAreaIndex).getAreaId() + "";
                     if (checkBoxAddArea.isChecked()) {
                         subArea = otherArea.getText().toString();
                     } else
@@ -328,16 +328,18 @@ public class EditProductActivity extends AppCompatActivity {
                         return;
                     }
                     String userId = userModel.getUserId() + "";
-                    OtherConstantDetailsModel otherConstantDetailsModel = productModel.getOtherConstantDetails();
+                  /*  OtherConstantDetailsModel otherConstantDetailsModel = productModel.getOtherConstantDetails();
                     VehiclesConstantDetailsModel vehiclesConstantDetailsModel = productModel.getVehiclesConstantDetails();
                     BuildingConstantDetailsModel buildingConstantDetailsModel = productModel.getBuildingConstantDetails();
                     AdsModel adsModel = new AdsModel(name, catId, subCatId, userId, areaId, subAreaId, subArea, price, priceType ,  vehiclesConstantDetailsModel , buildingConstantDetailsModel , otherConstantDetailsModel );
                     adsModel.setID_ADS(productModel.getProductID()+"");
+
+                   */
                    // AdsModel adsModel2 = new AdsModel(adsModel, vehiclesConstantDetailsModel , buildingConstantDetailsModel , otherConstantDetailsModel ); );
                     Intent intent = null;
 
                         String productType = catList.get(categoryIndex).getIsVehicles();
-                        if (productType.equals("1")) {
+                     /*   if (productType.equals("1")) {
                             if (subCategoryList.get(subCategoryIndex).getIsCar().equals("1"))
                                 intent = new Intent(EditProductActivity.this, EditCarActivity.class);
                             else
@@ -346,8 +348,10 @@ public class EditProductActivity extends AppCompatActivity {
                             intent = new Intent(EditProductActivity.this, EditBuildingActivity.class);
                         } else if (productType.equals("0"))
                             intent = new Intent(EditProductActivity.this, EditOtherDetailsActivity.class);
+
+                      */
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("ads_model", adsModel);
+                   // bundle.putSerializable("ads_model", adsModel);
                     intent.putExtras(bundle);
                     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
@@ -382,9 +386,9 @@ public class EditProductActivity extends AppCompatActivity {
 
         catList = new ArrayList<>();
         categoryViewModel.getAllCategories();
-        categoryViewModel.mutableCategoryList.observe(this, new Observer<ArrayList<CategoryModel>>() {
+        categoryViewModel.mutableCategoryList.observe(this, new Observer<List<CategoryModel>>() {
             @Override
-            public void onChanged(ArrayList<CategoryModel> categoryModels) {
+            public void onChanged(List<CategoryModel> categoryModels) {
                 catList = new ArrayList<>();
                 String curLang = "AR";
                 curLang = Constants.getLocal(EditProductActivity.this);
@@ -404,7 +408,7 @@ public class EditProductActivity extends AppCompatActivity {
                 catAdapter.setDropDownViewResource(R.layout.text_drop);
                 categorySpinner.setAdapter(catAdapter);
                 for (int i = 1; i < catList.size(); i++) {
-                    if (catList.get(i).getCategoryId() == productModel.getCategoryID()) {
+                    if (catList.get(i).getCategoryId()+"" == productModel.getCategoryId()) {
 
 
                         categorySpinner.setSelection(i);
@@ -416,32 +420,32 @@ public class EditProductActivity extends AppCompatActivity {
         });
 
 
-        cityList = new ArrayList<>();
+        areaList = new ArrayList<>();
         categoryViewModel.getAllCities();
-        categoryViewModel.mutableCityList.observe(this, new Observer<ArrayList<CityModel>>() {
+        categoryViewModel.mutableAreaList.observe(this, new Observer<List<AreaModel>>() {
             @Override
-            public void onChanged(ArrayList<CityModel> cityModels) {
-                cityList = new ArrayList<>();
+            public void onChanged(List<AreaModel> cityModels) {
+                areaList = new ArrayList<>();
                 ArrayList<String> list = new ArrayList<>();
                 String curLang = "AR";
                 curLang = Constants.getLocal(EditProductActivity.this);
-                for (CityModel model : cityModels) {
-                    cityList.add(model);
+                for (AreaModel model : cityModels) {
+                    areaList.add(model);
                     if (curLang.equals("AR"))
-                        list.add(model.getCityName());
+                        list.add(model.getAreaName());
                     else
                         list.add(model.getAreaNameEn());
                 }
                 String all = getString(R.string.all_cities);
                 list.add(0, all);
-                cityList.add(0, new CityModel(0, all));
-                list.remove(list.size() - 1);
+             //   areaList.add(0, new AreaModel(0, all));
+              //  list.remove(list.size() - 1);
                 //***//
                 cityAdapter = new ArrayAdapter<>(EditProductActivity.this, R.layout.spinner_textview, list);
                 cityAdapter.setDropDownViewResource(R.layout.text_drop);
                 areaSpinner.setAdapter(cityAdapter);
-                for (int i = 1; i < cityList.size(); i++) {
-                    if (productModel.getAreaId().equals(cityList.get(i).getCityID() + "")) {
+                for (int i = 1; i < areaList.size(); i++) {
+                    if (productModel.getAreaId().equals(areaList.get(i).getAreaID() + "")) {
                         areaSpinner.setSelection(i);
                         break;
                     }

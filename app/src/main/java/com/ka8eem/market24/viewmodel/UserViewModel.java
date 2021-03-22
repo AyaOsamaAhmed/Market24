@@ -66,6 +66,7 @@ public class UserViewModel extends ViewModel {
     }
 
     public void updateProfile(UserModel userModel) {
+
         DataClient.getINSTANCE().updateProfile(userModel).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -78,5 +79,6 @@ public class UserViewModel extends ViewModel {
                 Log.e("update profile error", t.getMessage());
             }
         });
+
     }
 }

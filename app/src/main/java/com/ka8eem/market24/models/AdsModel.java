@@ -1,135 +1,147 @@
 package com.ka8eem.market24.models;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class AdsModel implements Serializable {
-    @SerializedName("ID_ADS")
-    private String ID_ADS;
-
-    public String getID_ADS() {
-        return ID_ADS;
-    }
-
-    public void setID_ADS(String ID_ADS) {
-        this.ID_ADS = ID_ADS;
-    }
-
-    @SerializedName("title")
-    private String adsTitle;
-
-    @SerializedName("category")
-    private String adsCatId;
-
-    @SerializedName("sub_category")
-    private String adsSubCategoryId;
 
     @SerializedName("user_id")
-    private String adsUserId;
+    private String user_id;
+
+    @SerializedName("category_id")
+    private String category_id;
+
+    @SerializedName("subcategory_id")
+    private String subcategory_id;
 
     @SerializedName("area_id")
-    private String adsAreaId;
+    private String area_id;
 
-    @SerializedName("sub_area_id")
-    private String adsSubAreaId;
+    @SerializedName("subarea_id")
+    private String subarea_id;
 
-    @SerializedName("other_area")
-    private String otherArea;
+    @SerializedName("name")
+    private String name;
 
     @SerializedName("price")
-    private String adsPrice;
+    private String price;
 
-    @SerializedName("type_price")
-    private String type_price;
+    @SerializedName("description")
+    private String description;
 
-    @SerializedName("constant_details_Vichels")
-    private VehiclesConstantDetailsModel vehiclesConstantDetailsModel;
+    @SerializedName("images")
+    private ArrayList<Uri> images;
 
-    @SerializedName("constant_details_Biulding")
-    private BuildingConstantDetailsModel buildingConstantDetailsModel;
+    @SerializedName("lat")
+    private String latitude;
 
-    @SerializedName("constant_details_other")
-    private OtherConstantDetailsModel otherConstantDetailsModel;
+    @SerializedName("lng")
+    private String longitude;
 
-    public AdsModel() {
+    public AdsModel(String user_id, String category_id, String subcategory_id, String area_id, String subarea_id, String name, String price, String description, ArrayList<Uri> images, String latitude, String longitude) {
+        this.user_id = user_id;
+        this.category_id = category_id;
+        this.subcategory_id = subcategory_id;
+        this.area_id = area_id;
+        this.subarea_id = subarea_id;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.images = images;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public AdsModel(String adsTitle, String adsCatId, String adsSubCategoryId, String adsUserId, String adsAreaId, String adsSubAreaId, String otherArea, String adsPrice, String type_price) {
-        this.adsTitle = adsTitle;
-        this.adsCatId = adsCatId;
-        this.adsSubCategoryId = adsSubCategoryId;
-        this.adsUserId = adsUserId;
-        this.adsAreaId = adsAreaId;
-        this.adsSubAreaId = adsSubAreaId;
-        this.otherArea = otherArea;
-        this.adsPrice = adsPrice;
-        this.type_price = type_price;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public AdsModel(String adsTitle, String adsCatId, String adsSubCategoryId, String adsUserId, String adsAreaId,
-                    String adsSubAreaId, String otherArea, String adsPrice,
-                    String type_price, VehiclesConstantDetailsModel vehiclesConstantDetailsModel,
-                    BuildingConstantDetailsModel buildingConstantDetailsModel, OtherConstantDetailsModel otherConstantDetailsModel) {
-        this.adsTitle = adsTitle;
-        this.adsCatId = adsCatId;
-        this.adsSubCategoryId = adsSubCategoryId;
-        this.adsUserId = adsUserId;
-        this.adsAreaId = adsAreaId;
-        this.adsSubAreaId = adsSubAreaId;
-        this.otherArea = otherArea;
-        this.adsPrice = adsPrice;
-        this.type_price = type_price;
-        this.vehiclesConstantDetailsModel = vehiclesConstantDetailsModel;
-        this.buildingConstantDetailsModel = buildingConstantDetailsModel;
-        this.otherConstantDetailsModel = otherConstantDetailsModel;
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
     }
 
-    public String getAdsTitle() {
-        return adsTitle;
+    public String getCategory_id() {
+        return category_id;
     }
 
-    public String getAdsCatId() {
-        return adsCatId;
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
     }
 
-    public String getAdsSubCategoryId() {
-        return adsSubCategoryId;
+    public String getSubcategory_id() {
+        return subcategory_id;
     }
 
-    public String getAdsUserId() {
-        return adsUserId;
+    public void setSubcategory_id(String subcategory_id) {
+        this.subcategory_id = subcategory_id;
     }
 
-    public String getAdsAreaId() {
-        return adsAreaId;
+    public String getArea_id() {
+        return area_id;
     }
 
-    public String getAdsSubAreaId() {
-        return adsSubAreaId;
+    public void setArea_id(String area_id) {
+        this.area_id = area_id;
     }
 
-    public String getOtherArea() {
-        return otherArea;
+    public String getSubarea_id() {
+        return subarea_id;
     }
 
-    public String getAdsPrice() {
-        return adsPrice;
+    public void setSubarea_id(String subarea_id) {
+        this.subarea_id = subarea_id;
     }
 
-    public String getType_price() {
-        return type_price;
+    public String getName() {
+        return name;
     }
 
-    public VehiclesConstantDetailsModel getVehiclesConstantDetailsModel() {
-        return vehiclesConstantDetailsModel;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public BuildingConstantDetailsModel getBuildingConstantDetailsModel() {
-        return buildingConstantDetailsModel;
+    public String getPrice() {
+        return price;
     }
 
-    public OtherConstantDetailsModel getOtherConstantDetailsModel() {
-        return otherConstantDetailsModel;
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ArrayList<Uri> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<Uri> images) {
+        this.images = images;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

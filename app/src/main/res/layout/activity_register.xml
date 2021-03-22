@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,11 +8,28 @@
     android:layout_width="match_parent"
     android:background="@drawable/log_in"
     >
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register2"
+        android:textColor="@color/white"
+        android:textSize="@dimen/subtitle_text"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="50dp"
+        android:gravity="right"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
     <LinearLayout
         android:id="@+id/second_container"
         android:layout_width="match_parent"
@@ -19,21 +37,8 @@
         android:layout_marginHorizontal="10dp"
         android:background="@drawable/background_white"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
 
-        tools:layout_editor_absoluteX="10dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/register2"
-            android:textColor="@color/green"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+         >
 
         <EditText
             android:id="@+id/register_name_edit_text"
@@ -44,7 +49,8 @@
             android:layout_marginRight="10dp"
             android:layout_weight="0.5"
             android:background="@drawable/border_edit"
-            android:drawableLeft="@drawable/ic_person"
+            android:drawableLeft="@drawable/ic_person_border"
+            android:drawablePadding="25dp"
             android:gravity="center_vertical"
             android:hint="Full Name"
             android:inputType="textEmailAddress"
@@ -60,9 +66,10 @@
             android:layout_marginRight="10dp"
             android:layout_weight="0.5"
             android:background="@drawable/border_edit"
-            android:drawableLeft="@drawable/ic_baseline_phone_android_24"
+            android:drawableLeft="@drawable/ic_phone"
             android:gravity="center_vertical"
-            android:hint="Phone"
+            android:hint="@string/phone"
+            android:drawablePadding="25dp"
             android:inputType="phone"
             android:paddingLeft="3dp"
             android:singleLine="true" />
@@ -77,8 +84,9 @@
             android:layout_weight="0.5"
             android:background="@drawable/border_edit"
             android:drawableLeft="@drawable/ic_location"
+            android:drawablePadding="25dp"
             android:gravity="center_vertical"
-            android:hint="Address"
+            android:hint="@string/address"
             android:inputType="textEmailAddress"
             android:paddingLeft="3dp"
             android:singleLine="true" />
@@ -91,7 +99,8 @@
             android:layout_marginTop="15dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/border_edit"
-            android:drawableLeft="@drawable/ic_baseline_mail_24"
+            android:drawableLeft="@drawable/ic_message"
+            android:drawablePadding="25dp"
             android:gravity="center_vertical"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
@@ -107,9 +116,10 @@
             android:layout_marginRight="10dp"
             android:layout_weight="0.5"
             android:background="@drawable/border_edit"
-            android:drawableLeft="@drawable/ic_baseline_lock_24"
+            android:drawableLeft="@drawable/ic_key"
+            android:drawablePadding="22dp"
             android:gravity="center_vertical"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:paddingLeft="3dp"
             android:singleLine="true" />
@@ -123,53 +133,26 @@
             android:layout_marginRight="10dp"
             android:layout_weight="0.5"
             android:background="@drawable/border_edit"
-            android:drawableLeft="@drawable/ic_baseline_lock_24"
+            android:drawableLeft="@drawable/ic_key"
+            android:drawablePadding="25dp"
             android:gravity="center_vertical"
-            android:hint="Confirm"
+            android:hint="@string/confirm_password"
             android:inputType="textPassword"
             android:paddingLeft="3dp"
             android:singleLine="true" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/register_btn"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/register_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="20dp"
-                android:background="@drawable/back_btn"
-                android:gravity="center"
-                android:padding="15dp"
-                android:text="@string/register"
-                android:textColor="#ffffff" />
-
-            <Button
-                android:id="@+id/login_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="20dp"
-                android:background="@drawable/back_btn"
-                android:gravity="center"
-                android:padding="15dp"
-                android:text="@string/login"
-                android:textColor="#ffffff" />
-        </LinearLayout>
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:background="@drawable/background_light_green"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/create_account"
+            android:textColor="#ffffff" />
     </LinearLayout>
+    </ScrollView>
 
-    <TextView
-        android:layout_marginBottom="5dp"
-        android:textColor="@color/black"
-        android:textSize="@dimen/settings_sup_header_text_size"
-        android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/have_account"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>

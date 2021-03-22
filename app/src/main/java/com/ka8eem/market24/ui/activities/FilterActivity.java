@@ -9,17 +9,15 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.ListAdapter;
 import android.widget.Spinner;
 
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.CategoryModel;
-import com.ka8eem.market24.models.CityModel;
+import com.ka8eem.market24.models.AreaModel;
+import com.ka8eem.market24.models.SubAreaModel;
 import com.ka8eem.market24.models.SubCategoryModel;
 import com.ka8eem.market24.ui.fragments.HomeFragment;
 import com.ka8eem.market24.util.Constants;
@@ -27,6 +25,7 @@ import com.ka8eem.market24.viewmodel.CategoryViewModel;
 import com.ka8eem.market24.viewmodel.ProductViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FilterActivity extends AppCompatActivity {
 
@@ -36,7 +35,8 @@ public class FilterActivity extends AppCompatActivity {
 
     // vars
     ArrayAdapter<String> catAdapter, subCatAdapter, areaAdapter, subAreaAdapter;
-    ArrayList<CityModel> areaList, subAreaList;
+    ArrayList<AreaModel> areaList;
+    ArrayList<SubAreaModel> subAreaList;
     ArrayList<CategoryModel> catList;
     ArrayList<SubCategoryModel> subCatList;
     String selectedCatId, selectedSubCatId, selectedAreaId, selectedSubAreaId, searchQuery;
@@ -64,9 +64,9 @@ public class FilterActivity extends AppCompatActivity {
         subAreaSpinner = findViewById(R.id.sub_area_spinner);
         categoryVM.getAllCategories();
         categoryVM.getAllCities();
-        categoryVM.mutableCategoryList.observe(this, new Observer<ArrayList<CategoryModel>>() {
+        categoryVM.mutableCategoryList.observe(this, new Observer<List<CategoryModel>>() {
             @Override
-            public void onChanged(ArrayList<CategoryModel> categoryModels) {
+            public void onChanged(List<CategoryModel> categoryModels) {
                 catList = new ArrayList<>();
                 String curLang = "AR";
                 curLang = Constants.getLocal(FilterActivity.this);
@@ -89,24 +89,24 @@ public class FilterActivity extends AppCompatActivity {
             }
         });
 
-        categoryVM.mutableCityList.observe(this, new Observer<ArrayList<CityModel>>() {
+        categoryVM.mutableAreaList.observe(this, new Observer<List<AreaModel>>() {
             @Override
-            public void onChanged(ArrayList<CityModel> cityModels) {
+            public void onChanged(List<AreaModel> cityModels) {
                 areaList = new ArrayList<>();
                 ArrayList<String> list = new ArrayList<>();
                 String curLang = "AR";
                 curLang = Constants.getLocal(FilterActivity.this);
-                for (CityModel model : cityModels) {
+                for (AreaModel model : cityModels) {
                     areaList.add(model);
                     if (curLang.equals("AR"))
-                        list.add(model.getCityName());
+                        list.add(model.getAreaName());
                     else
                         list.add(model.getAreaNameEn());
                 }
                 String all = getString(R.string.all_cities);
                 list.add(0, all);
-                areaList.add(0, new CityModel(0, all));
-                list.remove(list.size() - 1);
+              //  areaList.add(0, new AreaModel(0, all));
+               // list.remove(list.size() - 1);
                 areaList.remove(areaList.size() - 1);
                 areaAdapter = new ArrayAdapter<>(FilterActivity.this, R.layout.spinner_textview, list);
                 areaAdapter.setDropDownViewResource(R.layout.text_drop);
@@ -122,9 +122,9 @@ public class FilterActivity extends AppCompatActivity {
                 } else {
                     selectedCatId = catList.get(position).getCategoryId() + "";
                     categoryVM.getSubCategory(selectedCatId);
-                    categoryVM.subCategoryList.observe(FilterActivity.this, new Observer<ArrayList<SubCategoryModel>>() {
+                    categoryVM.subCategoryList.observe(FilterActivity.this, new Observer<List<SubCategoryModel>>() {
                         @Override
-                        public void onChanged(ArrayList<SubCategoryModel> subCategoryModels) {
+                        public void onChanged(List<SubCategoryModel> subCategoryModels) {
                             subCatList = new ArrayList<>(subCategoryModels);
                             String curLang = "AR";
                             curLang = Constants.getLocal(FilterActivity.this);
@@ -157,21 +157,21 @@ public class FilterActivity extends AppCompatActivity {
                     subAreaSpinner.setVisibility(View.GONE);
                     selectedAreaId = "0";
                 } else {
-                    selectedAreaId = areaList.get(position).getCityID() + "";
+                    selectedAreaId = areaList.get(position).getAreaID() + "";
                     categoryVM.getSubArea(selectedAreaId);
-                    categoryVM.subAreaList.observe(FilterActivity.this, new Observer<ArrayList<CityModel>>() {
+                    categoryVM.subAreaList.observe(FilterActivity.this, new Observer<List<SubAreaModel>>() {
                         @Override
-                        public void onChanged(ArrayList<CityModel> cityModels) {
+                        public void onChanged(List<SubAreaModel> cityModels) {
                             subAreaList = new ArrayList<>(cityModels);
                             String curLang = "AR";
                             ArrayList<String> listNames = new ArrayList<>();
                             listNames.add(getString(R.string.all_area));
                             curLang = Constants.getLocal(FilterActivity.this);
-                            for (CityModel it : cityModels) {
+                            for (SubAreaModel it : cityModels) {
                                 if (curLang.equals("AR"))
-                                    listNames.add(it.getCityName());
+                                    listNames.add(it.getSubAreaName());
                                 else
-                                    listNames.add(it.getAreaNameEn());
+                                    listNames.add(it.getSubAreaNameEn());
                             }
                             subAreaAdapter = new ArrayAdapter<>(FilterActivity.this, R.layout.spinner_textview, listNames);
                             subAreaAdapter.setDropDownViewResource(R.layout.text_drop);
@@ -207,7 +207,7 @@ public class FilterActivity extends AppCompatActivity {
                 if (position == 0)
                     selectedSubAreaId = "0";
                 else {
-                    selectedSubAreaId = subAreaList.get(position).getCityID() + "";
+                    selectedSubAreaId = subAreaList.get(position).getAreaId() + "";
                 }
             }
 
@@ -220,7 +220,7 @@ public class FilterActivity extends AppCompatActivity {
 
     public void search(View view) {
         searchQuery = textSearch.getText().toString();
-        HomeFragment.getProducts(selectedCatId, selectedAreaId, selectedSubCatId, selectedSubAreaId, searchQuery);
+      //  HomeFragment.getProducts(selectedCatId, selectedAreaId, selectedSubCatId, selectedSubAreaId, searchQuery);
         finish();
     }
 

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@drawable/log_in"
+
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/register2"
+        android:textColor="@color/white"
+        android:textSize="@dimen/subtitle_text"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
+        android:gravity="right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/second_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/background_white"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+         >
+
+
+        <EditText
+            android:id="@+id/register_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/border_edit"
+            android:drawableLeft="@drawable/ic_person_border"
+            android:drawablePadding="25dp"
+            android:gravity="left"
+            android:hint="@string/name"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="3dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/register_phone_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/border_edit"
+            android:drawableLeft="@drawable/ic_phone"
+            android:gravity="left"
+            android:hint="@string/phone"
+            android:drawablePadding="25dp"
+            android:inputType="phone"
+            android:paddingLeft="3dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/register_address_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/border_edit"
+            android:drawableLeft="@drawable/ic_location"
+            android:drawablePadding="25dp"
+            android:hint="@string/address"
+            android:gravity="left"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="3dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/register_email_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/border_edit"
+            android:drawableLeft="@drawable/ic_message"
+            android:drawablePadding="25dp"
+            android:gravity="left"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="3dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/register_password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/border_edit"
+            android:drawableLeft="@drawable/ic_key"
+            android:drawablePadding="22dp"
+            android:gravity="left"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:paddingLeft="3dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/register_confirm_password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/border_edit"
+            android:drawableLeft="@drawable/ic_key"
+            android:drawablePadding="25dp"
+            android:gravity="left"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"
+            android:paddingLeft="3dp"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/register_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:background="@drawable/background_light_green"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="@string/create_account"
+            android:textColor="#ffffff" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

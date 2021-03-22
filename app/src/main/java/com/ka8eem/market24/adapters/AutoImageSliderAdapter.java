@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -31,14 +32,14 @@ import java.util.List;
 public class AutoImageSliderAdapter extends SliderViewAdapter<AutoImageSliderAdapter.SliderAdapterVH> {
 Bitmap bitmap;
     private Context context;
-    private ArrayList<PannerModel> list;
+    private List<PannerModel> list;
 
     boolean show = false;
     public AutoImageSliderAdapter(Context context) {
         this.context = context;
     }
 
-    public void renewItems(ArrayList<PannerModel> sliderItems) {
+    public void renewItems(List<PannerModel> sliderItems) {
         this.list = sliderItems;
         notifyDataSetChanged();
     }
@@ -66,16 +67,17 @@ Bitmap bitmap;
 
         Picasso.get()
                 .load(list.get(position).getImgUrl()).resize(600, 200)
-                //  .transform(RoundedCornersTransformation(30, 1))
-                .placeholder(R.drawable.ic_camera)
+                 .placeholder(R.drawable.ic_camera)
                 .into(viewHolder.imageView);
-             //new AutoImageSliderAdapter.GetImageFromUrl(viewHolder.imageView).execute(list.get(position).getImgUrl());
 
-        //viewHolder.paidIcon.setImageResource(R.drawable.paid);
-
-
-           // Glide.with(viewHolder.imageView).load(list.get(position).getImgUrl()).diskCacheStrategy(DiskCacheStrategy.ALL).dontTransform().into(viewHolder.imageView);
-
+        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(list.get(position).getLink()));
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override
@@ -87,12 +89,11 @@ Bitmap bitmap;
 
     class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
 
-        ImageView imageView, paidIcon;
+        ImageView imageView;
 
         public SliderAdapterVH(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.payment_ads_img_item);
-            //paidIcon = itemView.findViewById(R.id.paid_icon);
         }
     }
 

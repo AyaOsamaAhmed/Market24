@@ -2,35 +2,23 @@ package com.ka8eem.market24.ui.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.AdsModel;
-import com.ka8eem.market24.models.BuildingConstantDetailsModel;
 import com.ka8eem.market24.models.OtherConstantDetailsModel;
 import com.ka8eem.market24.models.UploadImageModel;
-import com.ka8eem.market24.models.VehiclesConstantDetailsModel;
 import com.ka8eem.market24.ui.fragments.AddProductFragment;
-import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.viewmodel.ProductViewModel;
-
-import java.io.File;
 import java.util.ArrayList;
-
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 public class OtherDetailsActivity extends AppCompatActivity {
 
@@ -66,13 +54,14 @@ public class OtherDetailsActivity extends AppCompatActivity {
         textOther = findViewById(R.id.other);
         btnUpload = findViewById(R.id.ok_go);
         btnCancel = findViewById(R.id.cancel);
-        textName.setText(adsModel.getAdsTitle());
+     /*   textName.setText(adsModel.getAdsTitle());
         String curLang = Constants.getLocal(this);
         if (curLang.equals("AR")) {
             price = adsModel.getAdsPrice() + " ل.س";
         } else {
             price = adsModel.getAdsPrice() + " L.S";
         }
+      */
         textPrice.setText(price);
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +75,7 @@ public class OtherDetailsActivity extends AppCompatActivity {
                             status,
                             desc
                     );
-                    AdsModel model = new AdsModel(
+                 /*   AdsModel model = new AdsModel(
                             adsModel.getAdsTitle(),
                             adsModel.getAdsCatId(),
                             adsModel.getAdsSubCategoryId(),
@@ -100,43 +89,16 @@ public class OtherDetailsActivity extends AppCompatActivity {
                             new BuildingConstantDetailsModel(),
                             detailsModel
                     );
+
+                  */
                     ProductViewModel viewModel = ViewModelProviders.of(OtherDetailsActivity.this).
                             get(ProductViewModel.class);
-                    viewModel.uploadProduct(model);
+                 //   viewModel.uploadProduct(model);
                     final ProgressDialog progressDialog = new ProgressDialog(OtherDetailsActivity.this);
                     progressDialog.show();
                     progressDialog.setContentView(R.layout.progress_dialog);
                     progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                     progressDialog.setCancelable(false);
-                    viewModel.mutableUploadProduct.observe(OtherDetailsActivity.this, new Observer<String>() {
-                        @Override
-                        public void onChanged(String s) {
-                            if (s != null) {
-                                if (s.contains("error") || s.equals("-1")) {
-                                    Toast.makeText(OtherDetailsActivity.this, getString(R.string.connection_error), Toast.LENGTH_SHORT).show();
-                                    progressDialog.dismiss();
-                                    return;
-                                }
-                            }
-                            Log.e("encodedImagesSize", AddProductFragment.encodedImages.size() + "");
-                            UploadImageModel imageModel = new UploadImageModel(s, AddProductFragment.encodedImages);
-                            viewModel.uploadImageAsString(imageModel);
-                            viewModel.uploadImageAsString.observe(OtherDetailsActivity.this, new Observer<String>() {
-                                @Override
-                                public void onChanged(String s) {
-                                    if (s.contains("-1-2-3") || s.contains("error")) {
-                                        Toast.makeText(OtherDetailsActivity.this, getString(R.string.connection_error), Toast.LENGTH_SHORT).show();
-                                        progressDialog.dismiss();
-                                        return;
-                                    }
-                                    Toast.makeText(OtherDetailsActivity.this, getString(R.string.ads_uploaded), Toast.LENGTH_SHORT).show();
-                                    progressDialog.dismiss();
-                                    startHomeActivity();
-                                }
-                            });
-
-                        }
-                    });
                 }
             }
         });

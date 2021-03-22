@@ -57,15 +57,16 @@ public class EditOtherDetailsActivity extends AppCompatActivity {
         textOther = findViewById(R.id.edit_other);
         btnUpload = findViewById(R.id.edit_other_ok_go);
         btnCancel = findViewById(R.id.edit_other_cancel);
-        textName.setText(adsModel.getAdsTitle());
+      //  textName.setText(adsModel.getAdsTitle());
         String curLang = Constants.getLocal(this);
-        if (curLang.equals("AR")) {
+        /*if (curLang.equals("AR")) {
             price = adsModel.getAdsPrice() + " ل.س";
         } else {
             price = adsModel.getAdsPrice() + " L.S";
         }
 
         model = adsModel.getOtherConstantDetailsModel();
+         */
         textPrice.setText(price);
         if(model != null) {
 
@@ -84,7 +85,7 @@ public class EditOtherDetailsActivity extends AppCompatActivity {
                             status,
                             desc
                     );
-                    AdsModel model = new AdsModel(
+                /*    AdsModel model = new AdsModel(
                             adsModel.getAdsTitle(),
                             adsModel.getAdsCatId(),
                             adsModel.getAdsSubCategoryId(),
@@ -99,9 +100,11 @@ public class EditOtherDetailsActivity extends AppCompatActivity {
                             detailsModel
                     );
                     model.setID_ADS(adsModel.getID_ADS());
+
+                 */
                     ProductViewModel viewModel = ViewModelProviders.of(EditOtherDetailsActivity.this).
                             get(ProductViewModel.class);
-                    viewModel.updateProduct(model);
+                //    viewModel.updateProduct(model);
                     final ProgressDialog progressDialog = new ProgressDialog(EditOtherDetailsActivity.this);
                     progressDialog.show();
                     progressDialog.setContentView(R.layout.progress_dialog);

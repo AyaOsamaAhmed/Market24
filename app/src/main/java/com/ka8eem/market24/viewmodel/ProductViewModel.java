@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.AdsModel;
+import com.ka8eem.market24.models.MainModel;
 import com.ka8eem.market24.models.PannerModel;
 import com.ka8eem.market24.models.PaymentAdsModel;
 import com.ka8eem.market24.models.ProductModel;
@@ -19,6 +20,7 @@ import com.ka8eem.market24.repository.DataClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.transform.sax.SAXResult;
 
@@ -30,18 +32,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProductViewModel extends ViewModel {
-    public MutableLiveData<ArrayList<ProductModel>> mutableProductList = new MutableLiveData<>();
+    public MutableLiveData<List<ProductModel>> mutableProductList = new MutableLiveData<>();
     public MutableLiveData<ArrayList<ProductModel>> mutableAdsList = new MutableLiveData<>();
-    public MutableLiveData<String> mutableUploadProduct = new MutableLiveData<>();
+    public MutableLiveData<MainModel> mutableUploadProduct = new MutableLiveData<>();
     public MutableLiveData<String> mutableReportAds = new MutableLiveData<>();
     public MutableLiveData<String> mutableRequestProduct = new MutableLiveData<>();
     public MutableLiveData<ArrayList<ProductModel>> adsCategoryList = new MutableLiveData<>();
-    public MutableLiveData<ArrayList<PaymentAdsModel>> paymentAdsList = new MutableLiveData<>();
+    public MutableLiveData<List<PaymentAdsModel>> paymentAdsList = new MutableLiveData<>();
     public MutableLiveData<String> mutableDeleteProduct = new MutableLiveData<>();
     public MutableLiveData<String> uploadImagesResponse = new MutableLiveData<>();
-    public MutableLiveData<String> uploadImageAsString = new MutableLiveData<>();
+  //  public MutableLiveData<String> uploadImageAsString = new MutableLiveData<>();
     public MutableLiveData<ArrayList<SpecialInfoModel>> MyAds_Message = new MutableLiveData<>();
-    public MutableLiveData<ArrayList<PannerModel>> pannerImages = new MutableLiveData<>();
+    public MutableLiveData<List<PannerModel>> pannerImages = new MutableLiveData<>();
     public MutableLiveData<ProductModel> productById = new MutableLiveData<>();
     public MutableLiveData<String> _deleteImage = new MutableLiveData<>();
     public MutableLiveData<String> _get_error = new MutableLiveData<>();
@@ -49,6 +51,7 @@ public class ProductViewModel extends ViewModel {
     public MutableLiveData<String> updateImageAsString = new MutableLiveData<>();
     MutableLiveData<String> error = new MutableLiveData<>();
 
+    MainModel mainModel = new MainModel();
 
     public void getProducts(String selectedCategoryID, String selectCityID,
                             String selectedSubCatId, String selectedSubAreaId,
@@ -67,6 +70,25 @@ public class ProductViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<ArrayList<ProductModel>> call, Throwable t) {
+                error.postValue(t.getMessage() + " Error!");
+            }
+        });
+    }
+
+
+    public void getHome() {
+        DataClient.getINSTANCE().getHome().enqueue(new Callback<MainModel>() {
+            @Override
+            public void onResponse(Call<MainModel> call, Response<MainModel> response) {
+                if(response.body() != null) {
+                    paymentAdsList.postValue(response.body().getResult().getPaymentAds());
+                    mutableProductList.postValue(response.body().getResult().getNormalAds());
+                    pannerImages.postValue(response.body().getResult().getPaymentImages());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MainModel> call, Throwable t) {
                 error.postValue(t.getMessage() + " Error!");
             }
         });
@@ -101,15 +123,15 @@ public class ProductViewModel extends ViewModel {
     }
 
     public void uploadProduct(AdsModel adsModel) {
-        DataClient.getINSTANCE().uploadProduct(adsModel).enqueue(new Callback<RegisterResponse>() {
+        DataClient.getINSTANCE().uploadProduct(adsModel).enqueue(new Callback<MainModel>() {
             @Override
-            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                mutableUploadProduct.postValue(response.body().getRes());
+            public void onResponse(Call<MainModel> call, Response<MainModel> response) {
+                mutableUploadProduct.postValue(response.body());
             }
 
             @Override
-            public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                mutableUploadProduct.postValue("-1-1");
+            public void onFailure(Call<MainModel> call, Throwable t) {
+                mutableUploadProduct.postValue(mainModel);
             }
         });
     }
@@ -199,7 +221,7 @@ public class ProductViewModel extends ViewModel {
         });
     }
 
-    public void uploadImageAsString(UploadImageModel model) {
+  /*  public void uploadImageAsString(UploadImageModel model) {
         DataClient.getINSTANCE().uploadImagesAsString(model).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -214,6 +236,7 @@ public class ProductViewModel extends ViewModel {
         });
     }
 
+   */
     public void updateImageAsString(UploadImageModel model) {
         DataClient.getINSTANCE().updateImagesAsString(model).enqueue(new Callback<String>() {
             @Override

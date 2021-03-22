@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_home"
+    app:startDestination="@id/HomeFragment">
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.ka8eem.market24.ui.fragments.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home">
+    </fragment>
+
+    <fragment
+        android:id="@+id/AllCategoriesFragment"
+        android:name="com.ka8eem.market24.ui.fragments.AllCategoriesFragment"
+        android:label="@string/category"
+        tools:layout="@layout/activity_all_categories"/>
+
+    <fragment
+        android:id="@+id/AllSubCategoriesFragment"
+        android:name="com.ka8eem.market24.ui.fragments.AllSubCategoriesFragment"
+        android:label="@string/sub_category"
+        tools:layout="@layout/all_sub_categories_fragment"/>
+    <fragment
+        android:id="@+id/AddProductFragment"
+        android:name="com.ka8eem.market24.ui.fragments.AddProductFragment"
+        android:label="@string/sub_category"
+        tools:layout="@layout/fragment_add_product"/>
+
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.ka8eem.market24.ui.fragments.ProfileFragment"
+        android:label="@string/profile"
+        tools:layout="@layout/fragment_add_product"/>
+
+    <fragment
+        android:id="@+id/ProductDetailsFragment"
+        android:name="com.ka8eem.market24.ui.fragments.ProductDetailsFragment"
+        android:label="@string/product_details"
+        tools:layout="@layout/activity_product_details"/>
+
+</navigation>

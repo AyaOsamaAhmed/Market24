@@ -80,15 +80,8 @@ public class RegisterActivity extends AppCompatActivity {
         editTextConfirmPassword = findViewById(R.id.register_confirm_password_edit_text);
         editTextEmail = findViewById(R.id.register_email_edit_text);
         btnRegister = findViewById(R.id.register_btn);
-        textView = findViewById(R.id.login_text);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
+
+
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +96,9 @@ public class RegisterActivity extends AppCompatActivity {
                 validData();
                 if (!valid)
                     return;
+
                 userModel = new UserModel(name, phone, address, email, password);
+
                 userViewModel.register(userModel);
                 userViewModel.userModelRegister.observe(RegisterActivity.this, new Observer<RegisterResponse>() {
                     @Override

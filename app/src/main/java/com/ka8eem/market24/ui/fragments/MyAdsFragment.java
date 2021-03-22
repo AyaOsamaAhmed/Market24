@@ -27,7 +27,6 @@ import com.ka8eem.market24.R;
 import com.ka8eem.market24.adapters.AdsAdapter;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.UserModel;
-import com.ka8eem.market24.ui.activities.ProductDetails;
 import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.viewmodel.ProductViewModel;
 
@@ -84,7 +83,7 @@ public class MyAdsFragment extends Fragment {
             public void onChanged(ArrayList<ProductModel> productModels) {
                 if (getActivity() != null) {
                     if (productModels != null) {
-                        adsAdapter.setList(productModels);
+                    //    adsAdapter.setList(productModels);
                         adsAdapter.notifyDataSetChanged();
                         recyclerView.setAdapter(adsAdapter);
                     } else {

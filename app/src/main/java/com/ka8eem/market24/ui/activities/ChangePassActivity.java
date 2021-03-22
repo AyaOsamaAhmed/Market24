@@ -51,12 +51,19 @@ public class ChangePassActivity extends AppCompatActivity {
                 userViewModel.userUpdate.observe(ChangePassActivity.this, new Observer<String>() {
                     @Override
                     public void onChanged(String response) {
-                        String res = getString(R.string.check_your_mail);
-                        if(response.equals("1")) {
-                            firebase_resetPass(email_txt);
-
-                        }else{Toast.makeText(ChangePassActivity.this, "no", Toast.LENGTH_LONG).show();
+                        firebase_resetPass(email_txt);
+                        Toast.makeText(ChangePassActivity.this, R.string.change_pass_success, Toast.LENGTH_LONG).show();
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
+
+                        Intent intent = new Intent(ChangePassActivity.this, HomeActivity.class);
+                        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+
                     }
                 });
             }
@@ -66,7 +73,7 @@ public class ChangePassActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(ChangePassActivity.this, LoginActivity.class);
+        Intent intent = new Intent(ChangePassActivity.this, HomeActivity.class);
         //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
@@ -106,8 +113,8 @@ public class ChangePassActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                           // Toast.makeText(ChangePassActivity.this, res, Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(ChangePassActivity.this, LoginActivity.class);
+                            Toast.makeText(ChangePassActivity.this, R.string.change_pass_success, Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(ChangePassActivity.this, HomeActivity.class);
                             //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();

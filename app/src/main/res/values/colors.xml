@@ -13,5 +13,6 @@
     <color name="dark_green">#314514</color>
     <color name="light_green">#9BD220</color>
     <color name="green_menu">#68922B</color>
+    <color name="green_profile">#628829</color>
     <color name="grey">#929292</color>
 </resources>

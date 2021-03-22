@@ -12,7 +12,7 @@ import java.lang.reflect.Type;
 public class Constants {
 
     // vars
-    public static final String BASE_URL = "https://markt-24.online/php/";
+    public static final String BASE_URL = "https://markt-24.online/";
     //https://itcoreapps.com/past/nolx/php/
     public static final String SHARED = "Settings";
 

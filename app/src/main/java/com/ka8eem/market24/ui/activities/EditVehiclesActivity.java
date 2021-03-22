@@ -48,7 +48,7 @@ public class EditVehiclesActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        model = adsModel.getVehiclesConstantDetailsModel();
+      //  model = adsModel.getVehiclesConstantDetailsModel();
         valid = true;
 
         textType = findViewById(R.id.edit_vehicle_type);
@@ -103,7 +103,7 @@ public class EditVehiclesActivity extends AppCompatActivity {
                             color,
                             desc
                     );
-                    AdsModel model = new AdsModel(
+                 /*   AdsModel model = new AdsModel(
                             adsModel.getAdsTitle(),
                             adsModel.getAdsCatId(),
                             adsModel.getAdsSubCategoryId(),
@@ -118,9 +118,11 @@ public class EditVehiclesActivity extends AppCompatActivity {
                             new OtherConstantDetailsModel()
                     );
                     model.setID_ADS(adsModel.getID_ADS());
+
+                  */
                     ProductViewModel viewModel = ViewModelProviders.of(EditVehiclesActivity.this).
                             get(ProductViewModel.class);
-                    viewModel.updateProduct(model);
+                  //  viewModel.updateProduct(model);
                     final ProgressDialog progressDialog = new ProgressDialog(EditVehiclesActivity.this);
                     progressDialog.show();
                     progressDialog.setContentView(R.layout.progress_dialog);

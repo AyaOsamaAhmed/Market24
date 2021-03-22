@@ -76,7 +76,7 @@ public class BuildingActivity extends AppCompatActivity {
         /*
          * images to uploaded
          * */
-        btnUpload.setOnClickListener(new View.OnClickListener() {
+  /*       btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 numOfRooms = textNumberOfRooms.getText().toString().trim();
@@ -88,7 +88,7 @@ public class BuildingActivity extends AppCompatActivity {
                 furnished = textFurnished.getText().toString();
                 desc = textDetails.getText().toString();
                 valid = true;
-                validInput();
+         //       validInput();
                 if (!valid)
                     return;
                 BuildingConstantDetailsModel details = new BuildingConstantDetailsModel(
@@ -101,7 +101,7 @@ public class BuildingActivity extends AppCompatActivity {
                         furnished,
                         desc
                 );
-                AdsModel model = new AdsModel(
+               /* AdsModel model = new AdsModel(
                         adsModel.getAdsTitle(),
                         adsModel.getAdsCatId(),
                         adsModel.getAdsSubCategoryId(),
@@ -115,9 +115,11 @@ public class BuildingActivity extends AppCompatActivity {
                         details,
                         null
                 );
+
+
                 ProductViewModel viewModel = ViewModelProviders.of(BuildingActivity.this).
                         get(ProductViewModel.class);
-                viewModel.uploadProduct(model);
+              //  viewModel.uploadProduct(model);
                 final ProgressDialog progressDialog = new ProgressDialog(BuildingActivity.this);
                 progressDialog.show();
                 progressDialog.setContentView(R.layout.progress_dialog);
@@ -135,7 +137,7 @@ public class BuildingActivity extends AppCompatActivity {
                             }
                         }
                         UploadImageModel imageModel = new UploadImageModel(s, AddProductFragment.encodedImages);
-                        viewModel.uploadImageAsString(imageModel);
+                       viewModel.uploadImageAsString(imageModel);
                         viewModel.uploadImageAsString.observe(BuildingActivity.this, new Observer<String>() {
                             @Override
                             public void onChanged(String s) {
@@ -151,9 +153,14 @@ public class BuildingActivity extends AppCompatActivity {
                         });
 
                     }
+
+
                 });
             }
-        });
+            });
+
+   */
+
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

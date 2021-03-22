@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         textRegister = findViewById(R.id.txt_register);
+
         textRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +82,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,11 +99,13 @@ public class LoginActivity extends AppCompatActivity {
                     public void onChanged(UserModel userModel) {
                         retUserModel = userModel;
                         if (retUserModel.getExist().equals("yes")) {
+
                             Gson gson = new Gson();
                             String json = gson.toJson(retUserModel);
                             editor.putString("USER_MODEL", json);
                             editor.putBoolean("LOGGED_IN", true);
                             editor.putBoolean("REGISTERED", true);
+
                             editor.commit();
                             editor.apply();
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -133,11 +138,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
                 dialog.show();
-
-
-
-             //   Intent intent = new Intent(LoginActivity.this , ChangePassActivity.class);
-              //  startActivity(intent);
             }
         });
     }

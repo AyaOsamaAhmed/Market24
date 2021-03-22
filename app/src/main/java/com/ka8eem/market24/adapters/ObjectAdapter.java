@@ -21,10 +21,10 @@ import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.ObjectModel;
 import com.ka8eem.market24.models.PaymentAdsModel;
 import com.ka8eem.market24.models.ProductModel;
-import com.ka8eem.market24.ui.activities.ProductDetails;
+import com.ka8eem.market24.ui.fragments.ProductDetailsFragment;
 import com.ka8eem.market24.util.Constants;
+import com.ka8eem.market24.util.Keys;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -56,9 +56,9 @@ public class ObjectAdapter extends RecyclerView.Adapter<ObjectAdapter.ObjectView
 
     }
 
-    private int isFav(int _id) {
+    private int isFav(String _id) {
         for (int i = 0; i < listInFav.size(); i++)
-            if (listInFav.get(i).getProductID() == _id)
+            if (listInFav.get(i).getAdsID() == _id)
                 return i;
         return -1;
     }
@@ -110,8 +110,10 @@ public class ObjectAdapter extends RecyclerView.Adapter<ObjectAdapter.ObjectView
         if (position % 3 == 0 && position > 0) {
             if (objectModel.isPaid()) {
                 PaymentAdsModel model = (PaymentAdsModel) list.get(position).getObject();
-                url = model.getAdsImage();
-                holder.textProductName.setText(model.getAdsName());
+                if( model.getAdsImage() != null) {
+                    url = Keys.image_domain + model.getAdsImage().getImgUrl();
+                }
+                holder.textProductName.setText(model.getProduct_name());
             } else {
                 url = func(holder, objectModel);
             }
@@ -119,8 +121,8 @@ public class ObjectAdapter extends RecyclerView.Adapter<ObjectAdapter.ObjectView
         } else {
             if (objectModel.isPaid()) {
                 PaymentAdsModel model = (PaymentAdsModel) list.get(position).getObject();
-                url = model.getAdsImage();
-                holder.textProductName.setText(model.getAdsName());
+                url = Keys.image_domain + model.getAdsImage();
+                holder.textProductName.setText(model.getProduct_name());
             } else {
                 url = func(holder, objectModel);
             }
@@ -130,27 +132,27 @@ public class ObjectAdapter extends RecyclerView.Adapter<ObjectAdapter.ObjectView
 
     private String func(ObjectViewHolder holder, ObjectModel objectModel) {
         ProductModel productModel = (ProductModel) objectModel.getObject();
-        String url = productModel.getProductImages().get(0).getImgUrl();
+     //   String url = productModel.getProductImages().get(0).getImgUrl();
         String curLang = Constants.getLocal(context);
         String price = productModel.getPrice();
-        String cityName = productModel.getCityName();
-        String catName = productModel.getCategoryName();
-        String time = productModel.getDateTime();
+      //  String cityName = productModel.getCityName();
+      //  String catName = productModel.getCategoryName();
+        String time = productModel.getDate();
         time = time.substring(0, time.indexOf(' '));
         if (curLang.equals("AR")) {
             price = price + " ل.س";
         } else {
             price = price + " L.S";
-            cityName = productModel.getCityNameEn();
-            catName = productModel.getCategoryNameEn();
+           // cityName = productModel.getCityNameEn();
+           // catName = productModel.getCategoryNameEn();
         }
 
-        holder.textCity.setText(cityName);
-
+     //   holder.textCity.setText(cityName);
+     //   holder.textUserName.setText(productModel.getUserName());
+     //   holder.textCatType.setText(catName);
         holder.textSalary.setText(price);
-        holder.textProductName.setText(productModel.getProductName());
-        holder.textUserName.setText(productModel.getUserName());
-        holder.textCatType.setText(catName);
+        holder.textProductName.setText(productModel.getProduct_name());
+
         holder.textDataTime.setText(time);
         holder.imageStar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,13 +160,13 @@ public class ObjectAdapter extends RecyclerView.Adapter<ObjectAdapter.ObjectView
                 addToFavourite(holder, productModel);
             }
         });
-        int ok = isFav(productModel.getProductID());
+        int ok = isFav(productModel.getAdsID());
         Drawable drw = context.getResources().getDrawable(R.drawable.ic_favorite_border);
         if (ok > -1) {
             drw = context.getResources().getDrawable(R.drawable.ic_favorite);
         }
         holder.imageStar.setImageDrawable(drw);
-        holder.txtSubArea.setText(productModel.getSubCityName());
+     //   holder.txtSubArea.setText(productModel.getSubCityName());
        /* holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,12 +178,12 @@ public class ObjectAdapter extends RecyclerView.Adapter<ObjectAdapter.ObjectView
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ProductDetails.class);
-                intent.putExtra("product_id", productModel.getProductID() + "");
+                Intent intent = new Intent(context, ProductDetailsFragment.class);
+                intent.putExtra("product_id", productModel.getAdsID() + "");
                 context.startActivity(intent);
             }
         });
-        return url;
+        return "url";
     }
 
 
@@ -194,7 +196,7 @@ public class ObjectAdapter extends RecyclerView.Adapter<ObjectAdapter.ObjectView
 
     private void addToFavourite(ObjectViewHolder holder, ProductModel productModel) {
         String toastMess = "";
-        int _id = productModel.getProductID();
+        String _id = productModel.getAdsID();
         Gson gson = new Gson();
         String json = preferences.getString("listFav", null);
         Type type = new TypeToken<ArrayList<ProductModel>>() {

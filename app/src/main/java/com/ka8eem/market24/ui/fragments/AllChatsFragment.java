@@ -1,66 +1,45 @@
 package com.ka8eem.market24.ui.fragments;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.Notification.Token;
 import com.ka8eem.market24.R;
-import com.ka8eem.market24.adapters.AdsAdapter;
-import com.ka8eem.market24.adapters.FavouriteAdapter;
 import com.ka8eem.market24.adapters.UserFirebaseAdapter;
 import com.ka8eem.market24.models.ChatModel;
 import com.ka8eem.market24.models.ChatlistModel;
-import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.SpecialInfoModel;
 import com.ka8eem.market24.models.UserFirebaseModel;
 import com.ka8eem.market24.models.UserModel;
-import com.ka8eem.market24.ui.activities.ProductDetails;
-import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.viewmodel.ProductViewModel;
 
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-
-import static android.content.Context.MODE_PRIVATE;
 
 public class AllChatsFragment extends Fragment {
     String date_st="";

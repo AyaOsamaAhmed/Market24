@@ -1,5 +1,7 @@
 package com.ka8eem.market24.models;
 
+import android.widget.ImageView;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -8,28 +10,16 @@ import java.util.ArrayList;
 public class ProductModel implements Serializable {
 
     @SerializedName("ads_id")
-    private int productID;
-
-    @SerializedName("account")
-    private String Email_user;
+    private String adsID;
 
     @SerializedName("user_id")
-    private int userID;
-
-    @SerializedName("phone")
-    private String phoneNumber;
-
-    @SerializedName("name")
-    private String userName;
-
-    @SerializedName("most_req")
-    private int mostRequest;
+    private String userID;
 
     @SerializedName("cat_id")
-    private int categoryID;
+    private String categoryId;
 
     @SerializedName("sub_cat")
-    private String subCatId;
+    private String subCategory;
 
     @SerializedName("area_id")
     private String areaId;
@@ -37,165 +27,183 @@ public class ProductModel implements Serializable {
     @SerializedName("sub_area_id")
     private String subAreaId;
 
-    @SerializedName("cat_name_A")
-    private String categoryName;
-
-    @SerializedName("cat_name")
-    private String categoryNameEn;
-
-    @SerializedName("sub_name_A")
-    private String subCatName;
-
-    @SerializedName("sub_name")
-    private String subCatNameEn;
-
-    @SerializedName("area_name")
-    private String cityName;
-
-    @SerializedName("area_name_E")
-    private String cityNameEn;
-
-    @SerializedName("Sub_area_name")
-    private String subCityName;
-
-    @SerializedName("Sub_area_name_E")
-    private String subCityNameEn;
-
     @SerializedName("product_name")
-    private String productName;
+    private String product_name;
+
+    @SerializedName("description")
+    private String description;
 
     @SerializedName("price")
     private String price;
 
-    @SerializedName("type_price")
-    private String priceType;
-
     @SerializedName("date")
-    private String dateTime;
+    private String date;
 
-    @SerializedName("Vehicles")
-    private String isVehicles;
+    @SerializedName("active")
+    private String active;
 
-    @SerializedName("images")
-    private ArrayList<ImageModel> productImages;
+    @SerializedName("report")
+    private String report;
 
-    @SerializedName("constant_details")
-    private VehiclesConstantDetailsModel vehiclesConstantDetails;
+    @SerializedName("reson_report")
+    private String reason_report;
 
-    @SerializedName("constant_details_other")
-    private OtherConstantDetailsModel otherConstantDetails;
+    @SerializedName("address")
+    private String address;
 
-    @SerializedName("constant_details_building")
-    private BuildingConstantDetailsModel buildingConstantDetails;
+    @SerializedName("rejected")
+    private String rejected;
 
-    public ProductModel() {
+    @SerializedName("lat")
+    private String latitude;
+
+    @SerializedName("image")
+    private ImageModel adsImage;
+
+    @SerializedName("long")
+    private String longtitude;
+
+    public String getAdsID() {
+        return adsID;
     }
 
-    public String getSubCatId() {
-        return subCatId;
+    public void setAdsID(String adsID) {
+        this.adsID = adsID;
     }
 
-    public String getSubAreaId() {
-        return subAreaId;
-    }
-
-    public int getProductID() {
-        return productID;
-    }
-
-    public String getEmail_user() {
-        return Email_user;
-    }
-
-    public int getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public int getMostRequest() {
-        return mostRequest;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public int getCategoryID() {
-        return categoryID;
+    public String getSubCategory() {
+        return subCategory;
+    }
+
+    public void setSubCategory(String subCategory) {
+        this.subCategory = subCategory;
     }
 
     public String getAreaId() {
         return areaId;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public void setAreaId(String areaId) {
+        this.areaId = areaId;
     }
 
-    public String getCategoryNameEn() {
-        return categoryNameEn;
+    public String getSubAreaId() {
+        return subAreaId;
     }
 
-    public String getSubCatName() {
-        return subCatName;
+    public void setSubAreaId(String aubAreaId) {
+        this.subAreaId = aubAreaId;
     }
 
-    public String getSubCatNameEn() {
-        return subCatNameEn;
+    public String getProduct_name() {
+        return product_name;
     }
 
-    public String getCityName() {
-        return cityName;
+    public void setProduct_name(String product_name) {
+        this.product_name = product_name;
     }
 
-    public String getCityNameEn() {
-        return cityNameEn;
+    public String getDescription() {
+        return description;
     }
 
-    public String getSubCityName() {
-        return subCityName;
-    }
-
-    public String getSubCityNameEn() {
-        return subCityNameEn;
-    }
-
-    public String getProductName() {
-        return productName;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPrice() {
         return price;
     }
 
-    public String getPriceType() {
-        return priceType;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
-    public String getDateTime() {
-        return dateTime;
+    public String getDate() {
+        return date;
     }
 
-    public String getIsVehicles() {
-        return isVehicles;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public ArrayList<ImageModel> getProductImages() {
-        return productImages;
+    public String getActive() {
+        return active;
     }
 
-    public VehiclesConstantDetailsModel getVehiclesConstantDetails() {
-        return vehiclesConstantDetails;
+    public void setActive(String active) {
+        this.active = active;
     }
 
-    public OtherConstantDetailsModel getOtherConstantDetails() {
-        return otherConstantDetails;
+    public String getReport() {
+        return report;
     }
 
-    public BuildingConstantDetailsModel getBuildingConstantDetails() {
-        return buildingConstantDetails;
+    public void setReport(String report) {
+        this.report = report;
+    }
+
+    public String getReason_report() {
+        return reason_report;
+    }
+
+    public void setReason_report(String reason_report) {
+        this.reason_report = reason_report;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getRejected() {
+        return rejected;
+    }
+
+    public void setRejected(String rejected) {
+        this.rejected = rejected;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public ImageModel getAdsImage() {
+        return adsImage;
+    }
+
+    public void setAdsImage(ImageModel adsImage) {
+        this.adsImage = adsImage;
+    }
+
+    public String getLongtitude() {
+        return longtitude;
+    }
+
+    public void setLongtitude(String longtitude) {
+        this.longtitude = longtitude;
     }
 }

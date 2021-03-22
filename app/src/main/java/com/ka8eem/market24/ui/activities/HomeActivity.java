@@ -5,11 +5,14 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
@@ -32,6 +35,7 @@ import com.ka8eem.market24.ui.fragments.ProfileFragment;
 //import com.ka8eem.market24.ui.fragments.SearchFragment;
 import com.ka8eem.market24.ui.fragments.SettingsFragment;
 import com.ka8eem.market24.util.Constants;
+import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
@@ -45,7 +49,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     FirebaseAuth mAuth;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
-
+    NavController navController ;
     Menu myMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         editor = preferences.edit();
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+
+        navController =
+                Navigation.findNavController(findViewById(R.id.fragment_container));
+
+
 //        toggle = new ActionBarDrawerToggle(this, drawerLayout,
 //                R.string.open_action_bar_toggle, R.string.close_action_bar_toggle);
 //        drawerLayout.addDrawerListener(toggle);
@@ -91,6 +100,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             UserModel userModel = Constants.getUser(getApplicationContext());
             navUsername.setText(userModel.getUserName());
             navUsername.setVisibility(View.VISIBLE);
+
+            if(userModel.getImage() !=null)
+            Picasso.get()
+                    .load(Uri.parse(userModel.getImage()))
+                    .placeholder(R.drawable.user_bk_profile)
+                    .into(user_image);
+
+
             logout_item.setVisible(true);
         }
 

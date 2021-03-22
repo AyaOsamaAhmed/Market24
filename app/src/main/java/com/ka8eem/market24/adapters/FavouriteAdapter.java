@@ -13,15 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.ProductModel;
-import com.ka8eem.market24.ui.activities.ProductDetails;
+import com.ka8eem.market24.ui.fragments.ProductDetailsFragment;
 import com.ka8eem.market24.util.Constants;
 
-import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -97,21 +95,23 @@ String price , cityName , catName ;
         price = listInFav.get(position).getPrice();
         if (curLang.equals("AR")) {
             price = price + " ل.س";
-            cityName = listInFav.get(position).getCityName();
-            catName = listInFav.get(position).getCategoryName();
+          //  cityName = listInFav.get(position).getCityName();
+          //  catName = listInFav.get(position).getCategoryName();
         } else {
             price = price + " L.S";
-            cityName = listInFav.get(position).getCityNameEn();
-            catName = listInFav.get(position).getCategoryNameEn();
+          //  cityName = listInFav.get(position).getCityNameEn();
+          //  catName = listInFav.get(position).getCategoryNameEn();
         }
-        holder.sub_area.setText(listInFav.get(position).getSubCityName());
+      /*  holder.sub_area.setText(listInFav.get(position).getSubCityName());
         Glide.with(context).load(listInFav.get(position).getProductImages().get(0).getImgUrl()).fitCenter().into(holder.imageView);
         holder.textName.setText(listInFav.get(position).getProductName());
         holder.user_name.setText(listInFav.get(position).getUserName());
+       */
+        String time = listInFav.get(position).getDate();
         holder.city_name.setText(cityName);
         holder.textPrice.setText(price);
         holder.cat.setText(catName);
-        String time = listInFav.get(position).getDateTime();
+
         time = time.substring(0, time.indexOf(' '));
         holder.time_.setText(time);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -119,8 +119,8 @@ String price , cityName , catName ;
             public void onClick(View v) {
                 ProductModel model = listInFav.get(position);
 
-                Intent intent = new Intent(context, ProductDetails.class);
-                intent.putExtra("product_id", model.getProductID() + "");
+                Intent intent = new Intent(context, ProductDetailsFragment.class);
+                intent.putExtra("product_id", model.getAdsID() + "");
                 context.startActivity(intent);
             }
         });
