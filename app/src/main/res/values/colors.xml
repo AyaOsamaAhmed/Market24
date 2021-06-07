@@ -10,6 +10,10 @@
     <color name="green_plus">#6F9717</color>
     <color name="red">#DD0505</color>
 
+    <color name="blue_dark">#2BB2D3</color>
+
+    <color name="colorCircle">#C9E8F6</color>
+
     <color name="dark_green">#314514</color>
     <color name="light_green">#9BD220</color>
     <color name="green_menu">#68922B</color>

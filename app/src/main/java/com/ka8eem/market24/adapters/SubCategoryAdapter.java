@@ -3,6 +3,7 @@ package com.ka8eem.market24.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -30,8 +32,10 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     String catName ;
-    public SubCategoryAdapter() {
+    NavController navController ;
 
+    public SubCategoryAdapter( NavController navController) {
+        this.navController = navController ;
     }
 
     public void setList(ArrayList<SubCategoryModel> list) {
@@ -53,9 +57,12 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AdsByCategoryActivity.class);
-                intent.putExtra("cat_id", list.get(position).getSub_id() + "");
-           //     context.startActivity(intent);
+
+                Bundle arguments = new Bundle();
+                arguments.putString("search_sub_cat_id", list.get(position).getSub_id() +"");
+                arguments.putString("search_cat_id", list.get(position).getSubCatId() +"");
+
+                navController.navigate(R.id.SearchFragment,arguments);
             }
         });
         String lang = Constants.getLocal(context);

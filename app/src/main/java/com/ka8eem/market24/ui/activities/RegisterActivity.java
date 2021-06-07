@@ -47,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     // widgets
     EditText editTextName, editTextPassword, editTextConfirmPassword, editTextPhone, editTextAddress, editTextEmail;
-    Button btnRegister;
+    Button btnRegister , btnLogin;
     TextView textView;
 
     // vars
@@ -80,8 +80,16 @@ public class RegisterActivity extends AppCompatActivity {
         editTextConfirmPassword = findViewById(R.id.register_confirm_password_edit_text);
         editTextEmail = findViewById(R.id.register_email_edit_text);
         btnRegister = findViewById(R.id.register_btn);
+        btnLogin = findViewById(R.id.login_btn);
 
-
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

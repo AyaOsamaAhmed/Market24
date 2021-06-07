@@ -97,11 +97,11 @@ public class LoginActivity extends AppCompatActivity {
                 userViewModel.userModel.observe(LoginActivity.this, new Observer<UserModel>() {
                     @Override
                     public void onChanged(UserModel userModel) {
-                        retUserModel = userModel;
-                        if (retUserModel.getExist().equals("yes")) {
+
+                        if (userModel.getExist().equals("yes")) {
 
                             Gson gson = new Gson();
-                            String json = gson.toJson(retUserModel);
+                            String json = gson.toJson(userModel);
                             editor.putString("USER_MODEL", json);
                             editor.putBoolean("LOGGED_IN", true);
                             editor.putBoolean("REGISTERED", true);
@@ -210,4 +210,6 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
+
 }

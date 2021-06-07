@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -20,9 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -30,6 +33,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.google.android.material.navigation.NavigationView;
@@ -72,7 +77,7 @@ public class AddProductFragment extends Fragment {
     String curLang = "AR";
     public static ArrayList<Uri> imageUris;
     public static ArrayList<File> imageFiles;
-
+    List<MultipartBody.Part> imagesPart ;
     int areaIndex, subAreaIndex, categoryIndex, subCategoryIntex;
     ImageProductAdapter imageProductAdapter;
     CategoryViewModel categoryViewModel;
@@ -85,7 +90,10 @@ public class AddProductFragment extends Fragment {
     public static ArrayList<MultipartBody.Part> images;
     public static ArrayList<String> encodedImages;
       ProgressDialog progressDialog ;
+    ProgressDialog take_image_progressDialog;
+    NavController navController ;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,6 +106,8 @@ public class AddProductFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
+
         //You need to add the following line for this solution to work; thanks skayred
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
@@ -108,9 +118,7 @@ public class AddProductFragment extends Fragment {
             {
                 if( keyCode == KeyEvent.KEYCODE_BACK )
                 {
-                    //  FragmentTransaction tx = getFragmentManager().beginTransaction();
-                    //  tx.replace(R.id.fragment_container, new AddProductFragment() ).addToBackStack( "tag" ).commit();
-
+                    navController.navigate(R.id.HomeFragment);
                     return true;
                 }
                 return false;
@@ -119,6 +127,7 @@ public class AddProductFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initViews() {
 
         searchView = (LinearLayout) getActivity().findViewById(R.id.relative1);
@@ -126,6 +135,7 @@ public class AddProductFragment extends Fragment {
         drawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
         //-------------------
         imageUris = new ArrayList<>();
+        imagesPart = new ArrayList<>();
         imageFiles =new ArrayList<>();
         encodedImages = new ArrayList<>();
         preferences = getContext().getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
@@ -142,8 +152,9 @@ public class AddProductFragment extends Fragment {
         progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         progressDialog.setCancelable(false);
         //----------------
-        if(! preferences.getString(Keys.longtitude,"").equals("")){
-            fragmentAddProductBinding.editLocation.setText(preferences.getString(Keys.latitude,"") +"--"+preferences.getString(Keys.longtitude,""));
+        if(! preferences.getString(Keys.Address,"").equals("")){
+            fragmentAddProductBinding.editLocation.setText(preferences.getString(Keys.Address,"") );
+
         }
         //---------
         categoryViewModel.subCategoryList.observe(getActivity(), new Observer<List<SubCategoryModel>>() {
@@ -152,8 +163,7 @@ public class AddProductFragment extends Fragment {
                 if (getActivity() != null && getContext() != null) {
                     subCategoryList = new ArrayList<>(subCategoryModels);
                     ArrayList<String> listNames = new ArrayList<>();
-                    // subCategoryList.add(0, new SubCategoryModel(-1, "", ""));
-                    //  listNames.add(getString(R.string.choose_sub_category));
+
                     for (SubCategoryModel it : subCategoryModels) {
                         if (curLang.equals("AR"))
                             listNames.add(it.getCubCatName());
@@ -276,43 +286,30 @@ public class AddProductFragment extends Fragment {
         fragmentAddProductBinding.btnPublishProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validInput()) {
+                   if (validInput()) {
                     progressDialog.show();
                     UserModel userModel = Constants.getUser(getContext());
 
                     String userId = userModel.getUserId() + "";
                    String price = fragmentAddProductBinding.editPrice.getText().toString().trim();
                    String name = fragmentAddProductBinding.editProductName.getText().toString();
-                    String catId = catList.get(categoryIndex).getCategoryId() + "";
-                    String subCatId = subCategoryList.get(subCategoryIntex).getSubCatId() + "";
-                    String areaId = areaList.get(areaIndex).getAreaID() + "";
-                    String subAreaId = subAreaList.get(subAreaIndex).getSubAreaID() + "";
+                    String catId = categoryIndex+"";
+                    String subCatId = subCategoryList.get(subCategoryIntex).getSub_id() + "";
                     String description = fragmentAddProductBinding.editDescription.getText().toString();
                     String latitude = preferences.getString(Keys.latitude,"");
                     String longtitude =preferences.getString(Keys.longtitude,"");
+                    String address  = preferences.getString(Keys.Address,"");
+                    String phone = fragmentAddProductBinding.editNumber.getText().toString();
+                       String negotiable;
+                     if(fragmentAddProductBinding.negotiable.getText().toString() == null)
+                           negotiable ="0";
+                     else
+                          negotiable = "1" ;
 
-                    AdsModel adsModel = new AdsModel(userId, catId, subCatId , areaId, subAreaId,name, price, description , imageUris,latitude,longtitude);
-                    Log.i(TAG, "onClick: "+ userId +"..."+catId +".."+subCatId+".."+areaId +".."+subAreaId+".."+price+"..."+description);
-                    viewModel.uploadProduct(adsModel);
+                    AdsModel adsModel = new AdsModel(userId, catId, subCatId ,name, price, description ,latitude,longtitude,address,negotiable,phone);
+                    Log.i(TAG, "onClick: "+ userId +"..."+catId +".."+subCatId+".." +".."+price+"..."+description);
 
-                 /*
-                     Intent intent = null;
-                    String productType = catList.get(categoryIndex).getIsVehicles();
-                    if (productType.equals("1")) {
-                        if (subCategoryList.get(subCategoryIntex).getIsCar().equals("1"))
-                            intent = new Intent(getContext(), CarActivity.class);
-                        else
-                            intent = new Intent(getContext(), VehiclesActivity.class);
-                    } else if (productType.equals("2")) {
-                        intent = new Intent(getContext(), BuildingActivity.class);
-                    } else if (productType.equals("0"))
-                        intent = new Intent(getContext(), OtherDetailsActivity.class);
-                    Bundle bundle = new Bundle();
-               //     bundle.putSerializable("ads_model", adsModel);
-                    bundle.putSerializable("images", null);
-                    intent.putExtras(bundle);
-                //    startActivity(intent);
-                  */
+                    viewModel.uploadProduct(adsModel,imagesPart);
 
                 }
             }
@@ -325,16 +322,53 @@ public class AddProductFragment extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.max_images_uploaded), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE )
+                        != PackageManager.PERMISSION_GRANTED ) {
                     ActivityCompat.requestPermissions(getActivity(),
                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
                     return;
                 }
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_images)), 1);
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE )
+                        != PackageManager.PERMISSION_GRANTED ) {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+                    return;
+                }
+
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA )
+                        != PackageManager.PERMISSION_GRANTED ) {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.CAMERA}, 100);
+                    return;
+                }
+                take_image_progressDialog = new ProgressDialog(getContext());
+                take_image_progressDialog.show();
+                take_image_progressDialog.setContentView(R.layout.choose_image_dialog);
+                take_image_progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                take_image_progressDialog.setCancelable(false);
+                Button take_image = take_image_progressDialog.findViewById(R.id.take_image);
+                Button choose_image = take_image_progressDialog.findViewById(R.id.choose_image);
+
+                take_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (takePicture.resolveActivity(getActivity().getPackageManager()) != null)
+                        startActivityForResult(takePicture, 0);//zero can be replaced with any action code (called requestCode)
+                    }
+                });
+                choose_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                        intent.setType("image/*");
+                        startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_images)), 1);
+                    }
+                });
+
+
             }
         });
 
@@ -345,16 +379,41 @@ public class AddProductFragment extends Fragment {
                     Toast.makeText(getContext(), getString(R.string.max_images_uploaded), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 100);
-                    return;
-                }
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_images)), 1);
+                take_image_progressDialog = new ProgressDialog(getContext());
+                take_image_progressDialog.show();
+                take_image_progressDialog.setContentView(R.layout.choose_image_dialog);
+                take_image_progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                take_image_progressDialog.setCancelable(false);
+                Button take_image = take_image_progressDialog.findViewById(R.id.take_image);
+                Button choose_image = take_image_progressDialog.findViewById(R.id.choose_image);
+
+                take_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (takePicture.resolveActivity(getActivity().getPackageManager()) != null)
+                            startActivityForResult(takePicture, 0);//zero can be replaced with any action code (called requestCode)
+                    }
+                });
+                choose_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                        intent.setType("image/*");
+                        startActivityForResult(Intent.createChooser(intent, getString(R.string.choose_images)), 1);
+                    }
+                });
+
+            }
+        });
+
+        viewModel.error.observe((LifecycleOwner) getContext(), new Observer<String>() {
+            @Override
+            public void onChanged(String message) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(),message,Toast.LENGTH_LONG).show();
             }
         });
 
@@ -389,6 +448,7 @@ public class AddProductFragment extends Fragment {
                     }
                 });
                 */
+
             }
         });
 
@@ -413,10 +473,7 @@ public class AddProductFragment extends Fragment {
                         else
                             list.add(it.getCatNameEn());
                     }
-                 //   String all = getContext().getString(R.string.all_categories);
-                  //  list.add(0, all);
-                  //  catList.add(0, new CategoryModel(0, all, "0"));
-                 //   list.remove(list.size() - 1);
+
                     catAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_textview, list);
                     catAdapter.setDropDownViewResource(R.layout.text_drop);
                     fragmentAddProductBinding.categorySpinner.setAdapter(catAdapter);
@@ -427,7 +484,7 @@ public class AddProductFragment extends Fragment {
             }
         });
         areaList = new ArrayList<>();
-        categoryViewModel.getAllCities();
+     //   categoryViewModel.getAllCities();
         categoryViewModel.mutableAreaList.observe(getActivity(), new Observer<List<AreaModel>>() {
             @Override
             public void onChanged(List<AreaModel> cityModels) {
@@ -479,17 +536,18 @@ public class AddProductFragment extends Fragment {
         */
 
 
-        else if (categoryIndex !=0) {
-            fragmentAddProductBinding.categorySpinner.requestFocus();
-            Toast.makeText(getContext(), getString(R.string.choose_cat), Toast.LENGTH_SHORT).show();
+         else if (fragmentAddProductBinding.editNumber.getText().toString().isEmpty()) {
+            fragmentAddProductBinding.editNumber.requestFocus();
+            Toast.makeText(getContext(), getString(R.string.num), Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        else if (subCategoryIntex != 0 ) {
-            fragmentAddProductBinding.subCategorySpinner.requestFocus();
-            Toast.makeText(getContext(), getString(R.string.choose_sub_category), Toast.LENGTH_SHORT).show();
+        else if (fragmentAddProductBinding.editDescription.getText().toString().isEmpty() ) {
+            fragmentAddProductBinding.editDescription.requestFocus();
+            Toast.makeText(getContext(), getString(R.string.description), Toast.LENGTH_SHORT).show();
             return false;
         }
+
         else if (imageUris == null || imageUris.size() == 0 || imageUris.size() > 5) {
             Toast.makeText(getContext(), getString(R.string.max_images_uploaded), Toast.LENGTH_SHORT).show();
             return false;
@@ -518,12 +576,13 @@ public class AddProductFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Uri uri = null;
-            File filePath = null ;
+            File filePath = null;
             ClipData clipData = data.getClipData();
             if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     imageUris.add(clipData.getItemAt(i).getUri());
-                    filePath = new File (clipData.getItemAt(i).getUri().getPath());
+                    imagesPart.add(Keys.compressImage(getContext(), clipData.getItemAt(i).getUri(), "images[]"));
+                    filePath = new File(clipData.getItemAt(i).getUri().getPath());
                     imageFiles.add(filePath);
                 }
                 encodedImages = new ArrayList<>();
@@ -551,9 +610,13 @@ public class AddProductFragment extends Fragment {
                 progressDialog.dismiss();
             } else {
                 if (data.getData() != null) {
-                    Bitmap bitmap = null;
+
                     imageUris.add(data.getData());
-                    try {
+                    imagesPart.add(Keys.compressImage(getContext(), data.getData(), "images[]"));
+
+                   /*
+                     Bitmap bitmap = null;
+                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUris.get(0));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -565,9 +628,11 @@ public class AddProductFragment extends Fragment {
                         byte[] byteArrayImage = baos.toByteArray();
                         encoded = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
                         encodedImages.add(encoded);
-                        filePath = new File (data.getData().getPath());
+                        filePath = new File(data.getData().getPath());
                         imageFiles.add(filePath);
                     }
+                    */
+
                 } else
                     encodedImages = new ArrayList<>();
             }
@@ -581,8 +646,31 @@ public class AddProductFragment extends Fragment {
             fragmentAddProductBinding.takeImg.setVisibility(View.GONE);
             fragmentAddProductBinding.takeImg2.setVisibility(View.VISIBLE);
             fragmentAddProductBinding.recyclerViewProductImage.setAdapter(imageProductAdapter);
-        }
-    }
 
+        } else if (requestCode == 0 && resultCode == RESULT_OK) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos); // bm is the bitmap object
+
+            String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, "Title", null);
+
+            Uri selectedImage = Uri.parse(path);
+                imageUris.add(selectedImage);
+            imagesPart.add(Keys.compressImage(getContext(), selectedImage, "images[]"));
+
+            GridLayoutManager manager = new GridLayoutManager(getContext(), 3);
+            fragmentAddProductBinding.recyclerViewProductImage.setLayoutManager(manager);
+            imageProductAdapter = new ImageProductAdapter(false);
+            imageProductAdapter.setList(imageUris);
+            fragmentAddProductBinding.recyclerViewProductImage.setVisibility(View.VISIBLE);
+            fragmentAddProductBinding.empty.setVisibility(View.GONE);
+            fragmentAddProductBinding.emptyDetails.setVisibility(View.GONE);
+            fragmentAddProductBinding.takeImg.setVisibility(View.GONE);
+            fragmentAddProductBinding.takeImg2.setVisibility(View.VISIBLE);
+            fragmentAddProductBinding.recyclerViewProductImage.setAdapter(imageProductAdapter);
+        }
+
+        take_image_progressDialog.dismiss();
+    }
 
 }

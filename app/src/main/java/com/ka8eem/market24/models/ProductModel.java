@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductModel implements Serializable {
 
@@ -60,8 +61,28 @@ public class ProductModel implements Serializable {
     @SerializedName("image")
     private ImageModel adsImage;
 
+    @SerializedName("images")
+    private List<ImageModel> listAdsImage;
+
     @SerializedName("long")
     private String longtitude;
+
+    @SerializedName("category")
+    private CategoryModel category;
+
+    @SerializedName("subcategory")
+    private SubCategoryModel subcategory;
+
+
+    @SerializedName("is_favourite")
+    private int is_favourite;
+
+    @SerializedName("phone")
+    private String phone;
+
+    @SerializedName("able_disscussion")
+    private String able_disscussion;
+
 
     public String getAdsID() {
         return adsID;
@@ -205,5 +226,50 @@ public class ProductModel implements Serializable {
 
     public void setLongtitude(String longtitude) {
         this.longtitude = longtitude;
+    }
+
+    public CategoryModel getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryModel category) {
+        this.category = category;
+    }
+
+    public SubCategoryModel getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(SubCategoryModel subcategory) {
+        this.subcategory = subcategory;
+    }
+
+    public List<ImageModel> getListAdsImage() {
+        return listAdsImage;
+    }
+
+    public void setListAdsImage(List<ImageModel> listAdsImage) {
+        this.listAdsImage = listAdsImage;
+    }
+
+
+    public int getIs_favourite() { return is_favourite; }
+
+    public void setIs_favourite(int is_favourite) { this.is_favourite = is_favourite; }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAble_disscussion() {
+        return able_disscussion;
+    }
+
+    public void setAble_disscussion(String able_disscussion) {
+        this.able_disscussion = able_disscussion;
     }
 }

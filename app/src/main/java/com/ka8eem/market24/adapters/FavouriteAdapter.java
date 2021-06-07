@@ -1,51 +1,49 @@
 package com.ka8eem.market24.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
+import com.ka8eem.market24.models.FavouriteModel;
 import com.ka8eem.market24.models.ProductModel;
-import com.ka8eem.market24.ui.fragments.ProductDetailsFragment;
 import com.ka8eem.market24.util.Constants;
+import com.ka8eem.market24.util.Keys;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyViewHolder> {
 
-    ArrayList<ProductModel> listInFav;
+    List<FavouriteModel> listInFav;
     Context context;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
-    Gson gson;
-String price , cityName , catName ;
-    ItemTouchHelper itemTouchHelper;
+    NavController navController ;
+    String price  ;
 
-    public void setList(ArrayList<ProductModel> list) {
+    public void setList(List<FavouriteModel> list) {
+
         this.listInFav = list;
     }
 
-    public FavouriteAdapter(Context context, ItemTouchHelper itemTouchHelper) {
-        this.itemTouchHelper = itemTouchHelper;
+    public FavouriteAdapter(Context context , NavController navController) {
         this.context = context;
-        preferences = context.getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
-        editor = preferences.edit();
-    }
-
-    public FavouriteAdapter() {
-
+        this.navController = navController ;
     }
 
     public void removeItem(int pos) {
@@ -84,7 +82,7 @@ String price , cityName , catName ;
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.favourite_item_list, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.favourite_list_item, parent, false);
         return new MyViewHolder(view);
     }
 
@@ -92,38 +90,51 @@ String price , cityName , catName ;
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
 
         String curLang = Constants.getLocal(context);
-        price = listInFav.get(position).getPrice();
+
+        price = listInFav.get(position).getAds().getPrice();
         if (curLang.equals("AR")) {
             price = price + " ل.س";
-          //  cityName = listInFav.get(position).getCityName();
-          //  catName = listInFav.get(position).getCategoryName();
         } else {
             price = price + " L.S";
-          //  cityName = listInFav.get(position).getCityNameEn();
-          //  catName = listInFav.get(position).getCategoryNameEn();
         }
-      /*  holder.sub_area.setText(listInFav.get(position).getSubCityName());
-        Glide.with(context).load(listInFav.get(position).getProductImages().get(0).getImgUrl()).fitCenter().into(holder.imageView);
-        holder.textName.setText(listInFav.get(position).getProductName());
-        holder.user_name.setText(listInFav.get(position).getUserName());
-       */
-        String time = listInFav.get(position).getDate();
-        holder.city_name.setText(cityName);
-        holder.textPrice.setText(price);
-        holder.cat.setText(catName);
 
-        time = time.substring(0, time.indexOf(' '));
-        holder.time_.setText(time);
+        holder.product_Price.setText(price);
+        holder.product_name.setText(listInFav.get(position).getAds().getProduct_name());
+
+        if( listInFav.get(position).getAds().getListAdsImage().size() != 0) {
+           String url = Keys.image_domain + listInFav.get(position).getAds().getListAdsImage().get(0).getImgUrl();
+
+            Transformation transformation = new RoundedTransformationBuilder()
+                    .borderColor(Color.WHITE)
+                    .borderWidthDp(3)
+                    .cornerRadiusDp(20)
+                    .oval(false)
+                    .build();
+
+            Picasso.get()
+                    .load(url).resize(600, 200)
+                    .placeholder(R.mipmap.ic_logo_round)
+                    .into(holder.img_view);
+        }
+
+
+        holder.fav_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProductModel model = listInFav.get(position);
+                Bundle arguments = new Bundle();
+                arguments.putString("product_id", listInFav.get(position).getAds().getAdsID()+"");
 
-                Intent intent = new Intent(context, ProductDetailsFragment.class);
-                intent.putExtra("product_id", model.getAdsID() + "");
-                context.startActivity(intent);
+                navController.navigate(R.id.ProductDetailsFragment,arguments);
             }
         });
+
     }
 
     @Override
@@ -133,18 +144,17 @@ String price , cityName , catName ;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
-        TextView textName, textPrice , user_name , city_name , cat , time_ , sub_area;
+        ImageView img_view ,  fav_item ;
+        TextView  product_name , product_Price ;
+
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.fav_img_item);
-            textName = itemView.findViewById(R.id.fav_prod_name);
-            textPrice = itemView.findViewById(R.id.fav_salary_item);
-            user_name = itemView.findViewById(R.id.user_name);
-            cat = itemView.findViewById(R.id.category);
-            city_name = itemView.findViewById(R.id.city_name);
-            sub_area = itemView.findViewById(R.id.sub_area);
-            time_ = itemView.findViewById(R.id.time_date);
+            img_view = itemView.findViewById(R.id.img_item);
+            fav_item = itemView.findViewById(R.id.fav_item);
+            product_name = itemView.findViewById(R.id.product_name);
+            product_Price= itemView.findViewById(R.id.product_price);
+
+
         }
     }
 }

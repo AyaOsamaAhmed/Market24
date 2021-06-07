@@ -18,11 +18,13 @@ import com.ka8eem.market24.models.RequestModel;
 import com.ka8eem.market24.models.SpecialInfoModel;
 import com.ka8eem.market24.models.SubCategoryModel;
 import com.ka8eem.market24.models.TypeCarModel;
+import com.ka8eem.market24.models.UpdateProfileResponse;
 import com.ka8eem.market24.models.UploadImageModel;
 import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.util.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MultipartBody;
@@ -33,6 +35,7 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import retrofit2.http.Field;
 
 public class DataClient {
 
@@ -73,9 +76,9 @@ public class DataClient {
         return dataInterface.getAllCategories();
     }
 
-    public Call<MainModel> getAllAreas() {
-        return dataInterface.getAllAreas();
-    }
+    public Call<MainModel> getAllAreas() { return dataInterface.getAllAreas(); }
+
+
 
     public Call<MainModel> getHome() {
         return dataInterface.getHome();
@@ -101,15 +104,34 @@ public class DataClient {
         return dataInterface.login(email, password);
     }
 
+    public Call<MainModel> getSearchName(String name) {
+        return dataInterface.getSearchName(name);
+    }
+
+    public Call<MainModel> getSearchLocation(String name , String latitude , String longtitude , String raduis) {
+        return dataInterface.getSearchLocation(name , latitude , longtitude , raduis);
+    }
+
+    public Call<MainModel> getSearchCategory(String cat_id , String sub_cat_id) {
+        return dataInterface.getSearchCategory(cat_id , sub_cat_id);
+    }
+
+    public Call<MainModel> getSearch(String name ,String cat_id , String sub_cat_id , String latitude , String longtitude , String raduis) {
+        return dataInterface.getSearch(name ,cat_id , sub_cat_id, latitude , longtitude , raduis);
+    }
+
     public Call<RegisterResponse> register(UserModel userModel) {
         return dataInterface.register(userModel);
     }
-
-    public Call<String> update_pass(String email, String password) {
-        return dataInterface.update_pass(email, password);
+    public Call<MainModel> getUserData(int user_id) {
+        return dataInterface.getUserData(user_id);
     }
 
-    public Call<ArrayList<ProductModel>> getMyAds(int id) {
+    public Call<ForgetPasswordResponse> update_pass(String user_id, String password) {
+        return dataInterface.changePassword(user_id, password);
+    }
+
+    public Call<MainModel> getMyAds(int id) {
         return dataInterface.getMyAds(id);
     }
 
@@ -118,8 +140,9 @@ public class DataClient {
     }
 
 
-    public Call<MainModel> uploadProduct(AdsModel adsModel) {
-        return dataInterface.uploadProduct(adsModel);
+    public Call<MainModel> uploadProduct(AdsModel adsModel, List<MultipartBody.Part> images) {
+        return dataInterface.uploadProduct(adsModel.getUser_id(),adsModel.getCategory_id(),adsModel.getSubcategory_id(),adsModel.getName()
+        ,adsModel.getPrice(),adsModel.getDescription(),adsModel.getLatitude(),adsModel.getLongitude(),adsModel.getAddress(),adsModel.getAble_disscussion(),adsModel.getPhone(),images);
     }
 
     public Call<String> reportAds(ReportModel reportModel) {
@@ -130,8 +153,34 @@ public class DataClient {
         return dataInterface.requestProduct(requestModel);
     }
 
-    public Call<String> updateProfile(UserModel userModel) {
-        return dataInterface.updateProfile(userModel);
+    public Call<UpdateProfileResponse> updateProfile(UserModel userModel , MultipartBody.Part image ) {
+        return dataInterface.updateProfile(userModel.getUserId(),userModel.getUserName(),userModel.getAddress()
+                ,userModel.getPhone() , image);
+    }
+
+
+    public Call<MainModel> getAllFavourite (int user_id) {
+        return dataInterface.getAllFavourite( user_id);
+    }
+
+    public Call<MainModel> getAllConversation (int user_id) {
+        return dataInterface.getAllConversations(user_id);
+    }
+
+    public Call<MainModel> sendMessage (int buyer_id , int seller_id , int ads_id
+            ,String message ,String  type_sender) {
+        return dataInterface.sendMessage(buyer_id,seller_id,ads_id,message,type_sender);
+    }
+
+    public Call<MainModel> getMessages (int conversation_id) {
+        return dataInterface.getMessages(conversation_id);
+    }
+
+    public Call<MainModel> getMessagesByPage (int conversation_id , String page) {
+        return dataInterface.getMessagesByPage(conversation_id,page);
+    }
+    public Call<MainModel> updateItemFavourite(int user_id , String ads_id) {
+        return dataInterface.updateItemFavourite(user_id,ads_id);
     }
 
     public Call<ArrayList<ProductModel>> getAdsByCategory(String id) {
@@ -152,6 +201,11 @@ public class DataClient {
 
     public Call<MainModel> getSubArea(String id) {
         return dataInterface.getSubAreas(id);
+    }
+
+
+    public Call<MainModel> getTerms() {
+        return dataInterface.get_terms();
     }
 
     public Call<String> uploadImages(RequestBody id, ArrayList<MultipartBody.Part> images) {
@@ -176,8 +230,12 @@ public class DataClient {
         return dataInterface.getPannerImages();
     }
 
-    public Call<ProductModel> getProductById(String id) {
+    public Call<MainModel> getProductById(String id) {
         return dataInterface.getProductById(id);
+    }
+
+    public Call<MainModel> getProductByIdAndUser(String id,int user_id) {
+        return dataInterface.getProductByIdAndUser(id,user_id);
     }
 
     public Call<String> deleteImage(String id) {

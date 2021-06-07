@@ -1,19 +1,26 @@
 package com.ka8eem.market24.ui.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,16 +31,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.Notification.Token;
 import com.ka8eem.market24.R;
+import com.ka8eem.market24.adapters.AllChatUserAdapter;
+import com.ka8eem.market24.adapters.FavouriteAdapter;
 import com.ka8eem.market24.adapters.UserFirebaseAdapter;
 import com.ka8eem.market24.models.ChatModel;
 import com.ka8eem.market24.models.ChatlistModel;
+import com.ka8eem.market24.models.ConversationModel;
 import com.ka8eem.market24.models.SpecialInfoModel;
 import com.ka8eem.market24.models.UserFirebaseModel;
 import com.ka8eem.market24.models.UserModel;
+import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.viewmodel.ProductViewModel;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,51 +54,89 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 public class AllChatsFragment extends Fragment {
-    String date_st="";
-    public static final String DATE_PARSING_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-Date date;
+
     public AllChatsFragment() {
         // Required empty public constructor
     }
-    ProductViewModel productVM;
+
     SharedPreferences preferences;
     UserModel userModel;
     Gson gson;
-    DateFormat currentDateTimeString = null;
-    SearchView searchView;
-    ImageView filterImage;
-
+    LinearLayout toolbar ;
     RecyclerView recyclerView;
-    private UserFirebaseAdapter userfirebaseAdapter;
+    ProductViewModel productViewModel ;
+    SwipeRefreshLayout swipeRefreshLayout;
+    String date_st="";
+    public static final String DATE_PARSING_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+    Date date;
+    private AllChatUserAdapter chatUserAdapter;
     private List<UserFirebaseModel> Muser ;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
-    //ArrayList<String> arr_st= new ArrayList<>();
     final List<String> userslist= new ArrayList<>();
     final List<String> _id_ad= new ArrayList<>();
     final List<String> _img= new ArrayList<>();
     final List<String> _name_pro= new ArrayList<>();
     final List<String> _str_date= new ArrayList<>();
-    final List<Integer> _num_seen= new ArrayList<>();
     final List<Boolean> _isSeen= new ArrayList<>();
 
-    //final List<List<String>> _ads_id= new ArrayList<>();
-   // final List<String> _ads_img= new ArrayList<>();
-    UserFirebaseModel userFirebaseModel;
     private List<ChatlistModel> My_Chats ;
-    private List<SpecialInfoModel> specialInfoModels = new ArrayList<>();
+    ImageView no_chat_img ;
+    TextView no_chat;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_allchats, container, false);
-        searchView = (SearchView) getActivity().findViewById(R.id.search_view);
-        searchView.setVisibility(View.GONE);
-        filterImage = (ImageView) getActivity().findViewById(R.id.filter_icon);
-        filterImage.setVisibility(View.GONE);
+        productViewModel = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
+        preferences = getContext().getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
+        gson = new Gson();
+        Type type = new TypeToken<UserModel>() {
+        }.getType();
+        String json = preferences.getString("USER_MODEL", null);
+        userModel = gson.fromJson(json, type);
+
+        toolbar = getActivity().findViewById(R.id.relative1);
+        toolbar.setVisibility(View.GONE);
+
+        no_chat = view.findViewById(R.id.no_chat);
+        no_chat_img = view.findViewById(R.id.no_img_chat);
+
         recyclerView = view.findViewById(R.id.chats_recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        swipeRefreshLayout = view.findViewById(R.id.swip_recycler);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                productViewModel.getAllConversation(userModel.getUserId());
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        productViewModel.getAllConversation(userModel.getUserId());
+        productViewModel.mutableConversationModel.observe(getActivity(), new Observer<List<ConversationModel>>() {
+            @Override
+            public void onChanged(List<ConversationModel> conversationModels) {
+
+                Log.d(TAG, "onChanged: list chat:" + conversationModels.size());
+                if(conversationModels.size() == 0){
+                        no_chat.setVisibility(View.VISIBLE);
+                        no_chat_img.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                }else {
+                    no_chat.setVisibility(View.GONE);
+                    no_chat_img.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    chatUserAdapter = new AllChatUserAdapter(getContext(), conversationModels ,userModel.getUserId());
+
+                    recyclerView.setAdapter(chatUserAdapter);
+                }
+            }
+        });
 
         ////get ads
      /*   preferences = getContext().getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
@@ -109,7 +160,7 @@ Date date;
                     }
                 }
             }
-        });*/
+        });
         
         //get message
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -160,7 +211,7 @@ Date date;
                 Collections.sort(_id_ad, Collections.reverseOrder());
                 Collections.sort(_img, Collections.reverseOrder());
                 Collections.sort(_name_pro, Collections.reverseOrder());
-                //Collections.sort(_str_date, Collections.reverseOrder());*/
+                //Collections.sort(_str_date, Collections.reverseOrder());
                 read_chat();
             }
 
@@ -170,6 +221,7 @@ Date date;
             }
         });
         updateToken(FirebaseInstanceId.getInstance().getToken());
+        */
         return view;
     }
     private void updateToken(String token)
@@ -303,8 +355,8 @@ Date date;
 
                // My_Chats.sort(Comparator.comparing(ChatlistModel::getStr_date).reversed());
                 //Collections.sort(My_Chats, Collections.reverseOrder());
-                userfirebaseAdapter = new UserFirebaseAdapter(getContext(), My_Chats);
-                recyclerView.setAdapter(userfirebaseAdapter);
+              //  userfirebaseAdapter = new UserFirebaseAdapter(getContext(), My_Chats);
+              //  recyclerView.setAdapter(userfirebaseAdapter);
             }
 
             @Override

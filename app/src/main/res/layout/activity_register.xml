@@ -140,7 +140,11 @@
             android:inputType="textPassword"
             android:paddingLeft="3dp"
             android:singleLine="true" />
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    >
         <Button
             android:id="@+id/register_btn"
             android:layout_width="wrap_content"
@@ -150,8 +154,22 @@
             android:background="@drawable/background_light_green"
             android:gravity="center"
             android:padding="15dp"
+            android:layout_weight="1"
             android:text="@string/create_account"
             android:textColor="#ffffff" />
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/background_light_green"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="@string/login"
+            android:textColor="#ffffff" />
+</LinearLayout>
     </LinearLayout>
     </ScrollView>
 

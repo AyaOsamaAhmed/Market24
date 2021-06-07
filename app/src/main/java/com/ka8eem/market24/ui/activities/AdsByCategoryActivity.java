@@ -40,7 +40,6 @@ public class AdsByCategoryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String id = intent.getStringExtra("cat_id");
         recyclerView = findViewById(R.id.ads_cat_recycler_view);
-        list = new ArrayList<>(MainActivity.paymentList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         productViewModel = ViewModelProviders.of(this).get(ProductViewModel.class);
         productViewModel.getAdsByCategory(id);

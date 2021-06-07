@@ -37,7 +37,7 @@
             android:paddingHorizontal="10dp"
             android:text="  this is category"
             android:textAlignment="viewStart"
-            android:textSize="@dimen/text_size"
+            android:textSize="@dimen/text_size_medium"
             tools:ignore="RtlCompat" />
 
     </LinearLayout>

@@ -173,7 +173,7 @@
     <string name="year_of_create">سنة الصنع</string>
     <string name="engine_power">قوة المحرك (CC)</string>
     <string name="kilo_meters">المسافة المقطوعة</string>
-    <string name="send_message">ارسل رسالتك الي مالك الاعلان</string>
+    <string name="send_message">ارسل رسالتك</string>
     <string name="send">ارسال</string>
     <string name="first">الرسالة الاولي</string>
     <string name="my_message">الرسائل</string>
@@ -225,14 +225,24 @@
     <string name="confirm_password">تاكيد كلمه المرور</string>
     <string name="edit_profile">تعديل البروفيل</string>
     <string name="change_pass_success">تم تغير كلمه المرور بنجاح</string>
-    <string name="new_product">"اضافه منتج "</string>
-    <string name="enter_price">ادخل السعر - قابل للتفاوض</string>
+    <string name="new_product">"إضافه منتج "</string>
+    <string name="enter_price">ادخل السعر </string>
     <string name="details_take_photo">"بحد أقصى 5 صور "</string>
-    <string name="publish">رفع الاعلان</string>
+    <string name="publish">رفع الإعلان</string>
     <string name="choose_location">اختر الموقع</string>
     <string name="upload_ads_sucess">تم رفع الاعلان بنجاح</string>
     <string name="animal">حيوانات</string>
     <string name="num">ادخل رقم الهاتف</string>
     <string name="sub_category">تصنيف فرعى</string>
     <string name="all_sub_of">كل الفروع الخاصه ب</string>
+    <string name="terms_condition">"شروط و الاحكام "</string>
+    <string name="choose_save">اختر الموقع</string>
+    <string name="negotiate">"قابل للتفاوض "</string>
+    <string name="chat">رسايل</string>
+    <string name="no_chats">لا يوجد محادثات</string>
+    <string name="no_product">لا يوجد منتجات</string>
+    <string name="no_category">لا يوجد تصنيفات فرعيه</string>
+    <string name="all_product">كل الاعلانات</string>
+    <string name="choose_image">أختر صورة</string>
+    <string name="take_image">التقط صورة</string>
 </resources>

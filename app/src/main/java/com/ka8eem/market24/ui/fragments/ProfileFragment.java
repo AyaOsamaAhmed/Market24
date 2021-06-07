@@ -1,7 +1,6 @@
 package com.ka8eem.market24.ui.fragments;
 
 import android.app.ProgressDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,70 +9,58 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.appcompat.widget.SearchView;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
+import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.ui.activities.ChangePassActivity;
-import com.ka8eem.market24.ui.activities.LoginActivity;
 import com.ka8eem.market24.util.Constants;
+import com.ka8eem.market24.util.Keys;
+import com.ka8eem.market24.viewmodel.ProductViewModel;
 import com.ka8eem.market24.viewmodel.UserViewModel;
+import com.pusher.client.channel.User;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.MultipartBody;
 
 import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
-    DatabaseReference reference;
-    FirebaseUser firebaseUser;
-    StorageReference storageReference;
-    private  static  final  int IMAGE_REQUEST = 1;
-    private  Uri imageUri ;
-    private StorageTask storageTask;
     // widgets
 
     Button btnSaveEdit;
@@ -84,8 +71,9 @@ public class ProfileFragment extends Fragment {
     ImageView filterImage  , edit_image;
     LinearLayout toolbar ;
     TextView  change_pass , title_profile;
-
+    UserViewModel userViewModel ;
     // vars
+    MultipartBody.Part imagePart = null ;
     private boolean edit;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -93,6 +81,9 @@ public class ProfileFragment extends Fragment {
     private String name, address, email, phone, encodedImg  , pass;
     private  int user_id;
     Bitmap bitmap;
+    NavController navController ;
+    private DrawerLayout drawerLayout;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -102,11 +93,28 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        initViews(view);
-      //  storageReference = FirebaseStorage.getInstance().getReference("Uploads");
 
+      //  storageReference = FirebaseStorage.getInstance().getReference("Uploads");
+        drawerLayout = getActivity().findViewById(R.id.drawer_layout);
         toolbar = getActivity().findViewById(R.id.relative1);
          toolbar.setVisibility(View.GONE);
+        navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
+        userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+
+        initViews(view);
+        view.setOnKeyListener( new View.OnKeyListener()
+        {
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    navController.navigate(R.id.HomeFragment);
+                    return true;
+                }
+                return false;
+            }
+        } );
 
         circleImageView.setClickable(false);
         if (savedInstanceState != null) {
@@ -134,12 +142,13 @@ public class ProfileFragment extends Fragment {
 
         if(userModel.getImage() != null) {
             Uri uri = Uri.parse(userModel.getImage());
-            Toast.makeText(getContext(), "---" + userModel.getImage() + "---" + uri, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),""+ uri, Toast.LENGTH_SHORT).show();
             Picasso.get()
                     .load(uri)
                     .placeholder(R.drawable.user_bk_profile)
                     .into(circleImageView);
-            circleImageView.setImageURI(uri);
+
+          //  circleImageView.setImageURI(uri);
         }
         return view;
     }
@@ -149,7 +158,7 @@ public class ProfileFragment extends Fragment {
         searchView.setVisibility(View.GONE);
         filterImage = (ImageView) getActivity().findViewById(R.id.filter_icon);
         filterImage.setVisibility(View.GONE);
-        UserViewModel userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+        userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
         name = textName.getText().toString();
         address = textAddress.getText().toString();
         phone = textPhone.getText().toString();
@@ -157,10 +166,9 @@ public class ProfileFragment extends Fragment {
 
 
       //-----------
-        if (encodedImg == null)
-            encodedImg = "";
-        UserModel model = new UserModel(pass  ,user_id , name, phone, address, encodedImg);
-        userViewModel.updateProfile(model);
+
+        UserModel model = new UserModel(user_id,name , phone, address , email);
+        userViewModel.updateProfile(model,imagePart);
         //--------------
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.show();
@@ -264,23 +272,20 @@ public class ProfileFragment extends Fragment {
                   startActivity(intent);
             }
         });
+
+
+        userViewModel.userData.observe(getActivity(), new Observer<UserModel>() {
+            @Override
+            public void onChanged(UserModel userModel) {
+
+                textAddress.setText(userModel.getAddress());
+                textName.setText(userModel.getUserName());
+                textPhone.setText(userModel.getPhone());
+            }
+        });
         pass = userModel.getPassword();
         user_id = userModel.getUserId();
-        textAddress.setText(userModel.getAddress());
         textEmail.setText(userModel.getEmail());
-        textName.setText(userModel.getUserName());
-        textPhone.setText(userModel.getPhone());
-
-      /*  if (userModel.getImage() == null || userModel.getImage().equals("")){
-            circleImageView.setImageResource(R.drawable.ic_person);}
-        else{
-            Toast.makeText(getContext(),"--------------"+ userModel.getImage(), Toast.LENGTH_SHORT).show();
-            new GetImageFromUrl(circleImageView).execute(userModel.getImage());
-            Glide.with(ProfileFragment.this).load(userModel.getImage()).into(circleImageView);
-
-            }
-       */
-
 
     }
 
@@ -290,6 +295,7 @@ public class ProfileFragment extends Fragment {
         Type type = new TypeToken<UserModel>() {
         }.getType();
         userModel = gson.fromJson(json, type);
+        userViewModel.userData(userModel.getUserId());
     }
 
 
@@ -303,7 +309,6 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (requestCode ==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE ) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if(resultCode == RESULT_OK)
@@ -316,6 +321,7 @@ public class ProfileFragment extends Fragment {
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
                     byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
                     encodedImg = Base64.encodeToString(byteArrayVar,Base64.DEFAULT);
+                   imagePart =  Keys.compressImage(getContext(), imageUrl, "img_profile");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -409,6 +415,13 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_SHORT).show();
         }
 }*/
+   public void openDrawer(View view) {
+       String lang = Constants.getLocal(getContext());
+       if (lang.equals("AR"))
+           drawerLayout.openDrawer(Gravity.RIGHT);
+       else
+           drawerLayout.openDrawer(Gravity.LEFT);
+   }
 
 }
     /*@Override

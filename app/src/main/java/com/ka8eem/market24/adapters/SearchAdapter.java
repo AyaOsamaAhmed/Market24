@@ -1,66 +1,35 @@
 package com.ka8eem.market24.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.ProductModel;
-import com.ka8eem.market24.ui.fragments.ProductDetailsFragment;
 import com.ka8eem.market24.util.Constants;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
-import static com.ka8eem.market24.util.Constants.SHARED;
+import com.ka8eem.market24.util.Keys;
+import com.squareup.picasso.Picasso;
+import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<ProductModel> list, listInFav;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
-    Gson gson;
-
+    List<ProductModel> list;
+    NavController navController ;
 
     public SearchAdapter() {
 
     }
 
-    private int isFav(String _id) {
-        for (int i = 0; i < listInFav.size(); i++)
-            if (listInFav.get(i).getAdsID() == _id)
-                return i;
-        return -1;
-    }
-
-    private void getFavList() {
-        listInFav = new ArrayList<>();
-        preferences = context.getSharedPreferences(SHARED, Context.MODE_PRIVATE);
-        editor = preferences.edit();
-        gson = new Gson();
-        String json = preferences.getString("listFav", null);
-        Type type = new TypeToken<ArrayList<ProductModel>>() {
-        }.getType();
-        listInFav = gson.fromJson(json, type);
-        if (listInFav == null)
-            listInFav = new ArrayList<>();
-    }
-
-    public void setList(ArrayList<ProductModel> list) {
+    public void setList(List<ProductModel> list , NavController navController) {
         this.list = list;
+        this.navController = navController ;
         notifyDataSetChanged();
     }
 
@@ -68,103 +37,50 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        getFavList();
-        View view = LayoutInflater.from(context).inflate(R.layout.search_list_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.my_ads_list_item, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-
         ProductModel model = list.get(position);
         String curLang = Constants.getLocal(context);
         String price = model.getPrice();
-      //  String cityName = model.getCityName();
-      //  String catName = model.getCategoryName();
-        String time = model.getDate();
-        time = time.substring(0, time.indexOf(' '));
+        String url = null ;
+
+        if( model.getAdsImage() != null) {
+            url = Keys.image_domain + model.getAdsImage().getImgUrl();
+            Picasso.get()
+                    .load(url).resize(600, 200)
+                    .placeholder(R.mipmap.ic_logo_round)
+                    .into(holder.imageView);
+        }
+
         if (curLang.equals("AR")) {
-            price = price + " ل.س";
+            price = price + " ل.س" ;
         } else {
             price = price + " L.S";
-           // cityName = model.getCityNameEn();
-           // catName = model.getCategoryNameEn();
         }
-     //   Glide.with(context).load(model.getProductImages().get(0).getImgUrl()).fitCenter().into(holder.imageView);
-      //  holder.textCity.setText(cityName);
-        holder.textSalary.setText(price);
-        holder.textProductName.setText(model.getProduct_name());
-     //   holder.textUserName.setText(model.getUserName());
-    //    holder.textCatType.setText(catName);
-        holder.textDataTime.setText(time);
-        holder.imageStar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addToFavourite(holder, list.get(position));
-            }
-        });
 
-        int ok = isFav(model.getAdsID());
-        Drawable drw = context.getResources().getDrawable(R.drawable.ic_favorite_border);
-        if (ok > -1) {
-            drw = context.getResources().getDrawable(R.drawable.ic_favorite);
-        }
-        holder.imageStar.setImageDrawable(drw);
-      //  holder.txtSubArea.setText(list.get(position).getSubCityName());
+        holder.price.setText(price);
+        holder.ProductName.setText(model.getProduct_name());
+        holder.product_desc.setText(model.getDescription());
+
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ProductDetailsFragment.class);
-                intent.putExtra("product_id", model.getAdsID() + "");
-                context.startActivity(intent);
+                Bundle arguments = new Bundle();
+                arguments.putString("product_id", list.get(position).getAdsID()+"");
+
+                navController.navigate(R.id.ProductDetailsFragment,arguments);
             }
         });
     }
 
-    private void addToFavourite(MyViewHolder holder, ProductModel productModel) {
-        String toastMess = "";
-        String _id = productModel.getAdsID();
-        Gson gson = new Gson();
-        String json = preferences.getString("listFav", null);
-        Type type = new TypeToken<ArrayList<ProductModel>>() {
-        }.getType();
-        listInFav = gson.fromJson(json, type);
-        if (listInFav == null || listInFav.size() == 0) {
-            listInFav = new ArrayList<>();
-            listInFav.add(productModel);
-            toastMess = context.getString(R.string.add_to_fav);
-            holder.imageStar.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
-        } else {
-            int pos = isFav(_id);
-            if (pos > -1) {
-                toastMess = context.getString(R.string.remove_from_fav);
-                removeFromFavourite(holder, pos);
-            } else {
-                listInFav.add(productModel);
-                toastMess = context.getString(R.string.add_to_fav);
-                holder.imageStar.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
-            }
-        }
-        json = gson.toJson(listInFav);
-        editor.putString("listFav", json);
-        editor.commit();
-        editor.apply();
-        notifyDataSetChanged();
-        Toast.makeText(context, toastMess, Toast.LENGTH_SHORT).show();
-    }
-
-    private void removeFromFavourite(MyViewHolder holder, int pos) {
-        String json = preferences.getString("listFav", null);
-        Type type = new TypeToken<ArrayList<ProductModel>>() {
-        }.getType();
-        listInFav = gson.fromJson(json, type);
-        listInFav.remove(pos);
-        json = gson.toJson(listInFav);
-        editor.putString("listFav", json);
-        editor.commit();
-        editor.apply();
-        holder.imageStar.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_border));
-        notifyItemRemoved(pos);
+    public void clearAdapter() {
+        list.clear();
         notifyDataSetChanged();
     }
 
@@ -177,20 +93,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView, imageStar;
-        TextView textSalary, textCatType, textCity, textProductName, textUserName, textDataTime, txtSubArea;
+        ImageView imageView;
+        TextView price, ProductName , product_desc;
 
         public MyViewHolder(@NonNull View item) {
             super(item);
-            imageStar = item.findViewById(R.id.search_star_);
-            imageView = item.findViewById(R.id.img_search_list_item);
-            textProductName = item.findViewById(R.id.product_name);
-            textUserName = item.findViewById(R.id.user_name);
-            textSalary = item.findViewById(R.id.price_search_item);
-            textCity = item.findViewById(R.id.city_name);
-            textCatType = item.findViewById(R.id.category);
-            textDataTime = item.findViewById(R.id.time_date);
-            txtSubArea = item.findViewById(R.id.sub_area);
+            imageView = item.findViewById(R.id.my_ads_img_item);
+            ProductName = item.findViewById(R.id.my_product_name);
+            product_desc = item.findViewById(R.id.my_product_desc);
+            price = item.findViewById(R.id.my_product_price);
+
         }
     }
 }

@@ -14,7 +14,7 @@
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/ads_image"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
@@ -36,12 +36,18 @@
         android:id="@+id/message_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:layout_above="@id/container_send"
         android:layout_below="@id/toolbar_chat"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
         android:background="@color/gray" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/container_send"
+        android:visibility="gone"
+        />
 
     <RelativeLayout
         android:id="@+id/container_send"
@@ -72,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="center"
         android:layout_margin="5dp"
         android:background="@drawable/send_msg"
@@ -80,4 +86,6 @@ android:layout_alignParentBottom="true"
         android:padding="15dp"
         android:text="@string/login"
         android:textColor="@color/white" />
+
+
 </RelativeLayout>

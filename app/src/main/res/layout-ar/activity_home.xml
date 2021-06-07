@@ -27,7 +27,6 @@
                 android:id="@+id/open_close"
                 android:layout_width="1dp"
                 android:layout_height="wrap_content"
-
                 android:layout_weight="1"
                 android:paddingVertical="10dp"
                 android:onClick="openDrawer"

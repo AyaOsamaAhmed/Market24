@@ -32,7 +32,16 @@
         app:layout_constraintBottom_toBottomOf="@id/image_profile"
         />
 
-
+    <ImageView
+        android:id="@+id/open_close"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:onClick="openDrawer"
+        android:src="@drawable/icon_menu_green"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
     <TextView
         android:id="@+id/title_profile"

@@ -2,50 +2,32 @@ package com.ka8eem.market24.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.PannerModel;
-import com.ka8eem.market24.models.PaymentAdsModel;
-import com.ka8eem.market24.ui.activities.WebViewActivity;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AutoImageSliderAdapter extends SliderViewAdapter<AutoImageSliderAdapter.SliderAdapterVH> {
-Bitmap bitmap;
+
     private Context context;
     private List<PannerModel> list;
 
-    boolean show = false;
     public AutoImageSliderAdapter(Context context) {
         this.context = context;
     }
 
     public void renewItems(List<PannerModel> sliderItems) {
         this.list = sliderItems;
-        notifyDataSetChanged();
-    }
-
-    public void addItem(PannerModel model) {
-        list.add(model);
         notifyDataSetChanged();
     }
 
@@ -63,21 +45,28 @@ Bitmap bitmap;
     @Override
     public void onBindViewHolder(SliderAdapterVH viewHolder, int position) {
 
+        Transformation transformation = new RoundedTransformationBuilder()
+                .borderColor(Color.WHITE)
+                .borderWidthDp(3)
+                .cornerRadiusDp(20)
+                .oval(false)
+                .build();
 
+            Picasso.get()
+                    .load(list.get(position).getImgUrl()).resize(600, 200)
+                    .placeholder(R.drawable.ic_camera)
+        //            .transform(transformation)
+                    .into(viewHolder.imageView);
 
-        Picasso.get()
-                .load(list.get(position).getImgUrl()).resize(600, 200)
-                 .placeholder(R.drawable.ic_camera)
-                .into(viewHolder.imageView);
+            viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(list.get(position).getLink()));
+                    context.startActivity(i);
+                }
+            });
 
-        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(list.get(position).getLink()));
-                context.startActivity(i);
-            }
-        });
     }
 
     @Override

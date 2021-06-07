@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,10 +41,19 @@ public class AllCategoriesFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_all_categories, container, false);
 
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-            fm.popBackStack();
-        }
+        view.setOnKeyListener( new View.OnKeyListener()
+        {
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    navController.navigate(R.id.HomeFragment);
+                    return true;
+                }
+                return false;
+            }
+        } );
         initView(view);
 
         toolbar = getActivity().findViewById(R.id.relative1);
@@ -63,6 +73,8 @@ public class AllCategoriesFragment extends Fragment {
         categoryAdapter = new CategoryAdapter();
         categoryVM = ViewModelProviders.of(this).get(CategoryViewModel.class);
         categoryVM.getAllCategories();
+
+
         categoryVM.mutableCategoryList.observe(getActivity(), new Observer<List<CategoryModel>>() {
             @Override
             public void onChanged(List<CategoryModel> categoryModels) {

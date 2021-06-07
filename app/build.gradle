@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.ka8eem.market24"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         multiDexEnabled true
@@ -45,7 +45,14 @@ dependencies {
     // create notifications
     implementation "com.android.support:support-compat:29.0.0"
 
+    //image picker
+    implementation 'com.asksira.android:bsimagepicker:1.3.2'
 
+    // full screen
+    implementation 'com.github.stfalcon:stfalcon-imageviewer:1.0.1'
+
+    //round image of picasso
+    implementation 'com.makeramen:roundedimageview:2.3.0'
     // retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
@@ -91,6 +98,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
 
+    //sdp
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+
+
     // firebase
     implementation 'com.google.firebase:firebase-auth:19.4.0'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
@@ -103,5 +114,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'jp.wasabeef:picasso-transformations:2.2.1'
 
+    // pusher for chat
+    implementation 'com.pusher:pusher-java-client:2.2.6'
     // compressor
 }

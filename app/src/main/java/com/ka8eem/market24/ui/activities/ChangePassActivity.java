@@ -1,11 +1,14 @@
 package com.ka8eem.market24.ui.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,27 +19,45 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.UserModel;
+import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.viewmodel.UserViewModel;
 
+import java.lang.reflect.Type;
+
 public class ChangePassActivity extends AppCompatActivity {
-    EditText pass , confirm , email;
+    EditText pass , confirm ;
+    TextView email;
     Button save;
     String email_txt , pass_txt , confirm_txt;
     boolean valid;
     UserModel retUserModel = new UserModel();
     UserViewModel userViewModel;
+    UserModel userModel ;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_changepass);
-        email = (EditText)findViewById(R.id.user_text);
+        email = (TextView)findViewById(R.id.user_text);
         pass = (EditText)findViewById(R.id.pass_text);
         confirm = (EditText)findViewById(R.id.confirm_pass_text);
         save = (Button) findViewById(R.id.btn_save);
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        preferences = this.getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
+        String json = preferences.getString("USER_MODEL", null);
+        Gson gson1 = new Gson();
+        Type type1 = new TypeToken<UserModel>() {
+        }.getType();
+        userModel = gson1.fromJson(json, type1);
+
+        email.setText(userModel.getEmail());
+
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,7 +68,7 @@ public class ChangePassActivity extends AppCompatActivity {
                 validData();
                 if (!valid)
                     return;
-                userViewModel.updatePass(email_txt, pass_txt);
+                userViewModel.updatePass(userModel.getUserId()+"", pass_txt);
                 userViewModel.userUpdate.observe(ChangePassActivity.this, new Observer<String>() {
                     @Override
                     public void onChanged(String response) {

@@ -46,6 +46,14 @@ public class UserModel implements Serializable {
 
     }
 
+    public UserModel(int userId, String userName, String phone, String address, String email ) {
+        this.userId = userId;
+        this.userName = userName;
+        this.phone = phone;
+        this.address = address;
+        this.email = email;
+    }
+
     public UserModel(String pass, int user_id , String userName, String phone, String address, String image)
     {
         this.userName = userName;
@@ -101,4 +109,5 @@ public class UserModel implements Serializable {
     public String getEmail() {
         return email;
     }
+
 }

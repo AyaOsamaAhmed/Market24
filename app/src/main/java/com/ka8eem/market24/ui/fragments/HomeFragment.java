@@ -16,6 +16,9 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
+
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.adapters.AdsAdapter;
@@ -50,45 +54,60 @@ import com.smarteist.autoimageslider.SliderView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+import static com.ka8eem.market24.util.Keys.image_domain;
+
 public class HomeFragment extends Fragment {
     public HomeFragment() {
         // Required empty public constructor
     }
 
     RecyclerView recommendedRecyclerView, paymentAdsRecyclerView;
-    SearchAdapter searchAdapter;
-    LinearLayout furnishedText, carText, animalText, allCatText, dressText ,buildingText  ;
+    LinearLayout furnishedText, all_product, cat_one, cat_two, cat_four ,cat_three  ,allCatText;
+    ImageView cat_one_img  , cat_two_img  , cat_three_img  , cat_four_img ;
+    TextView cat_one_text  , cat_two_text  , cat_three_text  , cat_four_text ;
     static ProductViewModel productViewModel;
     static CategoryViewModel categoryViewModel ;
     SharedPreferences preferences;
     TextView textUploadAdsFree;
-    NavigationView navigationView ;
     ArrayList<PaymentAdsModel> paymentAdsList;
     ArrayList<ProductModel> productList;
-    ArrayList<CategoryModel> categoryModel ;
+    List<CategoryModel> list_category;
     SliderView sliderView;
     PaymentAdsAdapter paymentAdsAdapter;
     AdsAdapter adsAdapter ;
-    CategoryAdapter categoryAdapter ;
     SearchView searchView;
     ImageView filterImage;
     LinearLayout toolbar ;
      NavController navController ;
-    ArrayList<PaymentAdsModel> list;
+    String lang ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-            fm.popBackStack();
-        }
-        initViews(view);
-
         toolbar = getActivity().findViewById(R.id.relative1);
         toolbar.setVisibility(View.VISIBLE);
+          lang = Constants.getLocal(getContext());
+        //You need to add the following line for this solution to work; thanks skayred
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener( new View.OnKeyListener()
+        {
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    navController.navigate(R.id.HomeFragment);
+                    return true;
+                }
+                return false;
+            }
+        } );
+
+        initViews(view);
+
         return view;
     }
 
@@ -105,22 +124,31 @@ public class HomeFragment extends Fragment {
         filterImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //    Intent intent = new Intent(getContext(), FilterActivity.class);
-             //   startActivity(intent);
+                navController.navigate(R.id.MapRadiusFragment);
             }
         });
         searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Log.d(TAG, "onQueryTextSubmit:"+query);
+                if (query != null || query.isEmpty()) {
+                    Bundle arguments = new Bundle();
+                    arguments.putString("search_name", query);
+
+                    navController.navigate(R.id.SearchFragment, arguments);
+                }
+
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText == null)
-                    newText = "";
-             //   getProducts("0", "0", "0", "0", newText);
+                Log.d(TAG, "onQueryTextChange:"+newText);
+                if (newText == null || newText.isEmpty()) {
+                    Log.d(TAG, "onQueryText:"+newText);
+                    navController.navigate(R.id.HomeFragment);
+                }
                 return true;
             }
         });
@@ -129,11 +157,20 @@ public class HomeFragment extends Fragment {
         recommendedRecyclerView = view.findViewById(R.id.recommended_recycler_view);
         recommendedRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        carText = view.findViewById(R.id.car_cat);
-        dressText = view.findViewById(R.id.fashion_cat);
-        animalText = view.findViewById(R.id.animal_cat);
-        buildingText = view.findViewById(R.id.building_cat);
-        furnishedText = view.findViewById(R.id.furnished_cat);
+        all_product = view.findViewById(R.id.all_product);
+        cat_one = view.findViewById(R.id.cat_one);
+        cat_two = view.findViewById(R.id.cat_two);
+        cat_three = view.findViewById(R.id.cat_three);
+        cat_four = view.findViewById(R.id.cat_four);
+        cat_one_img = view.findViewById(R.id.cat_one_img);
+        cat_one_text = view.findViewById(R.id.cat_one_text);
+        cat_two_img = view.findViewById(R.id.cat_two_img);
+        cat_two_text = view.findViewById(R.id.cat_two_text);
+        cat_three_img = view.findViewById(R.id.cat_three_img);
+        cat_three_text = view.findViewById(R.id.cat_three_text);
+        cat_four_img = view.findViewById(R.id.cat_four_img);
+        cat_four_text = view.findViewById(R.id.cat_four_text);
+
         allCatText = view.findViewById(R.id.all_cat);
         sliderView = view.findViewById(R.id.imageSlider);
         productViewModel = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
@@ -146,6 +183,17 @@ public class HomeFragment extends Fragment {
         progressDialog.setCancelable(false);
         //---------
         productViewModel.getHome();
+        categoryViewModel.getAllCategories();
+
+        categoryViewModel.mutableCategoryList.observe(getActivity(), new Observer<List<CategoryModel>>() {
+            @Override
+            public void onChanged(List<CategoryModel> categoryModels) {
+                if(categoryModels != null){
+                    list_category = categoryModels;
+                    setCategoryData(categoryModels);
+                }
+            }
+        });
 
         productViewModel.mutableProductList.observe(getActivity(), new Observer<List<ProductModel>>() {
             @Override
@@ -218,54 +266,86 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        furnishedText.setOnClickListener(new View.OnClickListener() {
+        cat_one.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle arguments = new Bundle();
-                arguments.putString("cat_id", "4");
-                arguments.putString("cat_name",getString(R.string.furnished));
+                arguments.putString("cat_id",   list_category.get(0).getCategoryId()+"");
+                if (lang.equals("AR"))
+                    arguments.putString("cat_name",list_category.get(0).getCategoryName());
+                else
+                    arguments.putString("cat_name",list_category.get(0).getCatNameEn());
               navController.navigate(R.id.AllSubCategoriesFragment,arguments);
             }
         });
-        buildingText.setOnClickListener(new View.OnClickListener() {
+        cat_two.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle arguments = new Bundle();
-                arguments.putString("cat_id", "4");
-                arguments.putString("cat_name",getString(R.string._home));
+                arguments.putString("cat_id",   list_category.get(1).getCategoryId()+"");
+                if (lang.equals("AR"))
+                    arguments.putString("cat_name",list_category.get(1).getCategoryName());
+                else
+                    arguments.putString("cat_name",list_category.get(1).getCatNameEn());
                 navController.navigate(R.id.AllSubCategoriesFragment,arguments);
             }
         });
-        dressText.setOnClickListener(new View.OnClickListener() {
+        cat_three.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle arguments = new Bundle();
-                arguments.putString("cat_id", "2");
-                arguments.putString("cat_name",getString(R.string.fashion));
-
+                arguments.putString("cat_id",   list_category.get(2).getCategoryId()+"");
+                if (lang.equals("AR"))
+                    arguments.putString("cat_name",list_category.get(2).getCategoryName());
+                else
+                    arguments.putString("cat_name",list_category.get(2).getCatNameEn());
                 navController.navigate(R.id.AllSubCategoriesFragment,arguments);           }
         });
-        animalText.setOnClickListener(new View.OnClickListener() {
+        cat_four.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                  Bundle arguments = new Bundle();
-                arguments.putString("cat_id", "11");
-                arguments.putString("cat_name",getString(R.string.animal));
+                arguments.putString("cat_id",   list_category.get(3).getCategoryId()+"");
+                if (lang.equals("AR"))
+                    arguments.putString("cat_name",list_category.get(3).getCategoryName());
+                else
+                    arguments.putString("cat_name",list_category.get(3).getCatNameEn());
 
                 navController.navigate(R.id.AllSubCategoriesFragment,arguments);
             }
         });
-        carText.setOnClickListener(new View.OnClickListener() {
+        all_product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                  Bundle arguments = new Bundle();
-                arguments.putString("cat_id", "1");
-                arguments.putString("cat_name",getString(R.string.vehicles));
-
-                navController.navigate(R.id.AllSubCategoriesFragment,arguments);
+                arguments.putString("search_name", "");
+                navController.navigate(R.id.SearchFragment,arguments);
             }
         });
 
+    }
+
+    private void setCategoryData(List<CategoryModel> categoryModels) {
+
+        Glide.with(getContext()).load(image_domain+categoryModels.get(0).getUrlImage()).into(cat_one_img);
+        Glide.with(getContext()).load(image_domain+categoryModels.get(1).getUrlImage()).into(cat_two_img);
+        Glide.with(getContext()).load(image_domain+categoryModels.get(2).getUrlImage()).into(cat_three_img);
+        Glide.with(getContext()).load(image_domain+categoryModels.get(3).getUrlImage()).into(cat_four_img);
+        String lang = Constants.getLocal(getContext());
+        if (lang.equals("AR")) {
+
+            cat_one_text.setText(categoryModels.get(0).getCategoryName());
+            cat_two_text.setText(categoryModels.get(1).getCategoryName());
+            cat_three_text.setText(categoryModels.get(2).getCategoryName());
+            cat_four_text.setText(categoryModels.get(3).getCategoryName());
+
+        }
+        else {
+            cat_one_text.setText(categoryModels.get(0).getCatNameEn());
+            cat_two_text.setText(categoryModels.get(1).getCatNameEn());
+            cat_three_text.setText(categoryModels.get(2).getCatNameEn());
+            cat_four_text.setText(categoryModels.get(3).getCatNameEn());
+        }
     }
 
     private void startRegisterActivity() {

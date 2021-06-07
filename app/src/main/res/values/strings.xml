@@ -178,7 +178,7 @@
     <string name="year_of_create">Manufacturing year</string>
     <string name="engine_power">Power Engine (CC)</string>
     <string name="kilo_meters">Kilometers</string>
-    <string name="send_message">Send Your Message To Owner this Ad!!</string>
+    <string name="send_message">Send Your Message</string>
     <string name="send">send</string>
     <string name="first">First Message</string>
     <string name="my_message">Messages</string>
@@ -224,14 +224,14 @@
     <string name="re_set_pass">Reset password</string>
     <string name="log_in">Log In</string>
     <string name="go">Go!</string>
-    <string name="enter">الدخول</string>
+    <string name="enter">Enter</string>
     <string name="change_pass">Change Password ?</string>
     <string name="create_account">Create Account</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="change_pass_success">Done, Change Password is Success</string>
     <string name="new_product">New Product</string>
-    <string name="enter_price">Enter Price / Negotiable</string>
+    <string name="enter_price">Enter Price</string>
     <string name="details_take_photo">at least 5 photos</string>
     <string name="publish">Publish</string>
     <string name="choose_location">Choose Location</string>
@@ -240,5 +240,15 @@
     <string name="num">Enter Number phone</string>
     <string name="sub_category">Sub Category</string>
     <string name="all_sub_of">All Sub Of</string>
+    <string name="terms_condition">Terms And Conditions</string>
+    <string name="choose_save">Choose Location</string>
+    <string name="negotiate">Negotiate</string>
+    <string name="chat">Messages</string>
+    <string name="no_chats">No Chats</string>
+    <string name="no_product">No Product</string>
+    <string name="no_category">No Sub Category</string>
+    <string name="all_product">All Product</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="take_image">Take Image</string>
 
 </resources>

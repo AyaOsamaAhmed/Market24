@@ -43,18 +43,27 @@ public class AdsModel implements Serializable {
     @SerializedName("lng")
     private String longitude;
 
-    public AdsModel(String user_id, String category_id, String subcategory_id, String area_id, String subarea_id, String name, String price, String description, ArrayList<Uri> images, String latitude, String longitude) {
+    @SerializedName("address")
+    private String address;
+
+    @SerializedName("able_disscussion")
+    private String  able_disscussion;
+
+    @SerializedName("phone")
+    private String phone;
+
+    public AdsModel(String user_id, String category_id, String subcategory_id , String name, String price, String description , String latitude, String longitude, String address, String able_disscussion, String phone) {
         this.user_id = user_id;
         this.category_id = category_id;
         this.subcategory_id = subcategory_id;
-        this.area_id = area_id;
-        this.subarea_id = subarea_id;
         this.name = name;
         this.price = price;
         this.description = description;
-        this.images = images;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.address = address;
+        this.able_disscussion = able_disscussion;
+        this.phone = phone;
     }
 
     public String getUser_id() {
@@ -143,5 +152,29 @@ public class AdsModel implements Serializable {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAble_disscussion() {
+        return able_disscussion;
+    }
+
+    public void setAble_disscussion(String able_disscussion) {
+        this.able_disscussion = able_disscussion;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

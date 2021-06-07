@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.ChatlistModel;
-import com.ka8eem.market24.ui.activities.CattingActivity;
+import com.ka8eem.market24.ui.activities.ChattingActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +67,7 @@ public class UserFirebaseAdapter extends RecyclerView.Adapter<UserFirebaseAdapte
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(context , CattingActivity.class);
+                Intent i = new Intent(context , ChattingActivity.class);
                 //args1.putString("owner_ad_id", owner_ad);
                  i.putExtra("ID_ADS", list.get(position).getId_ads());
                  i.putExtra("IMG_ADS", list.get(position).getImg_ad());

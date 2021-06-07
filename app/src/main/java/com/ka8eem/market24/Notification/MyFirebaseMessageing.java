@@ -10,7 +10,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -19,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.ka8eem.market24.ui.activities.CattingActivity;
+import com.ka8eem.market24.ui.activities.ChattingActivity;
 
 import static com.ka8eem.market24.ui.activities.App.CHANNEL_ID;
 
@@ -54,7 +53,7 @@ private  void sendOreoNotification(RemoteMessage remoteMessage){
 
     RemoteMessage.Notification notification = remoteMessage.getNotification();
     int j = Integer.parseInt(user.replaceAll("[\\D]" , ""));
-    Intent intent = new Intent(this , CattingActivity.class);
+    Intent intent = new Intent(this , ChattingActivity.class);
     Bundle bundle = new Bundle();
 
     bundle.putString("ID_ADS", id_ads);
@@ -88,7 +87,7 @@ private  void sendOreoNotification(RemoteMessage remoteMessage){
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]" , ""));
-        Intent intent = new Intent(this , CattingActivity.class);
+        Intent intent = new Intent(this , ChattingActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("ID_ADS", id_ads);
         bundle.putString("IMG_ADS", img_ads);

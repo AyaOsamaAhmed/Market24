@@ -35,8 +35,8 @@ public class AllSubCategoriesFragment extends Fragment {
     CategoryViewModel categoryVM;
     LinearLayout toolbar ;
     String sub_catid , sub_catName;
-    TextView title ;
-    ImageView back ;
+    TextView title , no_category ;
+    ImageView back  , no_img_category;
     NavController navController ;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +70,8 @@ public class AllSubCategoriesFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.all_sub_category_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        no_category = view.findViewById(R.id.no_category);
+        no_img_category = view.findViewById(R.id.no_img_category);
         title = view.findViewById(R.id.title);
         title.setText( getString(R.string.all_sub_of)+"  "+ sub_catName);
         back = view.findViewById(R.id.back);
@@ -80,15 +82,24 @@ public class AllSubCategoriesFragment extends Fragment {
             }
         });
 
-        subCategoryAdapter = new SubCategoryAdapter();
+        subCategoryAdapter = new SubCategoryAdapter(navController);
         categoryVM = ViewModelProviders.of(this).get(CategoryViewModel.class);
         categoryVM.getSubCategory(sub_catid);
         categoryVM.subCategoryList.observe(getActivity(), new Observer<List<SubCategoryModel>>() {
             @Override
             public void onChanged(List<SubCategoryModel> subCategoryModels) {
-                ArrayList<SubCategoryModel> list = new ArrayList<>(subCategoryModels);
-                subCategoryAdapter.setList(list);
-                recyclerView.setAdapter(subCategoryAdapter);
+                if (subCategoryModels.size() != 0) {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    no_category.setVisibility(View.GONE);
+                    no_img_category.setVisibility(View.GONE);
+                    ArrayList<SubCategoryModel> list = new ArrayList<>(subCategoryModels);
+                    subCategoryAdapter.setList(list);
+                    recyclerView.setAdapter(subCategoryAdapter);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    no_category.setVisibility(View.VISIBLE);
+                    no_img_category.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

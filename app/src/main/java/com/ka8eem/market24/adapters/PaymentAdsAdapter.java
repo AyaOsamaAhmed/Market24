@@ -2,6 +2,7 @@ package com.ka8eem.market24.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,9 @@ import com.ka8eem.market24.models.PaymentAdsModel;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.ui.activities.WebViewActivity;
 import com.ka8eem.market24.util.Keys;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -56,9 +59,19 @@ public class PaymentAdsAdapter extends RecyclerView.Adapter<PaymentAdsAdapter.Pa
         holder.price.setText(model.getPrice());
         holder.product_name.setText(model.getProduct_name());
 
+      /*  Transformation transformation = new RoundedTransformationBuilder()
+                .borderColor(Color.WHITE)
+                .borderWidthDp(3)
+                .cornerRadiusDp(20)
+                .oval(false)
+                .build();
+
+
+       */
         Picasso.get()
                 .load(url).resize(600, 200)
                 .placeholder(R.mipmap.ic_logo_round)
+//                .transform(transformation)
                 .into(holder.imageView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

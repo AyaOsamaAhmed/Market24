@@ -2,6 +2,7 @@ package com.ka8eem.market24.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.ProductModel;
-import com.ka8eem.market24.ui.fragments.ProductDetailsFragment;
 import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.util.Keys;
+import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.List;
 
@@ -66,9 +68,19 @@ public class AdsAdapter extends RecyclerView.Adapter<AdsAdapter.MyViewHolder> {
         holder.price.setText(price);
         holder.ProductName.setText(model.getProduct_name());
 
+       /* Transformation transformation = new RoundedTransformationBuilder()
+                .borderColor(Color.WHITE)
+                .borderWidthDp(3)
+                .cornerRadiusDp(20)
+                .oval(false)
+                .build();
+
+
+        */
         Picasso.get()
                 .load(url).resize(600, 200)
                 .placeholder(R.mipmap.ic_logo_round)
+//                .transform(transformation)
                 .into(holder.imageView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

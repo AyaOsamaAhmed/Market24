@@ -216,7 +216,7 @@ public class EditCarActivity extends AppCompatActivity {
                                 }
                             }
                             UploadImageModel imageModel = new UploadImageModel(s, EditProductActivity.encodedImages);
-                            viewModel.updateImageAsString(imageModel);
+                          //  viewModel.updateImageAsString(imageModel);
                             viewModel.updateImageAsString.observe(EditCarActivity.this, new Observer<String>() {
                                 @Override
                                 public void onChanged(String s) {

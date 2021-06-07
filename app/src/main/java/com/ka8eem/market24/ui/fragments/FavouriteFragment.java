@@ -6,15 +6,23 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
+
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,11 +30,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.adapters.FavouriteAdapter;
+import com.ka8eem.market24.models.FavouriteModel;
 import com.ka8eem.market24.models.ProductModel;
+import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.util.Constants;
+import com.ka8eem.market24.viewmodel.ProductViewModel;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FavouriteFragment extends Fragment {
 
@@ -42,38 +54,66 @@ public class FavouriteFragment extends Fragment {
     SharedPreferences.Editor editor;
     FloatingActionButton fab;
     Gson gson;
-    ItemTouchHelper itemTouchHelper;
-    SearchView searchView;
-    ImageView filterImage;
+   // ItemTouchHelper itemTouchHelper;
+    LinearLayout toolbar ;
+    NavController navController ;
+    ProductViewModel productViewModel ;
+    UserModel userModel ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favourite, container, false);
-        searchView = (SearchView) getActivity().findViewById(R.id.search_view);
-        searchView.setVisibility(View.GONE);
-        filterImage = (ImageView) getActivity().findViewById(R.id.filter_icon);
-        filterImage.setVisibility(View.GONE);        recyclerView = view.findViewById(R.id.favourite_recycler_view);
-        fab = view.findViewById(R.id.fab);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        favouriteAdapter = new FavouriteAdapter(getContext(), itemTouchHelper);
-        favouriteAdapter.setList(getFavouriteList());
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-        recyclerView.setAdapter(favouriteAdapter);
-        fab.setOnClickListener(new View.OnClickListener() {
+        productViewModel = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
+        preferences = getContext().getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
+        gson = new Gson();
+        Type type = new TypeToken<UserModel>() {
+        }.getType();
+        String json = preferences.getString("USER_MODEL", null);
+        userModel = gson.fromJson(json, type);
+
+        toolbar = getActivity().findViewById(R.id.relative1);
+        toolbar.setVisibility(View.GONE);
+        navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
+
+        view.setOnKeyListener( new View.OnKeyListener()
+        {
             @Override
-            public void onClick(View v) {
-                clearFavList();
-                Toast.makeText(getContext(), R.string.fav_list_empty, Toast.LENGTH_SHORT).show();
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    navController.navigate(R.id.HomeFragment);
+                    return true;
+                }
+                return false;
+            }
+        } );
+        recyclerView = view.findViewById(R.id.favourite_recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+            productViewModel.getAllFavourite(userModel.getUserId());
+
+
+        productViewModel.mutableFavouriteProduct.observe(getActivity(), new Observer<List<FavouriteModel>>() {
+            @Override
+            public void onChanged(List<FavouriteModel> favouriteModels) {
+                favouriteAdapter = new FavouriteAdapter(getContext(), navController);
+                favouriteAdapter.setList(favouriteModels);
+                recyclerView.setAdapter(favouriteAdapter);
             }
         });
+
         return view;
+    }
+
+    private boolean checkLoggedIn() {
+        boolean ret = preferences.getBoolean("LOGGED_IN", false);
+        return ret;
     }
 
     private ArrayList<ProductModel> getFavouriteList() {
         ArrayList<ProductModel> listInFav = new ArrayList<>();
-        preferences = getContext().getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
         editor = preferences.edit();
         gson = new Gson();
         String json = preferences.getString("listFav", null);

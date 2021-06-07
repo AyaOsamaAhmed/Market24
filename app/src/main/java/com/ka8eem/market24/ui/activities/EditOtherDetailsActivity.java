@@ -122,7 +122,7 @@ public class EditOtherDetailsActivity extends AppCompatActivity {
                             }
                             Log.e("encodedImagesSize", EditProductActivity.encodedImages.size() + "");
                             UploadImageModel imageModel = new UploadImageModel(s, EditProductActivity.encodedImages);
-                            viewModel.updateImageAsString(imageModel);
+                         //   viewModel.updateImageAsString(imageModel);
                             viewModel.updateImageAsString.observe(EditOtherDetailsActivity.this, new Observer<String>() {
                                 @Override
                                 public void onChanged(String s) {

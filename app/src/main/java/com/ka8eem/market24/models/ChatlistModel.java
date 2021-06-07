@@ -3,9 +3,12 @@ package com.ka8eem.market24.models;
 import java.util.Date;
 
 public class ChatlistModel implements Comparable<ChatlistModel>{
+
     public  String   id_ads , img_ad , name , id_user , name_product ;
-public Date str_date;
-public int num_seen;
+
+    public Date str_date;
+
+    public int num_seen;
 
     public int getNum_seen() {
         return num_seen;

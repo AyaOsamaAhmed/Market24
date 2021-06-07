@@ -140,7 +140,7 @@ public class EditBuildingActivity extends AppCompatActivity {
                             }
                         }
                         UploadImageModel imageModel = new UploadImageModel(s, EditProductActivity.encodedImages);
-                        viewModel.updateImageAsString(imageModel);
+                   //     viewModel.updateImageAsString(imageModel);
                         viewModel.updateImageAsString.observe(EditBuildingActivity.this, new Observer<String>() {
                             @Override
                             public void onChanged(String s) {

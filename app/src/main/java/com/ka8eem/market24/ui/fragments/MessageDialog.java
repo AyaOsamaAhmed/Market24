@@ -35,7 +35,7 @@ import com.ka8eem.market24.interfaces.DataInterface;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.RequestModel;
 import com.ka8eem.market24.models.UserFirebaseModel;
-import com.ka8eem.market24.ui.activities.CattingActivity;
+import com.ka8eem.market24.ui.activities.ChattingActivity;
 import com.ka8eem.market24.viewmodel.ProductViewModel;
 
 import java.text.SimpleDateFormat;
@@ -188,7 +188,7 @@ public class MessageDialog extends AppCompatDialogFragment {
 
             }
         });
-        Intent i = new Intent(getContext() , CattingActivity.class);
+        Intent i = new Intent(getContext() , ChattingActivity.class);
         i.putExtra("id_user" , receiver);
         i.putExtra("ID_ADS",ID_ADS);
         i.putExtra("IMG_ADS", one_img_ad);

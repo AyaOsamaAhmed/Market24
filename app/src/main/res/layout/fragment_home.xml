@@ -29,7 +29,7 @@
                 android:weightSum="6">
 
                 <LinearLayout
-                    android:id="@+id/car_cat"
+                    android:id="@+id/all_product"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="2dp"
@@ -42,14 +42,14 @@
                         android:id="@+id/home_car_cat_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_vechile"
+                        android:src="@drawable/ic_all_product"
                         android:padding="5dp"
                         android:background="@drawable/background_circle_white"
                         />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/vehicles"
+                        android:text="@string/all_product"
                         android:textColor="@color/white"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -57,7 +57,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/fashion_cat"
+                    android:id="@+id/cat_one"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -66,14 +66,15 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/home_fashion_cat_text"
+                        android:id="@+id/cat_one_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_high_heels"
+                        android:src="@drawable/ic_dress"
                         android:padding="5dp"
                         android:background="@drawable/background_circle_white"
                         />
                     <TextView
+                        android:id="@+id/cat_one_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/fashion"
@@ -84,7 +85,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/animal_cat"
+                    android:id="@+id/cat_two"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -93,7 +94,7 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/home_animal_cat_text"
+                        android:id="@+id/cat_two_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_animal"
@@ -101,6 +102,7 @@
                         android:background="@drawable/background_circle_white"
                         />
                     <TextView
+                        android:id="@+id/cat_two_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/animal"
@@ -111,7 +113,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/building_cat"
+                    android:id="@+id/cat_three"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -120,7 +122,7 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/home_building_cat_text"
+                        android:id="@+id/cat_three_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_home"
@@ -128,6 +130,7 @@
                         android:background="@drawable/background_circle_white"
                         />
                     <TextView
+                        android:id="@+id/cat_three_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/_home"
@@ -138,7 +141,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/furnished_cat"
+                    android:id="@+id/cat_four"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -147,7 +150,7 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/home_furnished_cat_text"
+                        android:id="@+id/cat_four_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_pouf"
@@ -155,6 +158,7 @@
                         android:background="@drawable/background_circle_white"
                         />
                     <TextView
+                        android:id="@+id/cat_four_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/furnished"
@@ -195,7 +199,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:background="@drawable/bachground_white"
                 android:layout_margin="15dp">
 
                 <com.smarteist.autoimageslider.SliderView
@@ -210,7 +213,6 @@
                     app:sliderIndicatorMargin="15dp"
                     app:sliderIndicatorOrientation="horizontal"
                     app:sliderIndicatorPadding="3dp"
-                    app:sliderIndicatorRadius="2dp"
                     app:sliderIndicatorSelectedColor="#5A5A5A"
                     app:sliderIndicatorUnselectedColor="#FFF"
                     app:sliderScrollTimeInSec="1"

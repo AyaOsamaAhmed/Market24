@@ -6,16 +6,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
@@ -25,6 +30,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.adapters.AdsAdapter;
+import com.ka8eem.market24.adapters.MyAdsAdapter;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.util.Constants;
@@ -32,6 +38,7 @@ import com.ka8eem.market24.viewmodel.ProductViewModel;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyAdsFragment extends Fragment {
 
@@ -41,58 +48,74 @@ public class MyAdsFragment extends Fragment {
     }
 
     RecyclerView recyclerView;
-    public static AdsAdapter adsAdapter;
+    MyAdsAdapter my_adsAdapter;
     ProductViewModel productVM;
     SharedPreferences preferences;
     UserModel userModel;
     Gson gson;
-    FloatingActionButton fabDeleteAllAds;
-    SearchView searchView;
-    ImageView filterImage;
+    LinearLayout toolbar ;
+    NavController navController ;
+    ImageView  no_img_product;
+    TextView  no_product ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_ads, container, false);
-        searchView = (SearchView) getActivity().findViewById(R.id.search_view);
-        searchView.setVisibility(View.GONE);
-        filterImage = (ImageView) getActivity().findViewById(R.id.filter_icon);
-        filterImage.setVisibility(View.GONE);
+        toolbar = getActivity().findViewById(R.id.relative1);
+        toolbar.setVisibility(View.GONE);
 
         productVM = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
         recyclerView = view.findViewById(R.id.my_ads_recycler_view);
-        fabDeleteAllAds = view.findViewById(R.id.delete_all_my_ads);
-        fabDeleteAllAds.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteProduct("0");
-            }
-        });
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
+
+        no_img_product = view.findViewById(R.id.no_img_product);
+        no_product = view.findViewById(R.id.no_product);
+
+        view.setOnKeyListener( new View.OnKeyListener()
+        {
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    navController.navigate(R.id.HomeFragment);
+                    return true;
+                }
+                return false;
+            }
+        } );
+        // get user data
         preferences = getContext().getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
         gson = new Gson();
         Type type = new TypeToken<UserModel>() {
         }.getType();
         String json = preferences.getString("USER_MODEL", null);
         userModel = gson.fromJson(json, type);
-        adsAdapter = new AdsAdapter();
-        // 1
+        //get product data
+        my_adsAdapter = new MyAdsAdapter();
         productVM.getMyAds(userModel.getUserId());
-        productVM.mutableAdsList.observe((getActivity()), new Observer<ArrayList<ProductModel>>() {
+        productVM.mutableAdsList.observe((getActivity()), new Observer<List<ProductModel>>() {
             @Override
-            public void onChanged(ArrayList<ProductModel> productModels) {
-                if (getActivity() != null) {
-                    if (productModels != null) {
-                    //    adsAdapter.setList(productModels);
-                        adsAdapter.notifyDataSetChanged();
-                        recyclerView.setAdapter(adsAdapter);
-                    } else {
-                        if (getActivity() != null && getContext() != null)
-                            Toast.makeText(getContext(), getString(R.string.no_ads), Toast.LENGTH_SHORT).show();
-                    }
+            public void onChanged(List<ProductModel> productModels) {
+
+                if (productModels.size() == 0) {
+                    no_product.setVisibility(View.VISIBLE);
+                    no_img_product.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    no_product.setVisibility(View.GONE);
+                    no_img_product.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    my_adsAdapter.setList(productModels, navController);
+                    my_adsAdapter.notifyDataSetChanged();
+                    recyclerView.setAdapter(my_adsAdapter);
                 }
             }
         });
+
+
         return view;
     }
 

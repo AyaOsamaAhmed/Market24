@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -39,13 +41,18 @@ import com.ka8eem.market24.databinding.MapFragmentBinding;
 import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.util.Keys;
 
+import java.util.List;
+import java.util.Locale;
+
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
+    private static final String TAG = "Map Fragment";
     private int PERMISSION_REQUEST= 10 ;
     private LocationManager service ;
     private  Boolean enabled = false ;
     private GoogleMap googleMap ;
+    String   address ;
     private LatLng latLong ;
     private MapFragmentBinding binding;
     private SupportMapFragment mapDetail  ;
@@ -79,16 +86,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (latLong != null) {
+                    editor.putString(Keys.latitude, latLong.latitude + "");
+                    editor.putString(Keys.longtitude, latLong.longitude + "");
+                    editor.putString(Keys.Address, address);
+                    editor.commit();
+                    editor.apply();
+                    navigationView = getActivity().findViewById(R.id.nav_view);
+                    navigationView.setCheckedItem(R.id.nav_add);
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new AddProductFragment()).addToBackStack(null).commit();
 
-                editor.putString(Keys.latitude,latLong.latitude+"");
-                editor.putString(Keys.longtitude,latLong.longitude+"");
-                editor.commit();
-                editor.apply();
-                navigationView = getActivity().findViewById(R.id.nav_view);
-                navigationView.setCheckedItem(R.id.nav_add);
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new AddProductFragment()).addToBackStack(null).commit();
-
+                } else
+                    mapDetail.getMapAsync((OnMapReadyCallback) getContext());
             }
         });
 
@@ -154,8 +164,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                 latLong = new LatLng(lat, longitude);
 
-              //  String address = getCompleteAddressString(location.getLatitude(), location.getLongitude());
-                Log.i("MapFragment.TAG", lat + " -- " + longitude );
+                 address = getCompleteAddressString(location.getLatitude(), location.getLongitude());
+                Log.i("MapFragment.TAG", lat + " -- " + longitude +"--"+address );
 
                 Toast.makeText(getContext(),lat+"---"+longitude,Toast.LENGTH_LONG);
 
@@ -203,5 +213,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    private String getCompleteAddressString(Double LATITUDE , Double LONGITUDE){
+        String strAdd = "" ;
+        Geocoder geocoder =new  Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses =
+                    geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                strAdd = returnedAddress.getAddressLine(0).toString();
+
+            } else {
+                Log.w(TAG, "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.w(TAG, "Canont get Address!");
+        }
+        return strAdd;
+    }
 
 }

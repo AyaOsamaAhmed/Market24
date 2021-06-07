@@ -3,11 +3,12 @@ package com.ka8eem.market24.ui.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,26 +21,18 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.UserModel;
-import com.ka8eem.market24.ui.fragments.AddProductFragment;
-import com.ka8eem.market24.ui.fragments.AllChatsFragment;
-import com.ka8eem.market24.ui.fragments.FavouriteFragment;
 import com.ka8eem.market24.ui.fragments.HomeFragment;
-import com.ka8eem.market24.ui.fragments.MyAdsFragment;
-import com.ka8eem.market24.ui.fragments.ProfileFragment;
-//import com.ka8eem.market24.ui.fragments.SearchFragment;
-import com.ka8eem.market24.ui.fragments.SettingsFragment;
 import com.ka8eem.market24.util.Constants;
 import com.squareup.picasso.Picasso;
-
 import java.util.Locale;
-
 import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -51,6 +44,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences.Editor editor;
     NavController navController ;
     Menu myMenu;
+    SearchView searchView ;
+    ImageView filter_icon ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +84,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = (TextView) headerView.findViewById(R.id.user_name);
         CircleImageView user_image = (CircleImageView) headerView.findViewById(R.id.user_image);
+        searchView = findViewById(R.id.search_view);
+        filter_icon = findViewById(R.id.filter_icon);
 
         MenuItem logout_item =  navigationView.getMenu().findItem(R.id.nav_logout);
 
@@ -172,6 +170,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             drawerLayout.openDrawer(Gravity.LEFT);
     }
 
+
+
+
     private void selectItemDrawer(MenuItem menuItem) {
 
         switch (menuItem.getItemId()) {
@@ -180,27 +181,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //                        .replace(R.id.fragment_container, new SearchFragment()).addToBackStack(null).commit();
 //                break;
             case R.id.nav_settings:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new SettingsFragment()).addToBackStack(null).commit();
+               navController.navigate(R.id.SettingsFragment);
                 break;
             case R.id.nav_logout:
                     logout();
                 break;
             case R.id.nav_add: {
-
-                if (!checkRegister())
-                    startRegisterActivity();
-                else if (!checkLoggedIn())
+                    if (!checkLoggedIn())
                     startLoginActivity();
                 else {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new AddProductFragment()).addToBackStack(null).commit();
-                }
+                  navController.navigate(R.id.AddProductFragment);
+                       }
                 break;
             }
             case R.id.nav_favourite:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new FavouriteFragment()).addToBackStack(null).commit();
+                if (!checkLoggedIn())
+                    startLoginActivity();
+                else
+                navController.navigate(R.id.FavouriteFragment);
                 break;
            /* case R.id.nav_notification:
                 if (!checkRegister())
@@ -212,26 +210,29 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             .replace(R.id.fragment_container, new AllChatsFragment()).addToBackStack(null).commit();
                 break;*/
             case R.id.nav_profile:
-                if (!checkRegister())
-                    startRegisterActivity();
-                else if (!checkLoggedIn())
+                if (!checkLoggedIn())
                     startLoginActivity();
                 else
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new ProfileFragment()).addToBackStack(null).commit();
+                  navController.navigate(R.id.ProfileFragment);
+                break;
+            case R.id.nav_chat:
+                if (!checkLoggedIn())
+                    startLoginActivity();
+                else
+                    navController.navigate(R.id.AllChatsFragment);
                 break;
             case R.id.nav_ads:
-                if (!checkRegister())
+               /* if (!checkRegister())
                     startRegisterActivity();
-                else if (!checkLoggedIn())
+                else
+                */
+                    if (!checkLoggedIn())
                     startLoginActivity();
                 else
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new MyAdsFragment()).addToBackStack(null).commit();
+                   navController.navigate(R.id.MyAdsFragment);
                 break;
             default:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new HomeFragment()).commit();
+              navController.navigate(R.id.HomeFragment);
 
                 break;
 

@@ -1,4 +1,4 @@
-        package com.ka8eem.market24.models;
+package com.ka8eem.market24.models;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -28,64 +28,86 @@ public class SubMainModel implements Serializable {
     @SerializedName("normal_ads")
     private List<ProductModel> normalAds;
 
+    @SerializedName("ad")
+    private ProductModel ads;
 
-    public SubMainModel() {
+    @SerializedName("user")
+    private UserModel user;
 
-    }
+    @SerializedName("ads")
+    private MyProductModel my_ads;
+
+    @SerializedName("search")
+    private MySearchProductModel product_search;
+
+    @SerializedName("favourites")
+    private MyFavouriteModel my_ads_favourite;
+
+    @SerializedName("conversations")
+    private MyConversationsModel my_conversations;
+
+    @SerializedName("messages")
+    private GetMessagesModel get_messages;
+
+    @SerializedName("message")
+    private MessageModel send_message;
+
+    @SerializedName("terms")
+    private TermsModel termsModel;
+
+    public SubMainModel() { }
 
     public List<CategoryModel> getCategories() {
         return categories;
-    }
-
-    public void setCategories(List<CategoryModel> categories) {
-        this.categories = categories;
     }
 
     public List<SubCategoryModel> getSubcategories() {
         return subcategories;
     }
 
-    public void setSubcategories(List<SubCategoryModel> subcategories) {
-        this.subcategories = subcategories;
-    }
-
     public List<AreaModel> getAreas() {
         return areas;
-    }
-
-    public void setAreas(List<AreaModel> areas) {
-        this.areas = areas;
     }
 
     public List<SubAreaModel> getSubareas() {
         return subareas;
     }
 
-    public void setSubareas(List<SubAreaModel> subareas) {
-        this.subareas = subareas;
-    }
-
     public List<PannerModel> getPaymentImages() {
         return paymentImages;
-    }
-
-    public void setPaymentImages(List<PannerModel> paymentImages) {
-        this.paymentImages = paymentImages;
     }
 
     public List<PaymentAdsModel> getPaymentAds() {
         return paymentAds;
     }
 
-    public void setPaymentAds(List<PaymentAdsModel> paymentAds) {
-        this.paymentAds = paymentAds;
-    }
-
     public List<ProductModel> getNormalAds() {
         return normalAds;
     }
 
-    public void setNormalAds(List<ProductModel> normalAds) {
-        this.normalAds = normalAds;
+    public ProductModel getAds() {
+        return ads;
     }
+
+    public TermsModel getTermsModel() {
+        return termsModel;
+    }
+
+    public MyProductModel getMy_ads() {
+        return my_ads;
+    }
+
+    public MyFavouriteModel getMy_ads_favourite() {
+        return my_ads_favourite;
+    }
+
+    public MySearchProductModel getProduct_search() { return product_search; }
+
+    public MyConversationsModel getMy_conversations() { return my_conversations; }
+
+    public GetMessagesModel getGet_messages() { return get_messages; }
+
+    public MessageModel getSend_message() { return send_message; }
+
+    public UserModel getUser() { return user; }
 }

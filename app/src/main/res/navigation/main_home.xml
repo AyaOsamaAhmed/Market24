@@ -25,14 +25,14 @@
     <fragment
         android:id="@+id/AddProductFragment"
         android:name="com.ka8eem.market24.ui.fragments.AddProductFragment"
-        android:label="@string/sub_category"
+        android:label="@string/new_product"
         tools:layout="@layout/fragment_add_product"/>
 
     <fragment
         android:id="@+id/ProfileFragment"
         android:name="com.ka8eem.market24.ui.fragments.ProfileFragment"
         android:label="@string/profile"
-        tools:layout="@layout/fragment_add_product"/>
+        tools:layout="@layout/fragment_profile"/>
 
     <fragment
         android:id="@+id/ProductDetailsFragment"
@@ -40,4 +40,40 @@
         android:label="@string/product_details"
         tools:layout="@layout/activity_product_details"/>
 
+    <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="com.ka8eem.market24.ui.fragments.SettingsFragment"
+        android:label="@string/settings"
+        tools:layout="@layout/fragment_settings"/>
+
+    <fragment
+        android:id="@+id/FavouriteFragment"
+        android:name="com.ka8eem.market24.ui.fragments.FavouriteFragment"
+        android:label="@string/favourite"
+        tools:layout="@layout/fragment_favourite"/>
+
+    <fragment
+        android:id="@+id/MyAdsFragment"
+        android:name="com.ka8eem.market24.ui.fragments.MyAdsFragment"
+        android:label="@string/my_ads"
+        tools:layout="@layout/fragment_my_ads"/>
+
+
+    <fragment
+        android:id="@+id/SearchFragment"
+        android:name="com.ka8eem.market24.ui.fragments.SearchFragment"
+        android:label="@string/search"
+        tools:layout="@layout/search_fragment"/>
+
+    <fragment
+        android:id="@+id/MapRadiusFragment"
+        android:name="com.ka8eem.market24.ui.fragments.MapRadiusFragment"
+        android:label="@string/search"
+        tools:layout="@layout/map_radius_fragment"/>
+
+    <fragment
+        android:id="@+id/AllChatsFragment"
+        android:name="com.ka8eem.market24.ui.fragments.AllChatsFragment"
+        android:label="@string/chat"
+        tools:layout="@layout/fragment_allchats"/>
 </navigation>

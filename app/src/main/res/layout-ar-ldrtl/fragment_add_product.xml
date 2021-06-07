@@ -19,18 +19,18 @@
         android:text="@string/new_product"
         android:textSize="@dimen/settings_header_text_size"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/open_close"
         />
 
     <ImageView
         android:id="@+id/open_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
         android:onClick="openDrawer"
-        android:src="@drawable/ic_open_close_drawer"
+        android:src="@drawable/icon_menu"
         app:layout_constraintTop_toTopOf="@id/title_product"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/title_product"
         />
     <androidx.core.widget.NestedScrollView
@@ -54,7 +54,8 @@
                 android:id="@+id/ln_category_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_margin="10dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="10dp"
                 android:background="@drawable/background_border_grey"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -65,6 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:paddingVertical="5dp"
+                android:layout_marginHorizontal="5dp"
                 android:spinnerMode="dropdown"
                 />
             </LinearLayout>
@@ -72,7 +74,8 @@
                 android:id="@+id/ln_subcategory_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_margin="10dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginVertical="10dp"
                 android:background="@drawable/background_border_grey"
                 app:layout_constraintTop_toBottomOf="@id/ln_category_spinner"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,6 +86,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:paddingVertical="5dp"
+                android:layout_marginHorizontal="5dp"
                 android:spinnerMode="dropdown"
                 />
             </LinearLayout>
@@ -106,32 +110,50 @@
                     android:layout_height="40dp"
                     android:hint="@string/product_name"
                     android:drawableStart="@drawable/ic_box"
+                    android:padding="5dp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size"
                     android:layout_marginTop="10dp"
                     android:singleLine="true"
                     android:gravity="center"
+                    android:background="@drawable/border_grey"
                     />
 
-                <EditText
-                    android:id="@+id/edit_price"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_marginTop="10dp"
-                    android:hint="@string/enter_price"
-                    android:inputType="number"
-                    android:drawableStart="@drawable/ic_dollar"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    />
+                    android:orientation="horizontal"
+                    >
+                    <EditText
+                        android:id="@+id/edit_price"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:drawableStart="@drawable/ic_dollar"
+                        android:background="@drawable/border_grey"
+                        android:padding="5dp"
+                        android:hint="@string/enter_price"
+                        android:inputType="number"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:layout_weight="1"
+                        />
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/negotiable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        android:text="@string/negotiable"
+                        />
+                </LinearLayout>
                 <TextView
                     android:id="@+id/edit_location"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:drawableStart="@drawable/ic_location"
                     android:hint="@string/choose_location"
+                    android:padding="5dp"
                     android:background="@drawable/border_grey"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size"
@@ -139,16 +161,18 @@
                     android:gravity="center"
                     android:maxLines="1"
                     />
-                <TextView
+                <EditText
                     android:id="@+id/edit_number"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:drawableStart="@drawable/ic_whatsapp"
                     android:hint="@string/num"
+                    android:padding="5dp"
                     android:background="@drawable/border_grey"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size"
                     android:layout_marginTop="10dp"
+                    android:inputType="number"
                     android:gravity="center"
                     android:maxLines="1"
                     />
