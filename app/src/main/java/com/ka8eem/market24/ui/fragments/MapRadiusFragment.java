@@ -78,6 +78,7 @@ public class MapRadiusFragment extends Fragment implements OnMapReadyCallback {
     private final Double max_cicle = 5000.0 ;
     private final Double step = 100.0 ;
     private Circle circle = null ;
+    float reSize = 15f;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,45 +111,26 @@ public class MapRadiusFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(View view) { getMap(); }
         });
 
-        binding.buttonEast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                latLong = moveCircle(homeLatLong, latLong, googleMap, zoneAdjustStep, Direction.EAST, raduis);
-        }});
 
-        binding.buttonWest.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    latLong = moveCircle(homeLatLong, latLong, googleMap, zoneAdjustStep, Direction.WEST, raduis);
-        }});
-        binding.buttonNourth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                latLong = moveCircle(homeLatLong, latLong, googleMap, zoneAdjustStep, Direction.NORTH, raduis);
-        }});
-        binding.buttonSouth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            latLong = moveCircle(homeLatLong, latLong, googleMap, zoneAdjustStep, Direction.SOUTH, raduis);
-        }});
 
         binding.minusCicle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(raduis > minus_cicle)
-                    raduis = raduis - step ;
-
-                drawCircleResize(latLong,googleMap,raduis) ;
-            }
+                if(raduis > minus_cicle) {
+                    raduis = raduis - step;
+                    reSize = reSize + 0.1f;
+                    drawCircleResize(latLong, googleMap, raduis, reSize);
+                }}
         });
 
         binding.maxCicle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            if(raduis < max_cicle)
+            if(raduis < max_cicle) {
                 raduis = raduis + step;
-
-            drawCircleResize(latLong,googleMap,raduis);
+                reSize = reSize - 0.1f;
+                drawCircleResize(latLong, googleMap, raduis, reSize);
+            }
         }   });
         binding.buttonLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -243,10 +225,11 @@ public class MapRadiusFragment extends Fragment implements OnMapReadyCallback {
               //  googleMap.setOnMarkerDragListener((GoogleMap.OnMarkerDragListener) this);
               //  googleMap.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
 
+
                 googleMap.moveCamera(
                         CameraUpdateFactory.newLatLngZoom(new
                                         LatLng(location.getLatitude(), location.getLongitude()),
-                                15f
+                                reSize
                         ));
                 Log.i("MapFragment.TAG", Math.round(lat * 1000.0) / 1000.0 + " -- " + Math.round(longitude * 1000.0) / 1000.0 );
 
@@ -287,7 +270,7 @@ public class MapRadiusFragment extends Fragment implements OnMapReadyCallback {
         circle = googleMap.addCircle(circleOptions);
     }
 
-    void drawCircleResize(LatLng point,GoogleMap googleMap , Double rad) {
+    void drawCircleResize(LatLng point,GoogleMap googleMap , Double rad , float resize) {
 
         // Instantiating CircleOptions to draw a circle around the marker
         CircleOptions circleOptions = new CircleOptions();
@@ -305,6 +288,12 @@ public class MapRadiusFragment extends Fragment implements OnMapReadyCallback {
 
         // Border width of the circle
         circleOptions.strokeWidth(2f);
+
+        googleMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(new
+                                LatLng(homeLatLong.latitude, homeLatLong.longitude),
+                        resize
+                ));
 
         circle.remove(); // Remove old circle.
         // Adding the circle to the GoogleMap
@@ -340,7 +329,7 @@ public class MapRadiusFragment extends Fragment implements OnMapReadyCallback {
       //  Toast.makeText(getContext(),radius+"",Toast.LENGTH_LONG).show();
 
         if (distanceFromOrigin < radius) {
-            drawCircleResize(newPoint,googleMap, radius);
+            drawCircleResize(newPoint,googleMap, radius, reSize);
             return  newPoint;
         }
 //        Log.i("msg", "just test logging with tags")

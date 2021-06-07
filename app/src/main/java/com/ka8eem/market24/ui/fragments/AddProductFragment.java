@@ -142,7 +142,6 @@ public class AddProductFragment extends Fragment {
         editor = preferences.edit();
         curLang = Constants.getLocal(getContext());
         //-----------------
-        areaIndex = subAreaIndex = categoryIndex = subCategoryIntex = -1;
         categoryViewModel = ViewModelProviders.of(getActivity()).get(CategoryViewModel.class);
         viewModel = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
         //-------------
@@ -229,8 +228,6 @@ public class AddProductFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (getActivity() != null && catList != null && catList.size() > 0) {
-                    categoryIndex = position;
-                    ArrayList<String> list = new ArrayList<>();
                     if (position != 0) {
                         subCategoryList = new ArrayList<>();
                         categoryIndex = catList.get(position).getCategoryId() ;
@@ -307,7 +304,7 @@ public class AddProductFragment extends Fragment {
                           negotiable = "1" ;
 
                     AdsModel adsModel = new AdsModel(userId, catId, subCatId ,name, price, description ,latitude,longtitude,address,negotiable,phone);
-                    Log.i(TAG, "onClick: "+ userId +"..."+catId +".."+subCatId+".." +".."+price+"..."+description);
+                    Log.i(TAG, "onClick: "+ userId +"..."+categoryIndex+"--"+catId +".."+subCatId+".." +".."+price+"..."+description+"... phone:"+phone);
 
                     viewModel.uploadProduct(adsModel,imagesPart);
 
@@ -533,7 +530,6 @@ public class AddProductFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.choose_city), Toast.LENGTH_SHORT).show();
             return false;
         }
-        */
 
 
          else if (fragmentAddProductBinding.editNumber.getText().toString().isEmpty()) {
@@ -541,6 +537,7 @@ public class AddProductFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.num), Toast.LENGTH_SHORT).show();
             return false;
         }
+ */
 
         else if (fragmentAddProductBinding.editDescription.getText().toString().isEmpty() ) {
             fragmentAddProductBinding.editDescription.requestFocus();

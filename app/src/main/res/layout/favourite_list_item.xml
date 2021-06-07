@@ -4,7 +4,7 @@
     android:layout_width="@dimen/_120sdp"
     android:layout_height="@dimen/_140sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/background_white"
+    android:background="@color/white"
     android:layout_margin="5dp">
 
     <ImageView
