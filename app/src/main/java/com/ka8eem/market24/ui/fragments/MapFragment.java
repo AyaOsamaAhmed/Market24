@@ -17,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "Map Fragment";
     private int PERMISSION_REQUEST= 10 ;
+    LinearLayout searchView;
     private LocationManager service ;
     private  Boolean enabled = false ;
     private GoogleMap googleMap ;
@@ -73,6 +75,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        searchView = (LinearLayout) getActivity().findViewById(R.id.relative1);
+        searchView.setVisibility(View.GONE);
+
         mapDetail =  (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map) ;
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext()) ;
@@ -83,6 +88,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             mapDetail.getMapAsync(this);
         }
 
+        binding.pinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getMap();
+            }
+        });
         binding.buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,8 +197,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
 
         });
+
+
         }
 
+    void getMap(){
+        mapDetail.getMapAsync( this );
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

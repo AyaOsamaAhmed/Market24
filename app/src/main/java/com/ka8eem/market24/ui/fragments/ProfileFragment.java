@@ -31,28 +31,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
-import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.ui.activities.ChangePassActivity;
 import com.ka8eem.market24.util.Constants;
 import com.ka8eem.market24.util.Keys;
-import com.ka8eem.market24.viewmodel.ProductViewModel;
 import com.ka8eem.market24.viewmodel.UserViewModel;
-import com.pusher.client.channel.User;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MultipartBody;
@@ -101,6 +93,7 @@ public class ProfileFragment extends Fragment {
         navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
+
         initViews(view);
         view.setOnKeyListener( new View.OnKeyListener()
         {
@@ -142,7 +135,7 @@ public class ProfileFragment extends Fragment {
 
         if(userModel.getImage() != null) {
             Uri uri = Uri.parse(userModel.getImage());
-            Toast.makeText(getContext(),""+ uri, Toast.LENGTH_SHORT).show();
+        //    Toast.makeText(getContext(),""+ uri, Toast.LENGTH_SHORT).show();
             Picasso.get()
                     .load(uri)
                     .placeholder(R.drawable.user_bk_profile)

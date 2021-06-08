@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.PannerModel;
+import com.ka8eem.market24.util.Keys;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 import com.squareup.picasso.Picasso;
@@ -53,7 +54,7 @@ public class AutoImageSliderAdapter extends SliderViewAdapter<AutoImageSliderAda
                 .build();
 
             Picasso.get()
-                    .load(list.get(position).getImgUrl()).resize(600, 200)
+                    .load(Keys.image_domain+list.get(position).getImgUrl()).resize(600, 200)
                     .placeholder(R.drawable.ic_camera)
         //            .transform(transformation)
                     .into(viewHolder.imageView);

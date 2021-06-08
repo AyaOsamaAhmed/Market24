@@ -9,6 +9,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -73,11 +75,17 @@ public class AllCategoriesFragment extends Fragment {
         categoryAdapter = new CategoryAdapter();
         categoryVM = ViewModelProviders.of(this).get(CategoryViewModel.class);
         categoryVM.getAllCategories();
-
+        //------------
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
 
         categoryVM.mutableCategoryList.observe(getActivity(), new Observer<List<CategoryModel>>() {
             @Override
             public void onChanged(List<CategoryModel> categoryModels) {
+                progressDialog.dismiss();
                 ArrayList<CategoryModel> list = new ArrayList<>(categoryModels);
                 categoryAdapter.setList(list,navController);
                 recyclerView.setAdapter(categoryAdapter);

@@ -1,5 +1,6 @@
 package com.ka8eem.market24.ui.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -110,6 +111,13 @@ public class AllChatsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         swipeRefreshLayout = view.findViewById(R.id.swip_recycler);
 
+        //------------
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+        //----
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -121,7 +129,7 @@ public class AllChatsFragment extends Fragment {
         productViewModel.mutableConversationModel.observe(getActivity(), new Observer<List<ConversationModel>>() {
             @Override
             public void onChanged(List<ConversationModel> conversationModels) {
-
+                progressDialog.dismiss();
                 Log.d(TAG, "onChanged: list chat:" + conversationModels.size());
                 if(conversationModels.size() == 0){
                         no_chat.setVisibility(View.VISIBLE);

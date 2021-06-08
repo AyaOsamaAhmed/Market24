@@ -71,6 +71,13 @@
         android:label="@string/search"
         tools:layout="@layout/map_radius_fragment"/>
 
+
+    <fragment
+        android:id="@+id/MapFragment"
+        android:name="com.ka8eem.market24.ui.fragments.MapFragment"
+        android:label="@string/search"
+        tools:layout="@layout/map_fragment"/>
+
     <fragment
         android:id="@+id/AllChatsFragment"
         android:name="com.ka8eem.market24.ui.fragments.AllChatsFragment"

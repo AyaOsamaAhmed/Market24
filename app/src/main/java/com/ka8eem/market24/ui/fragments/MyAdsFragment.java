@@ -86,6 +86,14 @@ public class MyAdsFragment extends Fragment {
                 return false;
             }
         } );
+        //loading
+
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+
         // get user data
         preferences = getContext().getSharedPreferences(Constants.SHARED, Context.MODE_PRIVATE);
         gson = new Gson();
@@ -100,6 +108,7 @@ public class MyAdsFragment extends Fragment {
             @Override
             public void onChanged(List<ProductModel> productModels) {
 
+                progressDialog.dismiss();
                 if (productModels.size() == 0) {
                     no_product.setVisibility(View.VISIBLE);
                     no_img_product.setVisibility(View.VISIBLE);

@@ -1,5 +1,6 @@
 package com.ka8eem.market24.ui.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -75,7 +76,14 @@ public class FavouriteFragment extends Fragment {
         toolbar = getActivity().findViewById(R.id.relative1);
         toolbar.setVisibility(View.GONE);
         navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
+        //loading
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
 
+        //
         view.setOnKeyListener( new View.OnKeyListener()
         {
             @Override
@@ -98,6 +106,7 @@ public class FavouriteFragment extends Fragment {
         productViewModel.mutableFavouriteProduct.observe(getActivity(), new Observer<List<FavouriteModel>>() {
             @Override
             public void onChanged(List<FavouriteModel> favouriteModels) {
+                progressDialog.dismiss();
                 favouriteAdapter = new FavouriteAdapter(getContext(), navController);
                 favouriteAdapter.setList(favouriteModels);
                 recyclerView.setAdapter(favouriteAdapter);

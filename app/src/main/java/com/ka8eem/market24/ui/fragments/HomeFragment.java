@@ -1,12 +1,18 @@
 package com.ka8eem.market24.ui.fragments;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
@@ -17,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -81,6 +88,10 @@ public class HomeFragment extends Fragment {
     LinearLayout toolbar ;
      NavController navController ;
     String lang ;
+    private int PERMISSION_REQUEST= 10 ;
+    private LocationManager service ;
+    private  Boolean enabled = false ;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -261,7 +272,8 @@ public class HomeFragment extends Fragment {
                 else if (!checkLoggedIn())
                     startLoginActivity();
                 else {
-                  navController.navigate(R.id.AddProductFragment);
+                    if(checkPermission())
+                  navController.navigate(R.id.MapFragment);
                 }
             }
         });
@@ -347,6 +359,56 @@ public class HomeFragment extends Fragment {
             cat_four_text.setText(categoryModels.get(3).getCatNameEn());
         }
     }
+
+    public Boolean checkPermission(){
+        if(ContextCompat.checkSelfPermission(
+                getContext().getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED){
+            service = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (!enabled) {
+                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(i);
+                enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            }
+            return true;
+
+        }else{
+            ActivityCompat.requestPermissions(
+                    getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST
+            );
+            //    check_location = false;
+            return false;
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_REQUEST) {
+            if (  grantResults[0] !=
+                    PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(),
+                        "Unable to show location - permission required",
+                        Toast.LENGTH_LONG).show();
+            }
+            service =(LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if (!enabled) {
+                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(i);
+                enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            }
+
+        }
+
+    }
+
 
     private void startRegisterActivity() {
         Intent intent = new Intent(getContext(), RegisterActivity.class);

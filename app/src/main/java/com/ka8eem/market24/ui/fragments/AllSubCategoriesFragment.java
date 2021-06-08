@@ -1,5 +1,6 @@
 package com.ka8eem.market24.ui.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -82,12 +83,20 @@ public class AllSubCategoriesFragment extends Fragment {
             }
         });
 
+        //------------
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
+        //----
         subCategoryAdapter = new SubCategoryAdapter(navController);
         categoryVM = ViewModelProviders.of(this).get(CategoryViewModel.class);
         categoryVM.getSubCategory(sub_catid);
         categoryVM.subCategoryList.observe(getActivity(), new Observer<List<SubCategoryModel>>() {
             @Override
             public void onChanged(List<SubCategoryModel> subCategoryModels) {
+                progressDialog.dismiss();
                 if (subCategoryModels.size() != 0) {
                     recyclerView.setVisibility(View.VISIBLE);
                     no_category.setVisibility(View.GONE);

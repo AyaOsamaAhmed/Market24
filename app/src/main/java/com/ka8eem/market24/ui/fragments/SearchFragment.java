@@ -1,5 +1,6 @@
 package com.ka8eem.market24.ui.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -84,13 +85,20 @@ public class SearchFragment extends Fragment {
         productVM = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
         navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
 
+        //loading
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        progressDialog.setCancelable(false);
 
+        //
         productVM.getSearch(search_name,search_lat,search_long,search_cat_id,search_sub_cat_id,search_radius);
 
         productVM.mutableAdsList.observe((getActivity()), new Observer<List<ProductModel>>() {
             @Override
             public void onChanged(List<ProductModel> productModels) {
-
+                progressDialog.dismiss();
                     if (productModels.size() != 0) {
                         recyclerView.setVisibility(View.VISIBLE);
                         no_img_product.setVisibility(View.GONE);
