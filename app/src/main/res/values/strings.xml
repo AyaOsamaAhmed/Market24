@@ -250,5 +250,6 @@
     <string name="all_product">All Product</string>
     <string name="choose_image">Choose Image</string>
     <string name="take_image">Take Image</string>
+    <string name="check">Price is negotiable</string>
 
 </resources>

@@ -81,7 +81,7 @@ public class ProductModel implements Serializable {
     private String phone;
 
     @SerializedName("able_disscussion")
-    private String able_disscussion;
+    private int able_disscussion;
 
 
     public String getAdsID() {
@@ -265,11 +265,11 @@ public class ProductModel implements Serializable {
         this.phone = phone;
     }
 
-    public String getAble_disscussion() {
+    public int getAble_disscussion() {
         return able_disscussion;
     }
 
-    public void setAble_disscussion(String able_disscussion) {
+    public void setAble_disscussion(int able_disscussion) {
         this.able_disscussion = able_disscussion;
     }
 }

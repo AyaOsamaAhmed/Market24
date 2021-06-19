@@ -118,6 +118,12 @@ public interface DataInterface {
             , @Query("cat_id") String category_id , @Query("sub_cat") String sub_category , @Query("rad") String radius );
 
 
+    @POST("market/api/search")
+    Call<MainModel> getSearchByPage(@Query("keyword") String keyword ,@Query("lat") String latitude , @Query("long") String longitude
+            , @Query("cat_id") String category_id , @Query("sub_cat") String sub_category , @Query("rad") String radius
+            ,@Query("page") int page);
+
+
     @POST("market/api/general/subAreas")
     Call<MainModel> getSubAreas(@Query("area_id") String id);
 
@@ -225,6 +231,10 @@ public interface DataInterface {
     @FormUrlEncoded
     @POST("market/api/chat/all")
     Call<MainModel> getAllConversations( @Field("user_id") int user_id);
+
+    @FormUrlEncoded
+    @POST("market/api/chat/all")
+    Call<MainModel> getAllConversationsByPage( @Field("user_id") int user_id ,  @Field("page") int page);
 
     @FormUrlEncoded
     @POST("market/api/chat/message")

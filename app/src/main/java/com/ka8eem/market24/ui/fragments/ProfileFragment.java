@@ -60,20 +60,20 @@ public class ProfileFragment extends Fragment {
     EditText textName, textAddress, textEmail, textPhone;
     UserModel retUserModel;
     SearchView searchView;
-    ImageView filterImage  , edit_image;
-    LinearLayout toolbar ;
-    TextView  change_pass , title_profile;
-    UserViewModel userViewModel ;
+    ImageView filterImage, edit_image;
+    LinearLayout toolbar;
+    TextView change_pass, title_profile;
+    UserViewModel userViewModel;
     // vars
-    MultipartBody.Part imagePart = null ;
+    MultipartBody.Part imagePart = null;
     private boolean edit;
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private UserModel userModel;
-    private String name, address, email, phone, encodedImg  , pass;
-    private  int user_id;
+    private String name, address, email, phone, encodedImg, pass;
+    private int user_id;
     Bitmap bitmap;
-    NavController navController ;
+    NavController navController;
     private DrawerLayout drawerLayout;
 
     public ProfileFragment() {
@@ -86,28 +86,28 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-      //  storageReference = FirebaseStorage.getInstance().getReference("Uploads");
+        //  storageReference = FirebaseStorage.getInstance().getReference("Uploads");
         drawerLayout = getActivity().findViewById(R.id.drawer_layout);
         toolbar = getActivity().findViewById(R.id.relative1);
-         toolbar.setVisibility(View.GONE);
-        navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
+        toolbar.setVisibility(View.GONE);
+        navController = Navigation.findNavController(getActivity(), R.id.fragment_container);
         userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
 
 
         initViews(view);
-        view.setOnKeyListener( new View.OnKeyListener()
-        {
+        view.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public boolean onKey( View v, int keyCode, KeyEvent event )
-            {
-                if( keyCode == KeyEvent.KEYCODE_BACK )
-                {
-                    navController.navigate(R.id.HomeFragment);
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (!drawerLayout.isDrawerOpen(view))
+                        navController.navigate(R.id.HomeFragment);
+                    else
+                        closeDrawer();
                     return true;
                 }
                 return false;
             }
-        } );
+        });
 
         circleImageView.setClickable(false);
         if (savedInstanceState != null) {
@@ -118,6 +118,7 @@ public class ProfileFragment extends Fragment {
         else {
             btnSaveEdit.setText(getString(R.string.save_changes));
         }
+
         btnSaveEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,15 +134,15 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        if(userModel.getImage() != null) {
+        if (userModel.getImage() != null) {
             Uri uri = Uri.parse(userModel.getImage());
-        //    Toast.makeText(getContext(),""+ uri, Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(getContext(),""+ uri, Toast.LENGTH_SHORT).show();
             Picasso.get()
                     .load(uri)
                     .placeholder(R.drawable.user_bk_profile)
                     .into(circleImageView);
 
-          //  circleImageView.setImageURI(uri);
+            //  circleImageView.setImageURI(uri);
         }
         return view;
     }
@@ -158,10 +159,10 @@ public class ProfileFragment extends Fragment {
         email = textEmail.getText().toString();
 
 
-      //-----------
+        //-----------
 
-        UserModel model = new UserModel(user_id,name , phone, address , email);
-        userViewModel.updateProfile(model,imagePart);
+        UserModel model = new UserModel(user_id, name, phone, address, email);
+        userViewModel.updateProfile(model, imagePart);
         //--------------
         final ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.show();
@@ -196,7 +197,7 @@ public class ProfileFragment extends Fragment {
                                     uploadImage();
                                 }*/
                             } else {
-                             //   Toast.makeText(getContext(), getString(R.string.user_not_exist), Toast.LENGTH_SHORT).show();
+                                //   Toast.makeText(getContext(), getString(R.string.user_not_exist), Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }
@@ -261,8 +262,8 @@ public class ProfileFragment extends Fragment {
         change_pass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                   Intent intent = new Intent(getActivity() , ChangePassActivity.class);
-                  startActivity(intent);
+                Intent intent = new Intent(getActivity(), ChangePassActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -302,26 +303,24 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode ==CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE ) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if(resultCode == RESULT_OK)
-            {
+            if (resultCode == RESULT_OK) {
                 Uri imageUrl = result.getUri();
                 try {
-                     bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUrl);
-                    ByteArrayOutputStream byteArrayOutputStreamObject ;
+                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), imageUrl);
+                    ByteArrayOutputStream byteArrayOutputStreamObject;
                     byteArrayOutputStreamObject = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStreamObject);
                     byte[] byteArrayVar = byteArrayOutputStreamObject.toByteArray();
-                    encodedImg = Base64.encodeToString(byteArrayVar,Base64.DEFAULT);
-                   imagePart =  Keys.compressImage(getContext(), imageUrl, "img_profile");
+                    encodedImg = Base64.encodeToString(byteArrayVar, Base64.DEFAULT);
+                    imagePart = Keys.compressImage(getContext(), imageUrl, "img_profile");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
                 circleImageView.setImageURI(imageUrl);
-            }else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE)
-            {
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception e = result.getError();
 
             }
@@ -332,9 +331,11 @@ public class ProfileFragment extends Fragment {
 
     public class GetImageFromUrl extends AsyncTask<String, Void, Bitmap> {
         ImageView imageView;
-        public GetImageFromUrl(ImageView img){
+
+        public GetImageFromUrl(ImageView img) {
             this.imageView = img;
         }
+
         @Override
         protected Bitmap doInBackground(String... url) {
             String stringUrl = url[0];
@@ -348,8 +349,9 @@ public class ProfileFragment extends Fragment {
             }
             return bitmap;
         }
+
         @Override
-        protected void onPostExecute(Bitmap bitmap){
+        protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             imageView.setImageBitmap(bitmap);
         }
@@ -361,62 +363,61 @@ public class ProfileFragment extends Fragment {
     return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
 }*/
 
-   /* private  void uploadImage(){
-        final ProgressDialog pd = new ProgressDialog(getContext());
-        pd.setMessage("Uploading");
-        pd.show();
+    /* private  void uploadImage(){
+         final ProgressDialog pd = new ProgressDialog(getContext());
+         pd.setMessage("Uploading");
+         pd.show();
 
-        if(imageUri != null)
-        {
-            final StorageReference file = storageReference.child(System.currentTimeMillis()
-            +"."+getFileExtension(imageUri));
+         if(imageUri != null)
+         {
+             final StorageReference file = storageReference.child(System.currentTimeMillis()
+             +"."+getFileExtension(imageUri));
 
-            storageTask = file.putFile(imageUri);
-            storageTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot , Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                   if(!task.isSuccessful())
-                   {
-                       throw task.getException();
-                   }
-                   return file.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if(task.isSuccessful())
+             storageTask = file.putFile(imageUri);
+             storageTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot , Task<Uri>>() {
+                 @Override
+                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if(!task.isSuccessful())
                     {
-                        Uri downloaduri = task.getResult();
-                        String mUri = downloaduri.toString();
-                        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
-                        HashMap<String , Object> map = new HashMap<>();
-                        map.put("imageURL" , mUri);
-                        reference.updateChildren(map);
-                        pd.dismiss();
-                    }else{
-                        Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        throw task.getException();
                     }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    pd.dismiss();
-                }
-            });
-        }else{
-            Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_SHORT).show();
+                    return file.getDownloadUrl();
+                 }
+             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                 @Override
+                 public void onComplete(@NonNull Task<Uri> task) {
+                     if(task.isSuccessful())
+                     {
+                         Uri downloaduri = task.getResult();
+                         String mUri = downloaduri.toString();
+                         reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+                         HashMap<String , Object> map = new HashMap<>();
+                         map.put("imageURL" , mUri);
+                         reference.updateChildren(map);
+                         pd.dismiss();
+                     }else{
+                         Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                     }
+                 }
+             }).addOnFailureListener(new OnFailureListener() {
+                 @Override
+                 public void onFailure(@NonNull Exception e) {
+                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                     pd.dismiss();
+                 }
+             });
+         }else{
+             Toast.makeText(getContext(), "No Image Selected", Toast.LENGTH_SHORT).show();
+         }
+ }*/
+    public void closeDrawer() {
+        String lang = Constants.getLocal(getContext());
+        if (lang.equals("AR")) {
+            drawerLayout.openDrawer(Gravity.LEFT);
+        } else {
+            drawerLayout.openDrawer(Gravity.RIGHT);
         }
-}*/
-   public void openDrawer(View view) {
-       String lang = Constants.getLocal(getContext());
-       if (lang.equals("AR"))
-           drawerLayout.openDrawer(Gravity.RIGHT);
-       else
-           drawerLayout.openDrawer(Gravity.LEFT);
-   }
-
-}
+    }
     /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -443,3 +444,4 @@ public class ProfileFragment extends Fragment {
 
 
     }  */
+}

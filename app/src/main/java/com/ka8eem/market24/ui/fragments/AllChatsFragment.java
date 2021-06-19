@@ -41,6 +41,7 @@ import com.ka8eem.market24.adapters.UserFirebaseAdapter;
 import com.ka8eem.market24.models.ChatModel;
 import com.ka8eem.market24.models.ChatlistModel;
 import com.ka8eem.market24.models.ConversationModel;
+import com.ka8eem.market24.models.MyConversationsModel;
 import com.ka8eem.market24.models.SpecialInfoModel;
 import com.ka8eem.market24.models.UserFirebaseModel;
 import com.ka8eem.market24.models.UserModel;
@@ -83,7 +84,7 @@ public class AllChatsFragment extends Fragment {
     final List<String> _name_pro= new ArrayList<>();
     final List<String> _str_date= new ArrayList<>();
     final List<Boolean> _isSeen= new ArrayList<>();
-
+    List<ConversationModel> listConversations;
     private List<ChatlistModel> My_Chats ;
     ImageView no_chat_img ;
     TextView no_chat;
@@ -110,7 +111,8 @@ public class AllChatsFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         swipeRefreshLayout = view.findViewById(R.id.swip_recycler);
-
+        chatUserAdapter = new AllChatUserAdapter(getContext() ,userModel.getUserId());
+        listConversations = new ArrayList<>();
         //------------
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.show();
@@ -126,22 +128,27 @@ public class AllChatsFragment extends Fragment {
             }
         });
         productViewModel.getAllConversation(userModel.getUserId());
-        productViewModel.mutableConversationModel.observe(getActivity(), new Observer<List<ConversationModel>>() {
+        productViewModel.mutableConversationModel.observe(getActivity(), new Observer<MyConversationsModel>() {
             @Override
-            public void onChanged(List<ConversationModel> conversationModels) {
+            public void onChanged(MyConversationsModel conversationModels) {
                 progressDialog.dismiss();
-                Log.d(TAG, "onChanged: list chat:" + conversationModels.size());
-                if(conversationModels.size() == 0){
-                        no_chat.setVisibility(View.VISIBLE);
-                        no_chat_img.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
-                }else {
+                Log.d(TAG, "onChanged: list chat:" + conversationModels.getData().size());
+                if(conversationModels.getData().size() != 0) {
                     no_chat.setVisibility(View.GONE);
                     no_chat_img.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    chatUserAdapter = new AllChatUserAdapter(getContext(), conversationModels ,userModel.getUserId());
 
-                    recyclerView.setAdapter(chatUserAdapter);
+                    setChats(conversationModels.getData());
+
+                    if(conversationModels.getCurrent_page() != conversationModels.getLast_page()) {
+                        productViewModel.getAllConversationByPage(userModel.getUserId() , conversationModels.getCurrent_page()+1);
+                    }
+
+                }
+                else {
+                    no_chat.setVisibility(View.VISIBLE);
+                    no_chat_img.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
         });
@@ -232,6 +239,18 @@ public class AllChatsFragment extends Fragment {
         */
         return view;
     }
+
+    private void setChats(List<ConversationModel> data) {
+        for (int i=0 ; i<data.size() ; i++){
+            listConversations.add(data.get(i));
+        }
+        Log.d("All Chats Fragment", "setUsers: " + listConversations.size());
+
+        chatUserAdapter.setList(listConversations);
+        chatUserAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(chatUserAdapter);
+    }
+
     private void updateToken(String token)
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");

@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ka8eem.market24.Notification.Data;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.models.ConversationModel;
+import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.ui.activities.ChattingActivity;
 import com.ka8eem.market24.util.Keys;
 import com.squareup.picasso.Picasso;
@@ -37,12 +39,15 @@ public class AllChatUserAdapter extends RecyclerView.Adapter<AllChatUserAdapter.
 
     String type_user ;
 
-    public AllChatUserAdapter(Context context , List<ConversationModel> list , int user_id)
+    public AllChatUserAdapter(Context context  , int user_id)
     {
         this.context = context;
-        this.list = list;
         this.user_id = user_id;
+    }
 
+    public void setList(List<ConversationModel> list) {
+        this.list = list;
+        notifyDataSetChanged();
     }
     @NonNull
     @Override

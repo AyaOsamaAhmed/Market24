@@ -120,6 +120,10 @@ public class DataClient {
         return dataInterface.getSearch(name ,cat_id , sub_cat_id, latitude , longtitude , raduis);
     }
 
+    public Call<MainModel> getSearchByPage(String name ,String cat_id , String sub_cat_id , String latitude , String longtitude , String raduis , int page) {
+        return dataInterface.getSearchByPage(name ,cat_id , sub_cat_id, latitude , longtitude , raduis , page);
+    }
+
     public Call<RegisterResponse> register(UserModel userModel) {
         return dataInterface.register(userModel);
     }
@@ -165,6 +169,10 @@ public class DataClient {
 
     public Call<MainModel> getAllConversation (int user_id) {
         return dataInterface.getAllConversations(user_id);
+    }
+
+    public Call<MainModel> getAllConversationByPage (int user_id , int page) {
+        return dataInterface.getAllConversationsByPage(user_id , page);
     }
 
     public Call<MainModel> sendMessage (int buyer_id , int seller_id , int ads_id

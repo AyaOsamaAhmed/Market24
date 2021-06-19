@@ -49,13 +49,13 @@ public class ProductImageSliderAdapter extends SliderViewAdapter<ProductImageSli
     @Override
     public void onBindViewHolder(SliderAdapterVH viewHolder, int position) {
 
-
-
             Picasso.get()
                     .load(image_domain + productItems.get(position).getImgUrl())
-                    .resize(600, 200)
+                    .resize(800, 200)
                     .placeholder(R.drawable.ic_camera)
                     .into(viewHolder.imageView);
+
+
 
             viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override

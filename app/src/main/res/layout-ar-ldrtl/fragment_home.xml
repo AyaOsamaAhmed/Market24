@@ -199,15 +199,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:layout_marginHorizontal="15dp"
-                android:layout_marginTop="15dp"
                 >
-
+<!--
                 <com.smarteist.autoimageslider.SliderView
                     android:id="@+id/imageSlider"
                     android:layout_width="match_parent"
-                    android:layout_height="140dp"
+                    android:layout_height="@dimen/_140sdp"
                     app:sliderAnimationDuration="600"
                     app:sliderAutoCycleDirection="back_and_forth"
                     app:sliderAutoCycleEnabled="true"
@@ -219,8 +216,20 @@
                     app:sliderIndicatorRadius="2dp"
                     app:sliderIndicatorSelectedColor="#5A5A5A"
                     app:sliderIndicatorUnselectedColor="#FFF"
-                    app:sliderScrollTimeInSec="1"
+                    app:sliderScrollTimeInSec="45"
                     app:sliderStartAutoCycle="true" />
+       -->
+                <com.opensooq.pluto.PlutoView
+                    android:id="@+id/pluto_flipper"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_140sdp"
+                    app:indicator_visibility="true"
+                    app:layout_constraintCircleRadius="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:background="@tools:sample/backgrounds/scenic" />
             </LinearLayout>
 
             <LinearLayout

@@ -104,7 +104,7 @@ public class MyAdsFragment extends Fragment {
         //get product data
         my_adsAdapter = new MyAdsAdapter();
         productVM.getMyAds(userModel.getUserId());
-        productVM.mutableAdsList.observe((getActivity()), new Observer<List<ProductModel>>() {
+        productVM.mutableMyAdsList.observe((getActivity()), new Observer<List<ProductModel>>() {
             @Override
             public void onChanged(List<ProductModel> productModels) {
 

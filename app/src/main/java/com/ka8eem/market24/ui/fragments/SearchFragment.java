@@ -13,6 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,8 @@ import android.widget.Toast;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.adapters.SearchAdapter;
 import com.ka8eem.market24.models.CategoryModel;
+import com.ka8eem.market24.models.MessageModel;
+import com.ka8eem.market24.models.MySearchProductModel;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.SubCategoryModel;
 import com.ka8eem.market24.viewmodel.CategoryViewModel;
@@ -51,6 +54,8 @@ public class SearchFragment extends Fragment {
     ImageView no_img_product;
     TextView no_product;
     LinearLayout toolbar ;
+
+    List<ProductModel>  listProductModels ;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,6 +86,8 @@ public class SearchFragment extends Fragment {
         toolbar = getActivity().findViewById(R.id.relative1);
         toolbar.setVisibility(View.VISIBLE);
 
+        listProductModels = new ArrayList<>() ;
+
         searchAdapter = new SearchAdapter();
         productVM = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
         navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
@@ -95,17 +102,21 @@ public class SearchFragment extends Fragment {
         //
         productVM.getSearch(search_name,search_lat,search_long,search_cat_id,search_sub_cat_id,search_radius);
 
-        productVM.mutableAdsList.observe((getActivity()), new Observer<List<ProductModel>>() {
+        productVM.mutableAdsList.observe((getActivity()), new Observer<MySearchProductModel>() {
             @Override
-            public void onChanged(List<ProductModel> productModels) {
+            public void onChanged(MySearchProductModel productModels) {
                 progressDialog.dismiss();
-                    if (productModels.size() != 0) {
+                    if (productModels.getData().size() != 0) {
                         recyclerView.setVisibility(View.VISIBLE);
                         no_img_product.setVisibility(View.GONE);
                         no_product.setVisibility(View.GONE);
-                        searchAdapter.setList(productModels,navController);
-                        searchAdapter.notifyDataSetChanged();
-                        recyclerView.setAdapter(searchAdapter);
+
+                        setAds(productModels.getData());
+
+                        if(productModels.getCurrent_page() != productModels.getLast_page()) {
+                            productVM.getSearchByPage(search_name,search_lat,search_long,search_cat_id,search_sub_cat_id,search_radius , productModels.getCurrent_page()+1);
+
+                        }
 
                     } else {
                         Toast.makeText(getContext(), getString(R.string.no_ads), Toast.LENGTH_SHORT).show();
@@ -139,7 +150,15 @@ public class SearchFragment extends Fragment {
         return view;
     }
 
-    private void initView() {
+    void setAds(List<ProductModel> productModels){
+        for (int i=0 ; i<productModels.size() ; i++){
+            listProductModels.add(productModels.get(i));
+        }
+        Log.d("Search Fragment", "setads: " + listProductModels.size());
+
+        searchAdapter.setList(listProductModels,navController);
+        searchAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(searchAdapter);
 
 
     }

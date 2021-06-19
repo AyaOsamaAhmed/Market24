@@ -9,12 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
+import com.ka8eem.market24.interfaces.CheckFavourite;
 import com.ka8eem.market24.models.FavouriteModel;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.util.Constants;
@@ -35,15 +39,18 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
     SharedPreferences.Editor editor;
     NavController navController ;
     String price  ;
+    CheckFavourite  checkFavourite;
+
 
     public void setList(List<FavouriteModel> list) {
 
         this.listInFav = list;
     }
 
-    public FavouriteAdapter(Context context , NavController navController) {
+    public FavouriteAdapter(Context context , NavController navController , CheckFavourite checkFavourite) {
         this.context = context;
         this.navController = navController ;
+        this.checkFavourite = checkFavourite;
     }
 
     public void removeItem(int pos) {
@@ -121,6 +128,8 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.MyVi
         holder.fav_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                     checkFavourite.onCheckFavourite(0 , listInFav.get(position).getAds().getAdsID());
 
             }
         });

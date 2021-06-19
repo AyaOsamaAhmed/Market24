@@ -12,6 +12,8 @@ import com.ka8eem.market24.models.GetMessagesModel;
 import com.ka8eem.market24.models.MainModel;
 import com.ka8eem.market24.models.MessageModel;
 import com.ka8eem.market24.models.MessagesModel;
+import com.ka8eem.market24.models.MyConversationsModel;
+import com.ka8eem.market24.models.MySearchProductModel;
 import com.ka8eem.market24.models.PannerModel;
 import com.ka8eem.market24.models.PaymentAdsModel;
 import com.ka8eem.market24.models.ProductModel;
@@ -33,14 +35,16 @@ import retrofit2.Response;
 
 public class ProductViewModel extends ViewModel {
     public MutableLiveData<List<ProductModel>> mutableProductList = new MutableLiveData<>();
-    public MutableLiveData<List<ProductModel>> mutableAdsList = new MutableLiveData<>();
+    public MutableLiveData<MySearchProductModel> mutableAdsList = new MutableLiveData<>();
+    public MutableLiveData<List<ProductModel>> mutableMyAdsList = new MutableLiveData<>();
+
     public MutableLiveData<MainModel> mutableUploadProduct = new MutableLiveData<>();
     public MutableLiveData<String> mutableReportAds = new MutableLiveData<>();
     public MutableLiveData<String> mutableRequestProduct = new MutableLiveData<>();
     public MutableLiveData<ArrayList<ProductModel>> adsCategoryList = new MutableLiveData<>();
     public MutableLiveData<List<PaymentAdsModel>> paymentAdsList = new MutableLiveData<>();
     public MutableLiveData<List<FavouriteModel>> mutableFavouriteProduct = new MutableLiveData<>();
-    public MutableLiveData<List<ConversationModel>> mutableConversationModel = new MutableLiveData<>();
+    public MutableLiveData<MyConversationsModel> mutableConversationModel = new MutableLiveData<>();
     public MutableLiveData<MessageModel> mutableSendMessageModel = new MutableLiveData<>();
     public MutableLiveData<GetMessagesModel> mutableGetMessagesModel = new MutableLiveData<>();
     public MutableLiveData<GetMessagesModel> mutableGetNextMessagesModel = new MutableLiveData<>();
@@ -107,7 +111,7 @@ public class ProductViewModel extends ViewModel {
             @Override
             public void onResponse(Call<MainModel> call, Response<MainModel> response) {
                 if(response.body().getStatus())
-                    mutableAdsList.postValue(response.body().getResult().getProduct_search().getData());
+                    mutableAdsList.postValue(response.body().getResult().getProduct_search());
             }
 
             @Override
@@ -122,7 +126,7 @@ public class ProductViewModel extends ViewModel {
             @Override
             public void onResponse(Call<MainModel> call, Response<MainModel> response) {
                 if(response.body().getStatus())
-                    mutableAdsList.postValue(response.body().getResult().getProduct_search().getData());
+                    mutableAdsList.postValue(response.body().getResult().getProduct_search());
             }
 
             @Override
@@ -137,7 +141,7 @@ public class ProductViewModel extends ViewModel {
             @Override
             public void onResponse(Call<MainModel> call, Response<MainModel> response) {
                 if(response.body().getStatus())
-                    mutableAdsList.postValue(response.body().getResult().getProduct_search().getData());
+                    mutableAdsList.postValue(response.body().getResult().getProduct_search());
             }
 
             @Override
@@ -152,7 +156,26 @@ public class ProductViewModel extends ViewModel {
             @Override
             public void onResponse(Call<MainModel> call, Response<MainModel> response) {
                 if(response.body().getStatus())
-                    mutableAdsList.postValue(response.body().getResult().getProduct_search().getData());
+                    mutableAdsList.postValue(response.body().getResult().getProduct_search());
+                else
+                    error.postValue(response.message() + " Error!");
+            }
+
+            @Override
+            public void onFailure(Call<MainModel> call, Throwable t) {
+                error.postValue(t.getMessage() + " Error!");
+            }
+        });
+    }
+
+    public void getSearchByPage(String name ,String cat_id , String sub_cat_id, String lat , String longtitude , String raduis , int page) {
+        DataClient.getINSTANCE().getSearchByPage(name ,cat_id , sub_cat_id, lat , longtitude , raduis,page).enqueue(new Callback<MainModel>() {
+            @Override
+            public void onResponse(Call<MainModel> call, Response<MainModel> response) {
+                if(response.body().getStatus())
+                    mutableAdsList.postValue(response.body().getResult().getProduct_search());
+                else
+                    error.postValue(response.message() + " Error!");
             }
 
             @Override
@@ -168,7 +191,7 @@ public class ProductViewModel extends ViewModel {
             @Override
             public void onResponse(Call<MainModel> call, Response<MainModel> response) {
                 if(response.body().getStatus())
-                mutableAdsList.postValue(response.body().getResult().getMy_ads().getData());
+                mutableMyAdsList.postValue(response.body().getResult().getMy_ads().getData());
             }
 
             @Override
@@ -350,7 +373,25 @@ public class ProductViewModel extends ViewModel {
             @Override
             public void onResponse(Call<MainModel> call, Response<MainModel> response) {
                 if(response.body().getStatus())
-                    mutableConversationModel.postValue(response.body().getResult().getMy_conversations().getData());
+                    mutableConversationModel.postValue(response.body().getResult().getMy_conversations());
+                else
+                    error.postValue(response.message() + " Error!");
+            }
+
+            @Override
+            public void onFailure(Call<MainModel> call, Throwable t) {
+                //     mutableUpdateFavourite.postValue(t.getMessage());
+                Log.e("upload favourite error", t.getMessage());
+            }
+        });
+    }
+
+    public void getAllConversationByPage(int user_id ,int page) {
+        DataClient.getINSTANCE().getAllConversationByPage(user_id ,page).enqueue(new Callback<MainModel>() {
+            @Override
+            public void onResponse(Call<MainModel> call, Response<MainModel> response) {
+                if(response.body().getStatus())
+                    mutableConversationModel.postValue(response.body().getResult().getMy_conversations());
                 else
                     error.postValue(response.message() + " Error!");
             }

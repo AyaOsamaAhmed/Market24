@@ -31,7 +31,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.adapters.FavouriteAdapter;
+import com.ka8eem.market24.interfaces.CheckFavourite;
 import com.ka8eem.market24.models.FavouriteModel;
+import com.ka8eem.market24.models.MainModel;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.util.Constants;
@@ -41,7 +43,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavouriteFragment extends Fragment {
+public class FavouriteFragment extends Fragment implements CheckFavourite {
 
 
 
@@ -91,6 +93,7 @@ public class FavouriteFragment extends Fragment {
             {
                 if( keyCode == KeyEvent.KEYCODE_BACK )
                 {
+
                     navController.navigate(R.id.HomeFragment);
                     return true;
                 }
@@ -102,14 +105,25 @@ public class FavouriteFragment extends Fragment {
 
             productViewModel.getAllFavourite(userModel.getUserId());
 
+        favouriteAdapter = new FavouriteAdapter(getContext(), navController, this);
 
         productViewModel.mutableFavouriteProduct.observe(getActivity(), new Observer<List<FavouriteModel>>() {
             @Override
             public void onChanged(List<FavouriteModel> favouriteModels) {
                 progressDialog.dismiss();
-                favouriteAdapter = new FavouriteAdapter(getContext(), navController);
                 favouriteAdapter.setList(favouriteModels);
                 recyclerView.setAdapter(favouriteAdapter);
+            }
+        });
+
+        productViewModel.mutableUpdateFavourite.observe(getActivity(), new Observer<MainModel>() {
+            @Override
+            public void onChanged(MainModel mainModel) {
+                if(mainModel.getStatus()) {
+
+                    productViewModel.getAllFavourite(userModel.getUserId());
+
+                }
             }
         });
 
@@ -181,4 +195,14 @@ public class FavouriteFragment extends Fragment {
             }
         }
     };
+
+
+    @Override
+    public void onCheckFavourite(int fav , String product_id) {
+
+        productViewModel.updateItemFavourite(userModel.getUserId(), product_id);
+        Toast.makeText(getContext(), "Success favourite", Toast.LENGTH_LONG).show();
+
+
+    }
 }

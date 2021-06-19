@@ -1,5 +1,6 @@
 package com.ka8eem.market24.ui.fragments;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -91,7 +92,10 @@ public class ProductDetailsFragment extends Fragment {
         Type type1 = new TypeToken<UserModel>() {
         }.getType();
          userModel = gson1.fromJson(json, type1);
+
         initView();
+
+
         return binding.getRoot();
     }
 
@@ -169,9 +173,8 @@ public class ProductDetailsFragment extends Fragment {
         binding.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                navController.navigate(R.id.HomeFragment);
-            }
+                getActivity().onBackPressed();
+             }
         });
 
         binding.imageProductSlider.setOnClickListener(new View.OnClickListener() {
@@ -222,6 +225,9 @@ public class ProductDetailsFragment extends Fragment {
         binding.productPrice.setText(price);
         binding.productDate.setText(productModel.getDate());
         binding.productAddress.setText(productModel.getAddress());
+
+        if(productModel.getAble_disscussion() == 1)
+        binding.productCheck.setVisibility(View.VISIBLE);
 
         if(productModel.getIs_favourite() == 1 ){
 
