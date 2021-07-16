@@ -8,7 +8,7 @@ import java.util.List;
 public class MyFavouriteModel implements Serializable {
 
     @SerializedName("current_page")
-    private String current_page;
+    private int current_page;
 
     @SerializedName("data")
     private List<FavouriteModel> data;
@@ -32,10 +32,10 @@ public class MyFavouriteModel implements Serializable {
     private String path;
 
     @SerializedName("per_page")
-    private String per_page;
+    private int per_page;
 
     @SerializedName("prev_page_url")
-    private int prev_page_url;
+    private String prev_page_url;
 
     @SerializedName("to")
     private int to;
@@ -43,11 +43,11 @@ public class MyFavouriteModel implements Serializable {
     @SerializedName("total")
     private int total;
 
-    public String getCurrent_page() {
+    public int getCurrent_page() {
         return current_page;
     }
 
-    public void setCurrent_page(String current_page) {
+    public void setCurrent_page(int current_page) {
         this.current_page = current_page;
     }
 
@@ -57,5 +57,45 @@ public class MyFavouriteModel implements Serializable {
 
     public void setData(List<FavouriteModel> data) {
         this.data = data;
+    }
+
+    public String getFirst_page_url() {
+        return first_page_url;
+    }
+
+    public int getFrom() {
+        return from;
+    }
+
+    public int getLast_page() {
+        return last_page;
+    }
+
+    public String getLast_page_url() {
+        return last_page_url;
+    }
+
+    public String getNext_page_url() {
+        return next_page_url;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public int getPer_page() {
+        return per_page;
+    }
+
+    public String getPrev_page_url() {
+        return prev_page_url;
+    }
+
+    public int getTo() {
+        return to;
+    }
+
+    public int getTotal() {
+        return total;
     }
 }

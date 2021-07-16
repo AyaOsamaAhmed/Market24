@@ -3,12 +3,15 @@ package com.ka8eem.market24.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -74,9 +77,16 @@ public class ImageSliderAdapter extends PlutoAdapter<PannerModel, ImageSliderAda
             });
             Uri uri = Uri.parse(Keys.image_domain+list.get(position).getImgUrl());
 
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+            int height = size.y;
+
             Picasso.get()
                     .load(uri)
-                    .resize(800, 200)
+                  .resize(width,height)
                     .placeholder(R.drawable.ic_camera)
                     .into(imageView);
         }

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -31,6 +33,8 @@ import com.google.gson.reflect.TypeToken;
 import com.ka8eem.market24.R;
 import com.ka8eem.market24.adapters.AdsAdapter;
 import com.ka8eem.market24.adapters.MyAdsAdapter;
+import com.ka8eem.market24.models.MyProductModel;
+import com.ka8eem.market24.models.MySearchProductModel;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.util.Constants;
@@ -39,6 +43,8 @@ import com.ka8eem.market24.viewmodel.ProductViewModel;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class MyAdsFragment extends Fragment {
 
@@ -57,6 +63,8 @@ public class MyAdsFragment extends Fragment {
     NavController navController ;
     ImageView  no_img_product;
     TextView  no_product ;
+    MyProductModel myProductModel;
+    List<ProductModel>  listProductModels ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +77,7 @@ public class MyAdsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.my_ads_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
-
+        listProductModels = new ArrayList<>();
         no_img_product = view.findViewById(R.id.no_img_product);
         no_product = view.findViewById(R.id.no_product);
 
@@ -104,12 +112,12 @@ public class MyAdsFragment extends Fragment {
         //get product data
         my_adsAdapter = new MyAdsAdapter();
         productVM.getMyAds(userModel.getUserId());
-        productVM.mutableMyAdsList.observe((getActivity()), new Observer<List<ProductModel>>() {
+        productVM.mutableMyAdsList.observe((getActivity()), new Observer<MyProductModel>() {
             @Override
-            public void onChanged(List<ProductModel> productModels) {
+            public void onChanged(MyProductModel productModels) {
 
                 progressDialog.dismiss();
-                if (productModels.size() == 0) {
+                if (productModels.getData().size() == 0) {
                     no_product.setVisibility(View.VISIBLE);
                     no_img_product.setVisibility(View.VISIBLE);
                     recyclerView.setVisibility(View.GONE);
@@ -117,10 +125,27 @@ public class MyAdsFragment extends Fragment {
                     no_product.setVisibility(View.GONE);
                     no_img_product.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    my_adsAdapter.setList(productModels, navController);
-                    my_adsAdapter.notifyDataSetChanged();
-                    recyclerView.setAdapter(my_adsAdapter);
+
+                    myProductModel = productModels ;
+                   setAds(productModels.getData());
                 }
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Log.d(TAG, "onScrollStateChanged: "+myProductModel.getCurrent_page());
+                if(myProductModel.getCurrent_page() != myProductModel.getLast_page()) {
+                    productVM.getMyAdsByPage(userModel.getUserId(),myProductModel.getCurrent_page()+1);
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.d(TAG, "onScrolled: "+myProductModel.getCurrent_page());
             }
         });
 
@@ -128,6 +153,18 @@ public class MyAdsFragment extends Fragment {
         return view;
     }
 
+    void setAds(List<ProductModel> productModels){
+        for (int i=0 ; i<productModels.size() ; i++){
+            listProductModels.add(productModels.get(i));
+        }
+        Log.d("My Ads Fragment", "setads: " + listProductModels.size());
+
+        my_adsAdapter.setList(listProductModels,navController);
+        my_adsAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(my_adsAdapter);
+
+
+    }
     private void deleteProduct(String productID) {
         ProductViewModel viewModel = ViewModelProviders.of(getActivity()).get(ProductViewModel.class);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

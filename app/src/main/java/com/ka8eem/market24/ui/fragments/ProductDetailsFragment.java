@@ -234,16 +234,16 @@ public class ProductDetailsFragment extends Fragment {
             binding.like.setImageResource(R.drawable.ic_like_full);
             is_favourite = 1 ;
         }
+        if (checkLoggedIn()) {
+            if (userModel.getUserId() == Integer.parseInt(productModel.getUserID())) {
 
-        if(userModel.getUserId() == Integer.parseInt(productModel.getUserID())){
-
-            binding.call.setVisibility(View.GONE);
-        }else {
-            type_user = Keys.buyer;
-            seller_id = Integer.parseInt(productModel.getUserID());
-            buyer_id = userModel.getUserId();
+                binding.call.setVisibility(View.GONE);
+            } else {
+                type_user = Keys.buyer;
+                seller_id = Integer.parseInt(productModel.getUserID());
+                buyer_id = userModel.getUserId();
+            }
         }
-
 
         setSliderAdapter = new ProductImageSliderAdapter(getContext() );
         setSliderAdapter.newItems(productModel.getListAdsImage());

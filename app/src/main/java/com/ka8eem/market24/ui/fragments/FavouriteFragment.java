@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,8 @@ import com.ka8eem.market24.adapters.FavouriteAdapter;
 import com.ka8eem.market24.interfaces.CheckFavourite;
 import com.ka8eem.market24.models.FavouriteModel;
 import com.ka8eem.market24.models.MainModel;
+import com.ka8eem.market24.models.MyFavouriteModel;
+import com.ka8eem.market24.models.MyProductModel;
 import com.ka8eem.market24.models.ProductModel;
 import com.ka8eem.market24.models.UserModel;
 import com.ka8eem.market24.util.Constants;
@@ -42,6 +45,8 @@ import com.ka8eem.market24.viewmodel.ProductViewModel;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class FavouriteFragment extends Fragment implements CheckFavourite {
 
@@ -62,6 +67,8 @@ public class FavouriteFragment extends Fragment implements CheckFavourite {
     NavController navController ;
     ProductViewModel productViewModel ;
     UserModel userModel ;
+    MyFavouriteModel myFavouriteModel;
+    List<FavouriteModel>  listfavoriteModel ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,7 +81,7 @@ public class FavouriteFragment extends Fragment implements CheckFavourite {
         }.getType();
         String json = preferences.getString("USER_MODEL", null);
         userModel = gson.fromJson(json, type);
-
+        listfavoriteModel = new ArrayList<>();
         toolbar = getActivity().findViewById(R.id.relative1);
         toolbar.setVisibility(View.GONE);
         navController = Navigation.findNavController(getActivity(),R.id.fragment_container);
@@ -107,12 +114,14 @@ public class FavouriteFragment extends Fragment implements CheckFavourite {
 
         favouriteAdapter = new FavouriteAdapter(getContext(), navController, this);
 
-        productViewModel.mutableFavouriteProduct.observe(getActivity(), new Observer<List<FavouriteModel>>() {
+        productViewModel.mutableFavouriteProduct.observe(getActivity(), new Observer<MyFavouriteModel>() {
             @Override
-            public void onChanged(List<FavouriteModel> favouriteModels) {
+            public void onChanged(MyFavouriteModel favouriteModels) {
                 progressDialog.dismiss();
-                favouriteAdapter.setList(favouriteModels);
-                recyclerView.setAdapter(favouriteAdapter);
+
+                myFavouriteModel = favouriteModels;
+
+               setAds(favouriteModels.getData());
             }
         });
 
@@ -120,16 +129,51 @@ public class FavouriteFragment extends Fragment implements CheckFavourite {
             @Override
             public void onChanged(MainModel mainModel) {
                 if(mainModel.getStatus()) {
-
+                    myFavouriteModel = new MyFavouriteModel();
+                    listfavoriteModel.clear();
+                    favouriteAdapter.setList(listfavoriteModel);
+                    favouriteAdapter.notifyDataSetChanged();
+                    recyclerView.setAdapter(favouriteAdapter);
                     productViewModel.getAllFavourite(userModel.getUserId());
 
                 }
             }
         });
 
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Log.d(TAG, "onScrollStateChanged: "+myFavouriteModel.getCurrent_page());
+                if(myFavouriteModel.getCurrent_page() != myFavouriteModel.getLast_page()) {
+                    productViewModel.getAllFavouriteByPage(userModel.getUserId(),myFavouriteModel.getCurrent_page()+1);
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.d(TAG, "onScrolled: "+myFavouriteModel.getCurrent_page());
+            }
+        });
+
         return view;
     }
 
+
+    void setAds(List<FavouriteModel> favouriteModel){
+        for (int i=0 ; i<favouriteModel.size() ; i++){
+            listfavoriteModel.add(favouriteModel.get(i));
+        }
+        Log.d("Favourite Fragment", "setads: " + listfavoriteModel.size());
+
+        favouriteAdapter.setList(listfavoriteModel);
+        favouriteAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(favouriteAdapter);
+
+
+    }
     private boolean checkLoggedIn() {
         boolean ret = preferences.getBoolean("LOGGED_IN", false);
         return ret;

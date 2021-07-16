@@ -298,10 +298,10 @@ public class AddProductFragment extends Fragment {
                     String address  = preferences.getString(Keys.Address,"");
                     String phone = fragmentAddProductBinding.editNumber.getText().toString();
                        String negotiable;
-                     if(fragmentAddProductBinding.negotiable.getText().toString() == null)
-                           negotiable ="0";
+                     if(fragmentAddProductBinding.negotiable.isChecked())
+                           negotiable ="1";
                      else
-                          negotiable = "1" ;
+                          negotiable = "0" ;
 
                     AdsModel adsModel = new AdsModel(userId, catId, subCatId ,name, price, description ,latitude,longtitude,address,negotiable,phone);
                     Log.i(TAG, "onClick: "+ userId +"..."+categoryIndex+"--"+catId +".."+subCatId+".." +".."+price+"..."+description+"... phone:"+phone);

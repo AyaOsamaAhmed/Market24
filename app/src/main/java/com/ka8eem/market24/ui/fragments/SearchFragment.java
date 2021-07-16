@@ -3,6 +3,7 @@ package com.ka8eem.market24.ui.fragments;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
@@ -38,6 +39,8 @@ import com.ka8eem.market24.viewmodel.ProductViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 
 public class SearchFragment extends Fragment {
 
@@ -54,7 +57,7 @@ public class SearchFragment extends Fragment {
     ImageView no_img_product;
     TextView no_product;
     LinearLayout toolbar ;
-
+    MySearchProductModel  mySearchProductModel;
     List<ProductModel>  listProductModels ;
 
     @Override
@@ -100,27 +103,22 @@ public class SearchFragment extends Fragment {
         progressDialog.setCancelable(false);
 
         //
+        if(listProductModels.size() ==0 )
         productVM.getSearch(search_name,search_lat,search_long,search_cat_id,search_sub_cat_id,search_radius);
+
 
         productVM.mutableAdsList.observe((getActivity()), new Observer<MySearchProductModel>() {
             @Override
             public void onChanged(MySearchProductModel productModels) {
                 progressDialog.dismiss();
-                    if (productModels.getData().size() != 0) {
+                    if (productModels.getData().size() != 0 ) {
                         recyclerView.setVisibility(View.VISIBLE);
                         no_img_product.setVisibility(View.GONE);
                         no_product.setVisibility(View.GONE);
-
+                        mySearchProductModel = productModels ;
                         setAds(productModels.getData());
-
-                        if(productModels.getCurrent_page() != productModels.getLast_page()) {
-                            productVM.getSearchByPage(search_name,search_lat,search_long,search_cat_id,search_sub_cat_id,search_radius , productModels.getCurrent_page()+1);
-
-                        }
-
                     } else {
-                        Toast.makeText(getContext(), getString(R.string.no_ads), Toast.LENGTH_SHORT).show();
-
+                    //    Toast.makeText(getContext(), getString(R.string.no_ads), Toast.LENGTH_SHORT).show();
                         recyclerView.setVisibility(View.GONE);
                         no_img_product.setVisibility(View.VISIBLE);
                         no_product.setVisibility(View.VISIBLE);
@@ -130,8 +128,25 @@ public class SearchFragment extends Fragment {
         });
 
 
-        //You need to add the following line for this solution to work; thanks skayred
-        view.setFocusableInTouchMode(true);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+             @Override
+             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                 super.onScrollStateChanged(recyclerView, newState);
+                 Log.d(TAG, "onScrollStateChanged: "+mySearchProductModel.getCurrent_page());
+                 if(mySearchProductModel.getCurrent_page() != mySearchProductModel.getLast_page()) {
+                     productVM.getSearchByPage(search_name,search_lat,search_long,search_cat_id,search_sub_cat_id,search_radius , mySearchProductModel.getCurrent_page()+1);
+
+                 }
+             }
+
+             @Override
+             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                 super.onScrolled(recyclerView, dx, dy);
+                 Log.d(TAG, "onScrolled: "+mySearchProductModel.getCurrent_page());
+             }
+         });
+                //You need to add the following line for this solution to work; thanks skayred
+                view.setFocusableInTouchMode(true);
         view.requestFocus();
         view.setOnKeyListener( new View.OnKeyListener()
         {
@@ -140,7 +155,8 @@ public class SearchFragment extends Fragment {
             {
                 if( keyCode == KeyEvent.KEYCODE_BACK )
                 {
-                    navController.navigate(R.id.HomeFragment);
+                   // navController.navigate(R.id.HomeFragment);
+                    getActivity().onBackPressed();
                     return true;
                 }
                 return false;
@@ -151,11 +167,11 @@ public class SearchFragment extends Fragment {
     }
 
     void setAds(List<ProductModel> productModels){
+     
         for (int i=0 ; i<productModels.size() ; i++){
             listProductModels.add(productModels.get(i));
         }
         Log.d("Search Fragment", "setads: " + listProductModels.size());
-
         searchAdapter.setList(listProductModels,navController);
         searchAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(searchAdapter);

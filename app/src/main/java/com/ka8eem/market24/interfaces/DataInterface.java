@@ -73,6 +73,9 @@ public interface DataInterface {
     @POST("market/api/ads/get")
     Call<MainModel> getMyAds(@Query("user_id") int user_id);
 
+    @POST("market/api/ads/get")
+    Call<MainModel> getMyAdsByPage(@Query("user_id") int user_id , @Query("page") int page);
+
     // no use
     @GET("get_oneImage.php")
     Call<ArrayList<SpecialInfoModel>> getMyAds_Message(@Query("ID") int pID);
@@ -180,6 +183,11 @@ public interface DataInterface {
     @FormUrlEncoded
     @POST("market/api/favourite/get")
     Call<MainModel> getAllFavourite(@Field("user_id") int user_id);
+
+    @FormUrlEncoded
+    @POST("market/api/favourite/get")
+    Call<MainModel> getAllFavouriteByPage(@Field("user_id") int user_id,@Field("page") int page);
+
 
     @FormUrlEncoded
     @POST("market/api/favourite/add")

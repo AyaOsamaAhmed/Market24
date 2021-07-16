@@ -138,6 +138,9 @@ public class DataClient {
     public Call<MainModel> getMyAds(int id) {
         return dataInterface.getMyAds(id);
     }
+    public Call<MainModel> getMyAdsByPage(int id,int page) {
+        return dataInterface.getMyAdsByPage(id,page);
+    }
 
     public Call<ArrayList<SpecialInfoModel>> getMyAds_Message(int id) {
         return dataInterface.getMyAds_Message(id);
@@ -166,6 +169,10 @@ public class DataClient {
     public Call<MainModel> getAllFavourite (int user_id) {
         return dataInterface.getAllFavourite( user_id);
     }
+    public Call<MainModel> getAllFavouriteByPage (int user_id, int page) {
+        return dataInterface.getAllFavouriteByPage( user_id,page);
+    }
+
 
     public Call<MainModel> getAllConversation (int user_id) {
         return dataInterface.getAllConversations(user_id);

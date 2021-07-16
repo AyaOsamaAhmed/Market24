@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/my_product"
+    >
+
+    <TextView
+        android:id="@+id/product"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_title_text"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="right"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/back"
+        />
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_back_icon_whi"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+    <ImageView
+        android:id="@+id/loc"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_location_white"
+        app:layout_constraintTop_toBottomOf="@id/back"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/city"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_title_text"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="right"
+        app:layout_constraintTop_toBottomOf="@id/back"
+        app:layout_constraintStart_toEndOf="@id/loc"
+        />
+
+    <TextView
+        android:id="@+id/city_data"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="wrap_content"
+        android:text="@string/city"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_title_text"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="right"
+        android:maxLines="1"
+        app:layout_constraintTop_toBottomOf="@id/back"
+        app:layout_constraintStart_toEndOf="@id/city"
+        app:layout_constraintEnd_toStartOf="@id/choose_city"
+        />
+
+    <ImageView
+        android:id="@+id/choose_city"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_back_right_icon"
+        app:layout_constraintTop_toBottomOf="@id/back"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <view
+        android:id="@+id/line_city"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/choose_city"
+        />
+
+
+
+    <ImageView
+        android:id="@+id/loc_area"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_location_white"
+        app:layout_constraintTop_toBottomOf="@id/line_city"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/area"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_title_text"
+        android:layout_marginStart="20dp"
+        android:gravity="right"
+        app:layout_constraintTop_toTopOf="@id/loc_area"
+        app:layout_constraintStart_toEndOf="@id/loc"
+        app:layout_constraintBottom_toBottomOf="@id/line_area"
+        />
+
+    <TextView
+        android:id="@+id/area_data"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="wrap_content"
+        android:text="@string/area"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_title_text"
+        android:layout_marginStart="20dp"
+        android:gravity="right"
+        android:maxLines="1"
+        app:layout_constraintTop_toTopOf="@id/area"
+        app:layout_constraintStart_toEndOf="@id/area"
+        app:layout_constraintEnd_toStartOf="@id/choose_area"
+        />
+
+    <ImageView
+        android:id="@+id/choose_area"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="15dp"
+        android:src="@drawable/ic_back_right_icon"
+        app:layout_constraintTop_toTopOf="@id/loc_area"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <view
+        android:id="@+id/line_area"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/choose_area"
+        />
+
+
+
+    <ImageView
+        android:id="@+id/loc_category"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_all_product_whi"
+        app:layout_constraintTop_toBottomOf="@id/line_area"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/category"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_title_text"
+        android:layout_marginStart="20dp"
+        android:gravity="right"
+        app:layout_constraintTop_toTopOf="@id/loc_category"
+        app:layout_constraintStart_toEndOf="@id/loc"
+        app:layout_constraintBottom_toBottomOf="@id/line_category"
+        />
+
+    <TextView
+        android:id="@+id/category_data"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="wrap_content"
+        android:text="@string/category"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_title_text"
+        android:layout_marginStart="20dp"
+        android:gravity="right"
+        android:maxLines="1"
+        app:layout_constraintTop_toTopOf="@id/category"
+        app:layout_constraintStart_toEndOf="@id/category"
+        app:layout_constraintEnd_toStartOf="@id/choose_category"
+        />
+
+    <ImageView
+        android:id="@+id/choose_category"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="15dp"
+        android:src="@drawable/ic_back_right_icon"
+        app:layout_constraintTop_toTopOf="@id/loc_category"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <view
+        android:id="@+id/line_category"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/choose_category"
+        />
+
+
+    <ImageView
+        android:id="@+id/icon_price"
+        android:layout_width="30dp"
+        android:layout_height="60dp"
+        android:layout_margin="15dp"
+        android:src="@drawable/ic_dollar"
+        app:layout_constraintTop_toBottomOf="@id/line_category"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/price"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_title_text"
+        android:layout_marginStart="20dp"
+        android:gravity="right"
+        app:layout_constraintTop_toTopOf="@id/icon_price"
+        app:layout_constraintStart_toEndOf="@id/loc"
+        app:layout_constraintBottom_toBottomOf="@id/line_price"
+        />
+
+    <TextView
+        android:id="@+id/price_data"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="wrap_content"
+        android:text="@string/price"
+        android:textColor="@color/white"
+        android:textSize="@dimen/header_title_text"
+        android:layout_marginStart="20dp"
+        android:gravity="right"
+        android:maxLines="1"
+
+        app:layout_constraintTop_toTopOf="@id/price"
+        app:layout_constraintStart_toEndOf="@id/price"
+        app:layout_constraintEnd_toStartOf="@id/choose_price"
+        />
+
+    <ImageView
+        android:id="@+id/choose_price"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="15dp"
+        android:src="@drawable/ic_back_right_icon"
+        app:layout_constraintTop_toTopOf="@id/icon_price"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <view
+        android:id="@+id/line_price"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/choose_price"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -158,6 +158,7 @@ public class HomeFragment extends Fragment {
         filterImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 navController.navigate(R.id.MapRadiusFragment);
             }
         });

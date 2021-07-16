@@ -246,4 +246,6 @@
     <string name="choose_image">أختر صورة</string>
     <string name="take_image">التقط صورة</string>
     <string name="check">السعر قابل للتفاوض</string>
+    <string name="filter">فلتر</string>
+    <string name="city">"المحافظه "</string>
 </resources>
